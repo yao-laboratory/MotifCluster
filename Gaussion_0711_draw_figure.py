@@ -53,7 +53,8 @@ def draw(input_file1, start_axis, end_axis):
     data_weight = []
     arr_final = []
     arr_final_draw=[]
-    draw_input = []
+    # draw_input = []
+    draw_input=[[] for i in range(global_cluster_num)]
     col_types_csv1=[int,int,float]
     for cnt_temp1 in range(0, global_cluster_num+2):
         col_types_csv1.append(int)
@@ -63,7 +64,6 @@ def draw(input_file1, start_axis, end_axis):
         Row=namedtuple('Row',headers)
         id = 0
         for r in f_csv:
-            draw_input_temp=[]
             row=Row(*r)
             # print(row)
             # print(type(row.IssueType))
@@ -71,10 +71,10 @@ def draw(input_file1, start_axis, end_axis):
             data_axis.append((row[1])) 
             data_weight.append(row[2])# 选择某一列加入到data数组中
             for cnt_temp2 in range(0, global_cluster_num):
-                draw_input_temp.append(row[cnt_temp2 + 3])
+                draw_input[cnt_temp2].append(row[cnt_temp2 + 3])
             arr_final.append(row[global_cluster_num + 3])
             arr_final_draw.append(row[global_cluster_num + 4])
-            draw_input.append(draw_input_temp)
+            # draw_input.append(draw_input_temp)
             id += 1
 
     #三种mean值的DBSCAN聚类情况画图
@@ -105,17 +105,17 @@ def draw(input_file1, start_axis, end_axis):
         print(draw_input_temp)
         Gaussion_0711_draw_function.draw_figure(draw_input_temp, avg_show, i+1, x1, y1, ax1)
     print("second step:\n")
-    print(arr_final)
-    print(len(arr_final))
     arr_1 = arr_final[label_space[0]:label_space[-1] + 1]
+    print(arr_1)
+    print(len(arr_1))
     Gaussion_0711_draw_function.draw_figure(arr_1,"final",11, x1, y1, ax1)  
     # plt.tight_layout()
     # plt.show()    
     # plt.show()
     print("third step:\n")
-    print(arr_final_draw)
-    print(len(arr_final_draw))
     arr_2 = arr_final_draw[label_space[0]:label_space[-1] + 1]
+    print(arr_2)
+    print(len(arr_2))
     Gaussion_0711_draw_function.draw_figure(arr_2,"final_2",12, x1, y1, ax1)  
     plt.tight_layout()    
     plt.show()
