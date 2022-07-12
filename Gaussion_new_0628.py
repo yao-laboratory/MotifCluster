@@ -379,9 +379,9 @@ label_space=[]
 # label_drawing=[]
 i0 = 0
 while(i0 < int(len(data_axis))):
-    if (data_axis[i0] - 8) >= 6710000 and (data_axis[i0] + 8 + 1) <= 6724000:
+    if (data_axis[i0] - 8) >= 19725250 and (data_axis[i0] + 8 + 1) <= 19729250:
         label_space.append(i0)
-    if (data_axis[i0] + 8 + 1) > 6724000:
+    if (data_axis[i0] + 8 + 1) > 19729250:
         break
     i0 += 1
 # while(i0 < int(len(label_values)/1000)):

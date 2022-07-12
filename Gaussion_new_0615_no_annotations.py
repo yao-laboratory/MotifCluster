@@ -248,8 +248,10 @@ def belong_which_cluster_better(cluster_0, cluster_1, id, distance, gm):
 # cluster_distance = [1,5,20,100]
 # data_axis = getSample(cluster_num,cluster_distance,200)
 # print(data_axis)
+MINIMUM_VALUE = math.pow(10,-20)
+MAXIMUM_DISTANCE = 1000
 line_temp=[]
-final_filename = "/home/ins/Downloads/bioinformatics/total_chr12.bed"
+final_filename = "/home/eilene/Downloads/total_chr12.bed"
 print("start reading total file:\n")
 data_axis=[]
 weight=[]
@@ -448,7 +450,7 @@ plt.tight_layout()
 # print(len(value_total))
 for cnt in range(len(value_total)):
     # cnt_temp = cnt+1
-    filename ="/home/ins/Downloads/bioinformatics/cluster%d.bdg"%cnt
+    filename ="/home/eilene/Downloads/cluster%d.bdg"%cnt
     f = open(filename,"w")
 
     # write data to file 
@@ -476,14 +478,14 @@ cluster=[]
 filenames = []
 for cnt in range(len(value_total)):
     # cnt_temp = cnt+1
-    filename ="/home/ins/Downloads/bioinformatics/cluster%d.bdg"%cnt
+    filename ="/home/eilene/Downloads/cluster%d.bdg"%cnt
     cluster.append(pybedtools.example_bedtool(filename))
     # print("cluster_"+str(cnt)+":\n")
     cluster[cnt].head()
     filenames.append(filename)
     # print("------------------------------------")
     # print(filenames)
-final_filename = "/home/ins/Downloads/bioinformatics/total.bdg"
+final_filename = "/home/eilene/Downloads/total.bdg"
 BedTool().union_bedgraphs(i=filenames, output=final_filename)
 
 # cmd = "bedtools unionbedg -i "  + filenames +"-output " + final_filename
@@ -550,6 +552,7 @@ data_sum=[]
 weight_sum=[]
 x_temp = x1
 y_temp = y1
+average_distance = []
 with open(final_filename,"r") as lines:
     cluster_id = 0
     for line in lines:
@@ -575,8 +578,13 @@ with open(final_filename,"r") as lines:
         data_distance_temp_=np.array([(int(data_temp[i+1]) - int(data_temp[i])) for i in range(len(data_temp)-1)])
         # print("data=",data_distance_temp_)
         #根据样本数据求高斯分布的平均数
-        ave_temp=average(data_distance_temp_)
+        ave_temp = average(data_distance_temp_)
+        # one point counts how many distance and score
+        ave_final = MAXIMUM_DISTANCE if len(data_distance_temp_) == 0 else average(data_distance_temp_)
+        average_distance.append(round(ave_final,4))
+        # print(data_distance_temp_)
         # print("ave=",ave_temp)
+        # print("ave_final=",ave_final)
         cluster_num = belong_which_cluster(ave_temp, gm)
         cluster_belong.append(cluster_num)         
 f.close()
@@ -858,7 +866,7 @@ for i in range(len(data_count_new)):
 # print(len(arr_final_2))
 draw_figure(arr_final_draw,"final_2",12)  
 plt.tight_layout()    
-plt.show()
+# plt.show()
 
 final_data = []
 for i in range(len(data_count_new)):
@@ -898,7 +906,7 @@ print(data_count_sum)
 
 # probability_ig=[]
 p_score=[]
-data_partial = np.array([(x1[i+1] - x1[i]) for i in range(len(x1)-1)])
+data_partial = np.array(average_distance)
 
 p_g = -gm.score_samples(data_partial.reshape(len(data_partial), 1))
 print(p_g)
@@ -908,6 +916,7 @@ for i in range(len(data_count_sum)):
         continue
     cnt = 0
     p_new = 1
+    p_ig_total = 0
     while(cnt < data_count_new[i] ):
         count_1 = 0
         data_cnt = cnt if i == 0 else (data_count_sum[i-1] + cnt)
@@ -922,23 +931,25 @@ for i in range(len(data_count_sum)):
                 print("@@@@@@@@@@")
                 # print(count_1) 
                 # print(len(data_weight_cluster[cluster_flag]))
+                # calculate P(X >= x)
                 #??the probality of first number and the last number
-                count_1 = 1 if count_1 == 0 else count_1
-                p_ig_score = -math.log(1 - count_1 / len(data_weight_cluster[cluster_flag]))
+                p_ig_score = (1 - MINIMUM_VALUE) if count_1 == 0 else -math.log(1 - count_1 / len(data_weight_cluster[cluster_flag]))
                 # print(count_1 / len(data_weight_cluster[cluster_flag]))
                 # probability_ig.append(p_ig_score)
-                p_new  *=  p_g[data_cnt] * p_ig_score
-                print(p_new)
+                p_ig_total  +=  round(p_ig_score,4)
+                print(p_ig_total)
                 break
         cnt += 1
-    p_score.append((i, p_new))
+    p_score.append((i, p_ig_total + p_g[i]))
 
 p_score_final = sorted(p_score, key=lambda x: x[1], reverse=True) 
+print(p_score_final)
 for i in range(len(p_score_final)):
     if i < 100:
+        print(x1[data_count_sum[p_score_final[i][0]]])
         print(data_count_sum[p_score_final[i][0]])
         print(p_score_final[i])
-        
+plt.show()        
 
     
     

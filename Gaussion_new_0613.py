@@ -92,7 +92,8 @@ def set_clusters_outlier_color(labels):
     
 def set_clusters_normal_color(labels):
     color_num = max(labels, key=None) + 1
-    # print(color_num)
+    print("color!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+    print(color_num)
     clrs = []
     for i in np.linspace(16711680,255,color_num):
         c = int(i)

@@ -248,6 +248,7 @@ def belong_which_cluster_better(cluster_0, cluster_1, id, distance, gm):
 # cluster_distance = [1,5,20,100]
 # data_axis = getSample(cluster_num,cluster_distance,200)
 # print(data_axis)
+
 MINIMUM_VALUE = math.pow(10,-20)
 MAXIMUM_DISTANCE = 1000
 line_temp=[]
@@ -868,6 +869,18 @@ draw_figure(arr_final_draw,"final_2",12)
 plt.tight_layout()    
 # plt.show()
 
+#calculate average_distance
+total_start = 0 
+# average_distance = []  
+p_g = []     
+for i in range(len(data_count_new)):
+    if data_count_new[i] == 1:
+        p_g.append(0)
+    else:
+        data_distance_temp_ = np.array([(int(x1[j+1]) - int(x1[j])) for j in range(total_start, total_start + data_count_new[i] - 1)])
+        p_g.append(round(-gm.score(data_distance_temp_.reshape(len(data_distance_temp_), 1)),4))
+    total_start += data_count_new[i]
+    
 final_data = []
 for i in range(len(data_count_new)):
     if data_count_new[i] == 1:
@@ -906,10 +919,9 @@ print(data_count_sum)
 
 # probability_ig=[]
 p_score=[]
-data_partial = np.array(average_distance)
-
-p_g = -gm.score_samples(data_partial.reshape(len(data_partial), 1))
-print(p_g)
+# data_partial = np.array(average_distance)
+# p_g = -gm.score_samples(data_partial.reshape(len(data_partial), 1))
+# print(p_g)
 for i in range(len(data_count_sum)):
     cluster_flag = cluster_belong_new[i]
     if cluster_flag == -1:
@@ -937,13 +949,13 @@ for i in range(len(data_count_sum)):
                 # print(count_1 / len(data_weight_cluster[cluster_flag]))
                 # probability_ig.append(p_ig_score)
                 p_ig_total  +=  round(p_ig_score,4)
-                print(p_ig_total)
+                # print(p_ig_total)
                 break
         cnt += 1
     p_score.append((i, p_ig_total + p_g[i]))
 
 p_score_final = sorted(p_score, key=lambda x: x[1], reverse=True) 
-print(p_score_final)
+# print(p_score_final)
 for i in range(len(p_score_final)):
     if i < 100:
         print(x1[data_count_sum[p_score_final[i][0]]])
