@@ -72,6 +72,8 @@ def getSample(cluster_num,cluster_distance,sample_total_num):
 def belong_which_cluster(distance, gm):
     maximum = 0
     cluster_id = SINGLE_POINT
+    # if distance > 500:
+    #     return -1
     for i in range(len(gm.means_)):
         value = (1 / math.sqrt(2 * math.pi * gm.covariances_[i])) * math.exp(-math.pow(distance - gm.means_[i],2) / (2 * gm.covariances_[i]))
         # print("p:")
@@ -87,6 +89,8 @@ def belong_which_cluster(distance, gm):
 #no need parameter id
 def belong_which_cluster_better(cluster_0, cluster_1, id, distance, gm):
     temp_array = []
+    if distance > 500:
+        return -2
     for i in range(len(gm.means_)):
         # print(id,i)
         # sentence = "{interval_id}\t{cluster_id}\t{log_odds}\n"
@@ -135,15 +139,16 @@ def cluster_and_merge(input_file1, start_axis, end_axis):
             line = line.split()
             # print(line)
             # center pos
-            data_axis.append(int(line[1])+ 8)
-            # data_axis.append(int(line[2]))
+            # data_axis.append(int(line[1])+ 8)
             raw_weight = ''.join(line[7][8:])
             mark_1 = raw_weight.rfind('e')
             mark_2 = raw_weight.rfind('-')
             num_part1 = float(raw_weight[0:mark_1])
             num_part2 = -int(raw_weight[mark_2 + 1:])
-            num = -math.log10(num_part1 * math.pow(10,num_part2))
-            weight.append(round(num,4))
+            if num_part1 * math.pow(10,num_part2) <= 0.005:
+                data_axis.append(int(line[1])+ 8)
+                num = -math.log10(num_part1 * math.pow(10,num_part2))
+                weight.append(round(num,4))
 
     f.close()
     # print(data_axis[0],data_axis[1])

@@ -2,7 +2,8 @@
 from main_operations.Gaussion_0711_cluster_merge import cluster_and_merge
 from main_operations.Gaussion_0711_score import score
 from main_operations.Gaussion_0711_draw_figure import draw
-from draw_operations.GMM_DRAW import draw_gmm
+from draw_operations.rank_compare_drawing import draw_rank
+from draw_operations.GMM_drawing import draw_gmm
 from draw_operations.cluster_weight_draw import draw_cluster_weight
 import argparse
 def main():
@@ -48,6 +49,13 @@ def main():
     parser_draw = subparsers.add_parser("draw_cluster_weight",help="add help")
     parser_draw.add_argument('-input', required = True, type=str, help='input file', default="result_cluster_weight.csv")
     parser_draw.set_defaults(func=draw_cluster_weight)
+    
+    #添加子命令 add
+    parser_draw = subparsers.add_parser("draw_rank",help="add help")
+    parser_draw.add_argument('-input1', required = True, type=str, help='input file 1', default="result_cluster_weight.csv")
+    parser_draw.add_argument('-input2', required = True, type=str, help='input file 2', default="result_cluster_weight.csv")
+    parser_draw.set_defaults(func=draw_rank)
+    
 
     args = parser.parse_args()
 
@@ -75,6 +83,10 @@ def main():
     elif args.subcommand=="draw_cluster_weight":
         input_file = args.input
         draw_cluster_weight(input_file)
+    elif args.subcommand=='draw_rank':
+        input_file1 = args.input1
+        input_file2 = args.input2
+        draw_rank(input_file1,input_file2)
     else:
         print("Wrong input. Check parameters")
 
