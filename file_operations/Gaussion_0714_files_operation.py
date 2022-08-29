@@ -5,6 +5,28 @@ import os
 import pandas as pd
 # from collections import namedtuple
 
+def create_new_file(input_file, output_file, start_line, end_line):
+    line_temp = []
+    draw_input = []
+    final_filename = "/home/eilene/Downloads/" + input_file
+    output_filename = "/home/eilene/Downloads/" + output_file
+    print("first, start reading total file:\n")
+    data_axis=[]
+    weight=[]
+    f = open(final_filename,"r")
+    f_new = open(output_filename, 'w')
+    with f as lines:
+        cluster_id = 0
+        i = 0
+        for line in lines:
+            if i > int(end_line):
+                break
+            if i >= int(start_line) and i <= int(end_line):
+                f_new.write(line)
+            i += 1
+        f_new.close()
+    f.close()
+
 # Gaussion_0711_score.py
 def write_score_result(res_path, data_axis, data_weight, final_data, p_score_final, data_count_sum, data_count_new):
     title = 'rank_id|start_pos|start_pos_head_axis|end_pos|end_pos_tail_axis|cluster_size|belong_which_class|max_weight|average_gap|score'

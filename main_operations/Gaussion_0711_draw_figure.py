@@ -2,6 +2,7 @@ import math
 import threading
 import time
 import gc
+import matplotlib as mpl
 # import numpy as np
 # import matplotlib.pyplot as plt
 import pybedtools
@@ -24,6 +25,9 @@ MAXIMUM_DISTANCE = 1000
 SINGLE_POINT = -5
 global_cluster_num = 10
 
+mpl.rcParams['pdf.fonttype'] = 42
+mpl.rcParams['ps.fonttype'] = 42
+mpl.rcParams['font.family'] = 'Arial'
 # #delete warning
 # warnings.filterwarnings("ignore")
 
@@ -79,8 +83,10 @@ def draw(input_file1, start_axis, end_axis):
     #三种mean值的DBSCAN聚类情况画图
     X_ORIGIN = np.array(data_axis).reshape(len(data_axis), 1)
     value_total = []
-    plt.figure("final")
-    ax1 = plt.subplot(12,1,1)
+
+    Fig,Axes=plt.subplots(12,1,sharex='col',sharey='row')
+    # ax1 = plt.subplot(12,1,1)
+    # ax1.axes.xaxis.set_visible(False)
 
     # drawing 
     label_space=[]
@@ -103,16 +109,17 @@ def draw(input_file1, start_axis, end_axis):
 
     # print(label_space[0])
     # print(label_space[-1] + 1)
+    print(loaded_gm.means_)
     for i in range(0, len(loaded_gm.means_)):
         avg_show = str(loaded_gm.means_[i])
         draw_input_temp = draw_input[i][label_space[0]:label_space[-1] + 1]
-        # print(draw_input_temp)
-        draw_figure(draw_input_temp, avg_show, i+1, x1, y1, ax1)
+        print(draw_input_temp)
+        draw_figure(draw_input_temp, avg_show, i, x1, y1, Axes)
     print("second step:\n")
     arr_1 = arr_final[label_space[0]:label_space[-1] + 1]
     print(arr_1)
     print(len(arr_1))
-    draw_figure(arr_1,"final",11, x1, y1, ax1)  
+    draw_figure(arr_1,"final",10, x1, y1, Axes)  
     # plt.tight_layout()
     # plt.show()    
     # plt.show()
@@ -120,8 +127,13 @@ def draw(input_file1, start_axis, end_axis):
     arr_2 = arr_final_draw[label_space[0]:label_space[-1] + 1]
     print(arr_2)
     print(len(arr_2))
-    draw_figure(arr_2,"final_2",12, x1, y1, ax1)  
-    plt.tight_layout()    
+    draw_figure(arr_2,"final_2",11, x1, y1, Axes)  
+    plt.subplots_adjust(wspace=0.5,hspace=0.5)
+    plt.ylim(0, 10) 
+    plt.savefig('tmp.pdf', bbox_inches='tight')
+    #plt.savefig(pp, format='pdf')
+    #pp.close()
+    # plt.tight_layout()    
     plt.show()
 
 

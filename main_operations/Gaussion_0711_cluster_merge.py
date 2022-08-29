@@ -145,10 +145,10 @@ def cluster_and_merge(input_file1, start_axis, end_axis):
             mark_2 = raw_weight.rfind('-')
             num_part1 = float(raw_weight[0:mark_1])
             num_part2 = -int(raw_weight[mark_2 + 1:])
-            if num_part1 * math.pow(10,num_part2) <= 0.005:
-                data_axis.append(int(line[1])+ 8)
-                num = -math.log10(num_part1 * math.pow(10,num_part2))
-                weight.append(round(num,4))
+            # if num_part1 * math.pow(10,num_part2) <= 0.01:
+            data_axis.append(int(line[1])+ 8)
+            num = -math.log10(num_part1 * math.pow(10,num_part2))
+            weight.append(round(num,4))
 
     f.close()
     # print(data_axis[0],data_axis[1])
@@ -251,6 +251,8 @@ def cluster_and_merge(input_file1, start_axis, end_axis):
 
     x1 = data_axis[label_space[0]:label_space[-1] + 1]
     y1 = data_weight[label_space[0]:label_space[-1] + 1]
+    # print("lalalalala")
+    # print(len(x1))
     # print(label_space[0])
     # print(label_space[-1] + 1)
     for i in range(0, len(gm.means_)):
@@ -273,6 +275,8 @@ def cluster_and_merge(input_file1, start_axis, end_axis):
         cnt = i
         # print("labels num:")
         # print(len(labels))
+        print(".........")
+        print(labels)
         for i in range(0,len(labels)):
             # print("i:",i)
             # print("labels[i]:",labels[i]) 
@@ -331,6 +335,7 @@ def cluster_and_merge(input_file1, start_axis, end_axis):
     np.save(gm_name + '_covariances', gm.covariances_, allow_pickle=False)
 
     # create and open file
+    # print("lalalalala")
     # print(len(value_total))
     for cnt in range(len(value_total)):
         # cnt_temp = cnt+1
@@ -506,9 +511,9 @@ def cluster_and_merge(input_file1, start_axis, end_axis):
                             data_count.insert(j + 1 + cnt_temp, 1)
                             cluster_belong.insert(j + 1 + cnt_temp, -1)
                             cnt_temp += 1
-    for id in cluster_belong:
-        if id == -5:
-            id = -1
+    # for id in cluster_belong:
+    #     if id == -5:
+    #         id = -1
         
     # print(number_cnt)
     print("*******************************************")
@@ -789,7 +794,10 @@ def cluster_and_merge(input_file1, start_axis, end_axis):
     final_data = []
     for i in range(len(data_count_new)):
         if data_count_new[i] == 1:
-            final_data.append(-1)
+            if cluster_belong_new[i] == -1:
+                final_data.append(-1)
+            else:
+                final_data.append(SINGLE_POINT)
             continue
         cnt = data_count_new[i]
         for j in range(cnt):
@@ -800,13 +808,20 @@ def cluster_and_merge(input_file1, start_axis, end_axis):
     count = 0
     for i in range(len(data_count_new)):
         if data_count_new[i] == 1:
-            arr_final_draw.append(-1)
+            if cluster_belong_new[i] == -1:
+                arr_final_draw.append(-1)
+            else:
+                arr_final_draw.append(count)
+                count += 4
             continue
         cnt = data_count_new[i]
         for j in range(cnt):
             arr_final_draw.append(count)
         count += 4
     # print(arr_final_2)
+    print(arr_final)
+    print(arr_final_draw)
+    print(final_data)
     print(len(arr_final_draw))        
     #output csv file 
     path = "/home/eilene/Downloads/"

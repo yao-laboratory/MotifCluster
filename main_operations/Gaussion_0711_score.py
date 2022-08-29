@@ -19,6 +19,7 @@ from collections import namedtuple
 from file_operations.Gaussion_0714_files_operation import *
 
 MINIMUM_VALUE = math.pow(10,-20)
+SINGLE_POINT = -5
 global_cluster_num = 10
 
 #均值
@@ -100,17 +101,17 @@ def score(input_file_score_1, input_file_score_2, debug):
     #     for j in range(cnt):
     #         final_data.append(cluster_belong_new[i])
     # print(final_data)
-    data_weight_cluster = [[] for i in range(global_cluster_num)]
+    data_weight_cluster = [[] for i in range(global_cluster_num + 1)]
     for i in range(len(final_data)):
         # num = final_data[id]
         # if the point is the outlier, no need to do anything
         cluster_flag = final_data[i]
-        if cluster_flag == -1:
-            continue
+        if cluster_flag == -1 or cluster_flag == SINGLE_POINT:
+            data_weight_cluster[global_cluster_num].append(data_weight[i])
         else:
             data_weight_cluster[cluster_flag].append(data_weight[i])
     
-    for num in range(global_cluster_num):        
+    for num in range(global_cluster_num + 1):        
         data_weight_cluster[num].sort()
         # print(data_weight_cluster[num])
 
@@ -127,6 +128,8 @@ def score(input_file_score_1, input_file_score_2, debug):
         # print(cluster_flag)
         if cluster_flag == -1:
             continue
+        if cluster_flag == SINGLE_POINT:
+            cluster_flag = global_cluster_num
         cnt = 0
         p_new = 1
         p_ig_total = 0

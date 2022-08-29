@@ -5,6 +5,7 @@ from main_operations.Gaussion_0711_draw_figure import draw
 from draw_operations.rank_compare_drawing import draw_rank
 from draw_operations.GMM_drawing import draw_gmm
 from draw_operations.cluster_weight_draw import draw_cluster_weight
+from file_operations.Gaussion_0714_files_operation import create_new_file
 import argparse
 def main():
     parser = argparse.ArgumentParser(prog='PROG')
@@ -55,7 +56,14 @@ def main():
     parser_draw.add_argument('-input1', required = True, type=str, help='input file 1', default="result_cluster_weight.csv")
     parser_draw.add_argument('-input2', required = True, type=str, help='input file 2', default="result_cluster_weight.csv")
     parser_draw.set_defaults(func=draw_rank)
-    
+     
+    #添加子命令 add
+    parser_draw = subparsers.add_parser("cutting_file",help="add help")
+    parser_draw.add_argument('-input', required = True, type=str, help='input file', default="result_cluster_weight.csv")
+    parser_draw.add_argument('-output', required = True, type=str, help='output file', default="result_cluster_weight.csv")
+    parser_draw.add_argument('-start', required = False, type=str, help='start_line', default="all")
+    parser_draw.add_argument('-end', required = False, type=str, help='end_line', default="all")
+    parser_draw.set_defaults(func=create_new_file)
 
     args = parser.parse_args()
 
@@ -87,6 +95,12 @@ def main():
         input_file1 = args.input1
         input_file2 = args.input2
         draw_rank(input_file1,input_file2)
+    elif args.subcommand=='cutting_file':
+        input_file = args.input
+        output_file = args.output
+        start_line = args.start
+        end_line = args.end
+        create_new_file(input_file, output_file, start_line, end_line)
     else:
         print("Wrong input. Check parameters")
 
