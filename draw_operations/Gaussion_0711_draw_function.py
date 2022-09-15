@@ -71,6 +71,7 @@ def set_clusters_normal_color(labels):
     return group_color
  
 def draw_figure(data, id, num, x1, y1, Axes):
+    plt.setp(Axes[num], ylabel='')
     group_color = []
     group_color_outlier = set_clusters_outlier_color(data)
     group_color_normal = set_clusters_normal_color(data)

@@ -122,7 +122,10 @@ def write_draw_input(res_path3, x1, y1, draw_input, draw_input_cnt, arr_final, a
     title = 'id|center_pos|weight'
     for cnt in range(0, draw_input_cnt):
         title +='|draw_input'+str(cnt)
-    title += '|arr_final|arr_final_draw'
+    if arr_final_draw is not None:
+        title += '|arr_final|arr_final_draw'
+    else:
+        title += '|arr_final'
     title_head = title.split('|')
     with open(res_path3, 'w', newline='') as f:
         csvwrite = csv.writer(f, dialect=('excel'))
@@ -136,8 +139,33 @@ def write_draw_input(res_path3, x1, y1, draw_input, draw_input_cnt, arr_final, a
             for j in range(0, draw_input_cnt):
                 line.append(draw_input[j][i]) 
             line.append(arr_final[i])
-            line.append(arr_final_draw[i])
+            if arr_final_draw is not None:
+                line.append(arr_final_draw[i])
             id += 1
             csvwrite.writerow(line)
-     
-                        
+            
+def write_draw_input_single_DBSCAN(res_path3, x1, draw_input, arr_final):
+    # print(draw_input)
+    # print(draw_input[0][0])
+    # print(avg_set[0][1:-1])
+    # print(avg_set)
+    title = 'id|center_pos|weight|'
+    # for cnt in range(0, draw_input_cnt):
+    #     title +='|draw_input'+str(cnt)
+    title += 'draw_input|arr_final'
+    title_head = title.split('|')
+    with open(res_path3, 'w', newline='') as f:
+        csvwrite = csv.writer(f, dialect=('excel'))
+        csvwrite.writerow(title_head)
+        id = 0
+        for i in range(len(x1)):
+            line = []
+            line.append(id)
+            line.append(x1[i])
+            # line.append(y1[i])
+            # for j in range(0, draw_input_cnt):
+            line.append(draw_input[i]) 
+            line.append(arr_final[i])
+            # line.append(arr_final_draw[i])
+            id += 1
+            csvwrite.writerow(line)

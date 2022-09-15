@@ -23,7 +23,7 @@ from pybedtools import BedTool
 
 MAXIMUM_DISTANCE = 1000
 SINGLE_POINT = -5
-global_cluster_num = 10
+# global_cluster_num = 10
 
 mpl.rcParams['pdf.fonttype'] = 42
 mpl.rcParams['ps.fonttype'] = 42
@@ -40,7 +40,7 @@ mpl.rcParams['font.family'] = 'Arial'
 #     return t
 
 def draw(input_file1, start_axis, end_axis):
-        # reload
+    # reload GMM Model
     gm_name = '/home/eilene/Downloads/GMM'
     means = np.load(gm_name + '_means.npy')
     covar = np.load(gm_name + '_covariances.npy')
@@ -49,6 +49,8 @@ def draw(input_file1, start_axis, end_axis):
     loaded_gm.weights_ = np.load(gm_name + '_weights.npy')
     loaded_gm.means_ = means
     loaded_gm.covariances_ = covar
+    global_cluster_num = len(loaded_gm.means_)
+    print("global_cluster_num", global_cluster_num)
     
     line_temp=[]
     final_filename = "/home/eilene/Downloads/" + input_file1
@@ -76,15 +78,20 @@ def draw(input_file1, start_axis, end_axis):
             for cnt_temp2 in range(0, global_cluster_num):
                 draw_input[cnt_temp2].append(row[cnt_temp2 + 3])
             arr_final.append(row[global_cluster_num + 3])
-            arr_final_draw.append(row[global_cluster_num + 4])
+            if input_file1 == "result_draw.csv":
+                arr_final_draw.append(row[global_cluster_num + 4])
             # draw_input.append(draw_input_temp)
             id += 1
 
     #三种mean值的DBSCAN聚类情况画图
     X_ORIGIN = np.array(data_axis).reshape(len(data_axis), 1)
     value_total = []
-
-    Fig,Axes=plt.subplots(12,1,sharex='col',sharey='row')
+    Fig,Axes=plt.subplots(global_cluster_num+2,1,sharex='col',sharey='row')
+    # plt.setp(Axes[12], ylabel='y axis label')
+    # for i in range(global_cluster_num+2):
+    #     Axes[i].set_aspect(30)
+    #     Axes[i].set_xlabel(None)
+    #     Axes[i].set_ylabel(None)
     # ax1 = plt.subplot(12,1,1)
     # ax1.axes.xaxis.set_visible(False)
 
@@ -119,7 +126,7 @@ def draw(input_file1, start_axis, end_axis):
     arr_1 = arr_final[label_space[0]:label_space[-1] + 1]
     print(arr_1)
     print(len(arr_1))
-    draw_figure(arr_1,"final",10, x1, y1, Axes)  
+    draw_figure(arr_1,"final",global_cluster_num, x1, y1, Axes)  
     # plt.tight_layout()
     # plt.show()    
     # plt.show()
@@ -127,7 +134,12 @@ def draw(input_file1, start_axis, end_axis):
     arr_2 = arr_final_draw[label_space[0]:label_space[-1] + 1]
     print(arr_2)
     print(len(arr_2))
-    draw_figure(arr_2,"final_2",11, x1, y1, Axes)  
+    draw_figure(arr_2,"final_2",global_cluster_num+1, x1, y1, Axes)
+
+    for i in range(global_cluster_num+2):
+        Axes[i].set_aspect(30)
+        plt.setp(Axes[11], xlabel='')
+        plt.setp(Axes[11], ylabel='')
     plt.subplots_adjust(wspace=0.5,hspace=0.5)
     plt.ylim(0, 10) 
     plt.savefig('tmp.pdf', bbox_inches='tight')

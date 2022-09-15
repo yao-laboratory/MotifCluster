@@ -20,14 +20,61 @@ from file_operations.Gaussion_0714_files_operation import *
 
 MINIMUM_VALUE = math.pow(10,-20)
 SINGLE_POINT = -5
-global_cluster_num = 10
 
 #均值
 def average(data):
     return np.sum(data)/len(data)
 
+def find_gap_class(distance,gm):
+    min = abs(distance - gm.means_[0])
+    class_id = 0
+    for id in range(len(gm.means_)):
+        if abs(distance - gm.means_[id]) < min:
+            min = abs(distance - gm.means_[id])
+            class_id = int(id)
+    return class_id
+       
+#start calculating the class distribution:
+def cal_distance_in_groups(data_axis,data_weight, gm):
+    group = [[] for i in range(len(gm.means_) + 1)]
+    class_id = -1
+    # group =[]
+    data = np.array([(data_axis[i+1] - data_axis[i]) for i in range(len(data_axis)-1)])
+    # print("data_axis",len(data_axis))
+    for i in range(len(data_axis)):
+        if i == 0:
+            class_id = find_gap_class(data[0],gm)
+            group[class_id].append(data_weight[i])
+        elif i == len(data_axis) - 1:
+            class_id = find_gap_class(data[len(data)-1],gm)
+            group[class_id].append(data_weight[i])
+        else:
+            if (data[i-1] < 500):
+                class_id = find_gap_class(data[i-1],gm)
+                group[class_id].append(data_weight[i])
+            elif data[i] < 500:
+                class_id = find_gap_class(data[i],gm)
+                group[class_id].append(data_weight[i])
+            else:
+                class_id = len(gm.means_)
+                group[class_id].append(data_weight[i])
+    # print("group",group)
+    group_final=[]
+    for i in range(len(gm.means_) + 1):   
+        group[i].sort()
+    return group
+
+        # print(group_temp)
+    
+    # print("group_final",group_final)
+    # path = "/home/eilene/Downloads/"
+    # res_dir = os.path.dirname(path)
+    # res_path = os.path.join(res_dir, 'result_class_distribution.csv')
+    # write_class_distribution(res_path, group_final)
+
 # data_axis as the all data input
-def score(input_file_score_1, input_file_score_2, debug):
+def score(input_file_0, input_file_score_1, input_file_score_2, debug):
+    original_filename =  "/home/eilene/Downloads/" + input_file_0
     final_filename_1 = "/home/eilene/Downloads/" + input_file_score_1
     final_filename_2 = "/home/eilene/Downloads/" + input_file_score_2
     data_axis = []
@@ -38,6 +85,44 @@ def score(input_file_score_1, input_file_score_2, debug):
     cluster_belong_new = []
     data_count_sum = []
     col_types_csv1=[int,int,int,int,int,str]
+    ##########
+    # reload GMM Model
+    gm_name = '/home/eilene/Downloads/GMM'
+    means = np.load(gm_name + '_means.npy')
+    # print(means)
+    loaded_gm = GaussianMixture(n_components = len(means), covariance_type='full')
+    # loaded_gm.precisions_cholesky_ = np.linalg.cholesky(np.linalg.inv(covar))
+    # loaded_gm.weights_ = np.load(gm_name + '_weights.npy')
+    loaded_gm.means_ = means
+    # loaded_gm.covariances_ = covar
+    ###########
+    print("first, start reading total file:\n")
+    ori_data_axis=[]
+    ori_weight=[]
+    f = open(original_filename,"r")
+    with f as lines:
+        cluster_id = 0
+        for line in lines:
+            line = line.split()
+            # print(line)
+            # center pos
+            # data_axis.append(int(line[1])+ 8)
+            raw_weight = ''.join(line[7][8:])
+            mark_1 = raw_weight.rfind('e')
+            mark_2 = raw_weight.rfind('-')
+            num_part1 = float(raw_weight[0:mark_1])
+            num_part2 = -int(raw_weight[mark_2 + 1:])
+            # if num_part1 * math.pow(10,num_part2) <= 0.01:
+            ori_data_axis.append(int(line[1])+ 8)
+            num = -math.log10(num_part1 * math.pow(10,num_part2))
+            ori_weight.append(num)
+
+    f.close()
+    ori_data_weight = np.array(ori_weight)
+    data_weight_cluster = cal_distance_in_groups(ori_data_axis,ori_data_weight, loaded_gm)
+    # print(data_weight_cluster)
+    ###########
+    
     with open(final_filename_1) as f:
         f_csv=csv.reader(f)
         headers=next(f_csv)
@@ -92,6 +177,7 @@ def score(input_file_score_1, input_file_score_2, debug):
     #         p_g.append(round(-gm.score(data_distance_temp_.reshape(len(data_distance_temp_), 1)),4))
     #     total_start += data_count_new[i]
     print("*******")    
+    global_cluster_num = len(loaded_gm.means_)
     # final_data = []
     # for i in range(len(data_count_new)):
     #     if data_count_new[i] == 1:
@@ -101,19 +187,21 @@ def score(input_file_score_1, input_file_score_2, debug):
     #     for j in range(cnt):
     #         final_data.append(cluster_belong_new[i])
     # print(final_data)
-    data_weight_cluster = [[] for i in range(global_cluster_num + 1)]
-    for i in range(len(final_data)):
-        # num = final_data[id]
-        # if the point is the outlier, no need to do anything
-        cluster_flag = final_data[i]
-        if cluster_flag == -1 or cluster_flag == SINGLE_POINT:
-            data_weight_cluster[global_cluster_num].append(data_weight[i])
-        else:
-            data_weight_cluster[cluster_flag].append(data_weight[i])
+    #original code start
+    # data_weight_cluster = [[] for i in range(global_cluster_num + 1)]
+    # for i in range(len(final_data)):
+    #     # num = final_data[id]
+    #     # if the point is the outlier, no need to do anything
+    #     cluster_flag = final_data[i]
+    #     if cluster_flag == -1 or cluster_flag == SINGLE_POINT:
+    #         data_weight_cluster[global_cluster_num].append(data_weight[i])
+    #     else:
+    #         data_weight_cluster[cluster_flag].append(data_weight[i])
     
-    for num in range(global_cluster_num + 1):        
-        data_weight_cluster[num].sort()
-        # print(data_weight_cluster[num])
+    # for num in range(global_cluster_num + 1):        
+    #     data_weight_cluster[num].sort()
+    # print(data_weight_cluster[num])
+    #original code end
 
 
     print("third, start reading total file to place the order:\n")
@@ -151,7 +239,7 @@ def score(input_file_score_1, input_file_score_2, debug):
                 # print(cluster_flag)
                 # print(data_weight[data_cnt])
                 # print(data_weight_cluster[cluster_flag][id_cluster])
-                if data_weight[data_cnt] > data_weight_cluster[cluster_flag][id_cluster]:
+                if float(data_weight[data_cnt]) > data_weight_cluster[cluster_flag][id_cluster]:
                     count_1 += 1
                 else:
                     # print("@@@@@@@@@@")
@@ -169,7 +257,7 @@ def score(input_file_score_1, input_file_score_2, debug):
             cnt += 1
         # p_score.append((i, p_ig_total + p_g[i]))
         average_gap = 0 if len(group_distance) == 0 else average(np.array(group_distance))
-        p_score.append((i, round(p_ig_total,4), round(average_gap,4), round(max_data_weight,4)))
+        p_score.append((i, round(p_ig_total,6), round(average_gap,6), round(max_data_weight,6)))
 
     p_score_final = sorted(p_score, key=lambda x: x[1], reverse=True) 
     path = "/home/eilene/Downloads/"
