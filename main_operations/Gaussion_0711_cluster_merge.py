@@ -58,7 +58,7 @@ def prob(data,avg,sig):
 
 def union_store_data(final_filename,x1,arr_final,data_sum,sequence,data_count,data_count_sum,arr_outliers):
     with open(final_filename,"r") as lines:
-        class_id = 0
+        cluster_id = 0
         flag = False
         for line in lines:
             line = line.split()
@@ -72,11 +72,11 @@ def union_store_data(final_filename,x1,arr_final,data_sum,sequence,data_count,da
                     #     continue
                     data_temp.append(x1[i])
                     data_sum.append(x1[i])
-                    arr_final.append(class_id)
+                    arr_final.append(cluster_id)
                     sequence.append(i)
                     flag = True        
             if flag == True:
-                class_id += 1
+                cluster_id += 1
             if len(data_temp) == 0:
                 continue
             data_count.append(len(data_temp))          
@@ -646,7 +646,28 @@ def merge_store_data(data_count_new,data_count_sum,class_belong_new,final_data,a
 #output csv file     
 def store_file(path,x1,y1,gm,data_count_new,class_belong_new,data_count_sum,draw_input,final_data,arr_final,arr_final_draw):        
     #output csv file 
-    if class_belong_new is None:
+    if gm is None:
+        res_dir = os.path.dirname(path)
+        res_path = os.path.join(res_dir, 'result_simple_DBSCAN.csv')
+        res_path2 = os.path.join(res_dir, 'result_middle_simple_DBSCAN.csv')
+        res_path3 = os.path.join(res_dir, 'result_draw_simple_DBSCAN.csv')
+        print(res_path)
+        if os.path.exists(res_path):
+            os.remove(res_path)
+        if os.path.exists(res_path2):
+            os.remove(res_path2)
+        if os.path.exists(res_path3):
+            os.remove(res_path3)
+        # print("x1",len(x1))
+        # print(x1)
+        # print("final_data",len(final_data))
+        # print(final_data)
+        # write_result(res_path, x1, y1, final_data)
+        # write_middle_result(res_path2, data_count_new, class_belong_new, data_count_sum)
+        write_result(res_path, x1, y1, final_data)
+        write_middle_result(res_path2, data_count_new, class_belong_new, data_count_sum)
+        write_draw_input(res_path3, x1, y1, draw_input, 1, arr_final, arr_final_draw)
+    elif class_belong_new is None:
         res_dir = os.path.dirname(path)
         res_path = os.path.join(res_dir, 'result_union.csv')
         res_path2 = os.path.join(res_dir, 'result_middle_union.csv')
@@ -664,6 +685,8 @@ def store_file(path,x1,y1,gm,data_count_new,class_belong_new,data_count_sum,draw
         # print(final_data)
         # write_result(res_path, x1, y1, final_data)
         # write_middle_result(res_path2, data_count_new, class_belong_new, data_count_sum)
+        write_result(res_path, x1, y1, final_data)
+        write_middle_result(res_path2, data_count_new, class_belong_new, data_count_sum)
         write_draw_input(res_path3, x1, y1, draw_input, len(gm.means_), arr_final, arr_final_draw)
     else:
         res_dir = os.path.dirname(path)
@@ -714,11 +737,12 @@ def cluster_and_merge(input_file1, start_axis, end_axis, merge_switch):
             mark_2 = raw_weight.rfind('-')
             num_part1 = float(raw_weight[0:mark_1])
             num_part2 = -int(raw_weight[mark_2 + 1:])
-            # if num_part1 * math.pow(10,num_part2) <= 0.01:
-            data_axis.append(int(line[1])+ 8)
-            num = -math.log10(num_part1 * math.pow(10,num_part2))
+            if num_part1 * math.pow(10,num_part2) <= 0.01:
+                data_axis.append(int(line[1])+ 8)
+                num = -math.log10(num_part1 * math.pow(10,num_part2))
             #original
-            weight.append(num)
+                weight.append(num)
+            #new
             # weight.append(10)
 
     f.close()
@@ -889,6 +913,7 @@ def cluster_and_merge(input_file1, start_axis, end_axis, merge_switch):
         print(len(label_drawing))
         print("----------------")
         draw_input.append(label_drawing)
+        # print(len(value_total))
         # avg_set.append(avg_show)
         # print(label_space[0])
         # print(label_space[-1] + 1)

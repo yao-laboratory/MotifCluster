@@ -92,10 +92,12 @@ def write_result(res_path, x1, y1, final_data):
         csvwrite.writerow(title_head)
         id = 0
         for i in range(len(x1)):
+            class_id = 0
             center_pos= x1[i]
             start_pos = x1[i] - 8
             end_pos = x1[i] + 8 + 1
-            class_id = final_data[i]
+            if final_data is not None:
+                class_id = final_data[i]
             weight = y1[i]
             id += 1
             csvwrite.writerow([id, center_pos, start_pos, end_pos, class_id, weight])
@@ -109,7 +111,9 @@ def write_middle_result(res_path, data_count_new, cluster_belong_new, data_count
         id = 0
         for i in range(len(data_count_new)):
             data_count_new2= data_count_new[i]
-            cluster_belong_new2 = cluster_belong_new[i]
+            cluster_belong_new2 = 0
+            if cluster_belong_new is not None:
+                cluster_belong_new2 = cluster_belong_new[i]
             data_count_sum2 = data_count_sum[i]
             id += 1
             csvwrite.writerow([id, data_count_new2, cluster_belong_new2,data_count_sum2])

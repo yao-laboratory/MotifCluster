@@ -1,8 +1,13 @@
 import numpy as np
+import matplotlib as mpl
 import matplotlib.pyplot as plt
 import math
 import csv,re
 from collections import namedtuple
+
+mpl.rcParams['pdf.fonttype'] = 42
+mpl.rcParams['ps.fonttype'] = 42
+mpl.rcParams['font.family'] = 'Arial'
 
 def draw_rank(final_filename1, final_filename2):
     group_axis_head1 = []
@@ -18,8 +23,8 @@ def draw_rank(final_filename1, final_filename2):
             if id >= 100:
                 break
             row=Row(*r)
-            group_axis_head1.append(int(row[2]))
-            group_axis_tail1.append(int(row[4]))
+            group_axis_head1.append(int(float(row[2])))
+            group_axis_tail1.append(int(float(row[4])))
             id += 1
     with open(final_filename2) as f2:
         f_csv=csv.reader(f2)
@@ -30,8 +35,8 @@ def draw_rank(final_filename1, final_filename2):
             if id >= 100:
                  break
             row=Row(*r)
-            group_axis_head2.append(int(row[2]))
-            group_axis_tail2.append(int(row[4]))
+            group_axis_head2.append(int(float(row[2])))
+            group_axis_tail2.append(int(float(row[4])))
             id += 1
 
     print(len(group_axis_head2))
@@ -70,7 +75,7 @@ def draw_rank(final_filename1, final_filename2):
     # 设置横坐标名称
     ax1.set_xlabel('chr12 p value < 0.001')
     # 设置纵坐标名称
-    ax1.set_ylabel('chr12 p value < 0.01')
+    ax1.set_ylabel('chr12 p value < 0.005')
     # 画散点图
     plt.scatter(x_axis, y_axis, color='b')
     plt.scatter(x_axis, y_axis, marker='o', edgecolors='g', s=20)
@@ -80,6 +85,60 @@ def draw_rank(final_filename1, final_filename2):
     plt.xlim(xmax = 101, xmin = 0)
     plt.ylim(ymax = 102, ymin = 0)
     # 显示
+    plt.savefig('normal_vs_noise_rank.pdf', bbox_inches='tight')
+    plt.show()
+    
+def draw_score_size(final_filename):
+    group_cluster_size = []
+    group_score = []
+    with open(final_filename) as f1:
+        f_csv=csv.reader(f1)
+        headers=next(f_csv)
+        Row=namedtuple('Row',headers)
+        id = 0
+        for r in f_csv:
+            if id >= 100:
+                break
+            row=Row(*r)
+            group_cluster_size.append(int(row[5]))
+            group_score.append(float(row[len(row) -1]))
+            id += 1
+    x = np.arange(1, 101)
+    y1 = group_score
+    print(y1)
+    y2 = group_cluster_size
+    print(y2)
+
+    fig = plt.figure(figsize=[15, 6])
+
+    ax1 = fig.add_subplot(111)
+    fig1 = ax1.plot(x, y1,color="b",label="score")
+    ax1.scatter(x, y1,color='b',s=18)
+    ax1.spines['left'].set_color('b')
+    ax1.spines['left'].set_linewidth(3)
+    ax1.yaxis.label.set_color('b')
+    ax1.set_ylim([0, int(max(group_score))+5])
+    # ax1.scatter(x, y1, marker='o', edgecolors='b', s=20)
+    ax1.set_ylabel('Y values for score')
+    # ax1.set_title("Double Y axis")
+    # ax1.grid(linestyle='--',alpha=0.5)
+
+    ax2 = ax1.twinx()  # this is the important function
+    fig2 = ax2.plot(x, y2, color="r",label="cluster size")
+    ax2.scatter(x, y2, color='r',s=18)
+    ax2.spines['right'].set_color('r')
+    ax2.spines['right'].set_linewidth(3)
+    ax2.yaxis.label.set_color('r')
+    ax2.set_ylim([0, int(max(group_cluster_size))+5])
+    ax2.set_ylabel('Y values for cluster size')
+    ax2.set_xlim([0, 101])
+    ax2.grid(linestyle='--',alpha=0.5)
+
+    ax1.set_xlabel('Same X for score rank id')
+    legends = fig1 + fig2
+    labels = [l.get_label() for l in legends]
+    plt.legend(legends, labels, loc=(0.85, 0.85))
+    plt.savefig('score_size.pdf', bbox_inches='tight')
     plt.show()
  
  

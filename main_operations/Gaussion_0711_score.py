@@ -112,10 +112,10 @@ def score(input_file_0, input_file_score_1, input_file_score_2, debug):
             mark_2 = raw_weight.rfind('-')
             num_part1 = float(raw_weight[0:mark_1])
             num_part2 = -int(raw_weight[mark_2 + 1:])
-            # if num_part1 * math.pow(10,num_part2) <= 0.01:
-            ori_data_axis.append(int(line[1])+ 8)
-            num = -math.log10(num_part1 * math.pow(10,num_part2))
-            ori_weight.append(num)
+            if num_part1 * math.pow(10,num_part2) <= 0.005:
+                ori_data_axis.append(int(line[1])+ 8)
+                num = -math.log10(num_part1 * math.pow(10,num_part2))
+                ori_weight.append(num)
 
     f.close()
     ori_data_weight = np.array(ori_weight)

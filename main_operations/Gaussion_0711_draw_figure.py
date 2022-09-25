@@ -86,6 +86,7 @@ def draw(input_file1, start_axis, end_axis):
     #三种mean值的DBSCAN聚类情况画图
     X_ORIGIN = np.array(data_axis).reshape(len(data_axis), 1)
     value_total = []
+    # Fig,Axes=plt.subplots(global_cluster_num+2,1,sharex='col',sharey='row',figsize=(50,10))
     Fig,Axes=plt.subplots(global_cluster_num+2,1,sharex='col',sharey='row')
     # plt.setp(Axes[12], ylabel='y axis label')
     # for i in range(global_cluster_num+2):

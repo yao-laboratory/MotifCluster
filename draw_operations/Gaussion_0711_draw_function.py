@@ -107,7 +107,7 @@ def draw_figure(data, id, num, x1, y1, Axes):
     # plt.sca(plt.subplot(12,1,num))
     # print(x_outlier)
     # print(x_normal)
-    Axes[num].vlines(x_outlier, 0, y_outlier, colors=group_color_outlier, linestyles='--', label='', data=None) 
+    Axes[num].vlines(x_outlier, 0, y_outlier, colors=group_color_outlier, linestyles='dotted', label='', data=None) 
     Axes[num].vlines(x_normal, 0, y_normal, colors=group_color_normal, linestyles='solid', label='', data=None) 
     # if num == 12:
     #     plt.setp(plt.subplot(12,1,1).get_yticklabels(), fontsize=6)

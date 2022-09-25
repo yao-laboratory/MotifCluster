@@ -19,6 +19,7 @@ from sklearn.cluster import DBSCAN
 from pybedtools import BedTool
 
 from file_operations.Gaussion_0714_files_operation import *
+from main_operations.Gaussion_0711_cluster_merge import union_store_data,store_file
 
 MAXIMUM_DISTANCE = 1000
 SINGLE_POINT = -5
@@ -139,6 +140,7 @@ def cluster_and_merge_simple_dbscan(input_file1, start_axis, end_axis):
         for line in lines:
             line = line.split()
             data_axis.append(int(line[1])+ 8)
+            weight.append(10)
     f.close()
     data_weight = np.array(weight)
 
@@ -178,11 +180,12 @@ def cluster_and_merge_simple_dbscan(input_file1, start_axis, end_axis):
             i0 += 1
 
     x1 = data_axis[label_space[0]:label_space[-1] + 1]
+    y1 = data_weight[label_space[0]:label_space[-1] + 1]
     print("len x1",len(x1))
     # y1 = data_weight[label_space[0]:label_space[-1] + 1]
 
     gc.disable()
-    db_temp = DBSCAN(eps = ave, min_samples = 8).fit(X_ORIGIN, y = None, sample_weight = None)
+    db_temp = DBSCAN(eps = ave, min_samples = 8).fit(X_ORIGIN, y = None, sample_weight = data_weight)
     # gc.enable()
     # print("fffffffffffffff")
     labels = db_temp.labels_
@@ -222,14 +225,14 @@ def cluster_and_merge_simple_dbscan(input_file1, start_axis, end_axis):
         # print(label_values)
         
         # #label value is like [0,3,4,4,6,9]
-        value_total.append(label_values)
-        
-        label_drawing = labels[label_space[0]:label_space[-1]+1]
-        print("----------------")
-        print(label_drawing)
-        print(len(label_drawing))
-        print("----------------")
-        draw_input.append(label_drawing)
+    value_total.append(label_values)
+    
+    label_drawing = labels[label_space[0]:label_space[-1]+1]
+    print("----------------")
+    print(label_drawing)
+    print(len(label_drawing))
+    print("----------------")
+    draw_input.append(label_drawing)
 
     
     # create and open file
@@ -284,58 +287,9 @@ def cluster_and_merge_simple_dbscan(input_file1, start_axis, end_axis):
     # cluster_belong=[]
     data_count=[]
     data_sum=[]
-    # average_distance = []
+    data_count_sum=[]
+    union_store_data(final_filename,x1,arr_final,data_sum,sequence,data_count,data_count_sum,arr_outliers)    
 
-    with open( ,"r") as lines:
-        cluster_id = 0
-        flag = False
-        for line in lines:
-            line = line.split()
-            # print(line)
-            data_temp=[]
-            for i in range(len(x1)):
-                if int(x1[i]) > int(line[2]):
-                    break
-                elif int(x1[i]) >= int(line[1]) and int(x1[i]) <= int(line[2])-1:
-                    # if((len(arr_final) - 1) == i):
-                    #     continue
-                    data_temp.append(x1[i])
-                    data_sum.append(x1[i])
-                    arr_final.append(cluster_id)
-                    sequence.append(i)
-                    flag = True        
-            if flag == True:
-                cluster_id += 1
-            if len(data_temp) == 0:
-                continue
-            data_count.append(len(data_temp))
-            # print(len(data_temp))
-            # print(data_temp)
-
-    f.close()
-    # set_outliers(final_filename,arr_final)
-
-    # print(arr_temp)
-    # x1 = data_axis[number_cnt[0]:number_cnt[-1]+1]
-    # y1 = data_weight[number_cnt[0]:number_cnt[-1]+1]
-    print(sequence)
-    print(arr_final)
-
-    # add outliers
-    # ??????
-    # print(len(x1))
-    # print(sequence)
-    # print(arr_final)
-    # for i in range(len(x1)):
-    #     if i not in sequence:
-    #         arr_final.insert(i,-1)
-    #         arr_outliers.append(i)
-    #         sequence.insert(i,i)
-    #         # cluster_belong.insert(i, -1)
-    #         # data_count.insert(i, 1)
-    #         data_sum.insert(i,x1[i])
-    # print(arr_final)      
-    # print(number_cnt)
     print("*******************************************")
     # print(arr_final)
     print(len(arr_final))
@@ -377,23 +331,24 @@ def cluster_and_merge_simple_dbscan(input_file1, start_axis, end_axis):
   
     #output csv file 
     path = "/home/eilene/Downloads/"
-    res_dir = os.path.dirname(path)
-    # res_path = os.path.join(res_dir, 'result.csv')
-    # res_path2 = os.path.join(res_dir, 'result_middle.csv')
-    res_path3 = os.path.join(res_dir, 'result_draw_single_DBSCAN.csv')
-    print(res_path3)
+    # res_dir = os.path.dirname(path)
+    # res_path = os.path.join(res_dir, 'result_simple_DBSCAN.csv')
+    # res_path2 = os.path.join(res_dir, 'result_middle_simple_DBSCAN.csv')
+    # res_path3 = os.path.join(res_dir, 'result_draw_simple_DBSCAN.csv')
+    # print(res_path3)
     # if os.path.exists(res_path):
     #     os.remove(res_path)
     # if os.path.exists(res_path2):
     #     os.remove(res_path2)
-    if os.path.exists(res_path3):
-        os.remove(res_path3)
+    # if os.path.exists(res_path3):
+    #     os.remove(res_path3)
     # write_result(res_path, x1, y1, final_data)
     # write_middle_result(res_path2, data_count_new, cluster_belong_new, data_count_sum)
     print(len(x1))
-    print(len(draw_input))
+    print(len(draw_input[0]))
     print(len(arr_final))
-    write_draw_input_single_DBSCAN(res_path3, x1, draw_input,arr_final)
+    store_file(path,x1,y1,None,data_count,None,data_count_sum,draw_input,None,arr_final,None)
+    # write_draw_input_single_DBSCAN(res_path3, x1, draw_input[0],arr_final)
     
     # if plot_flag == True:
     #     Gaussion_Draw_function_0705.draw_figure(arr_final_draw,"final_2",12, x1, y1, ax1)  
