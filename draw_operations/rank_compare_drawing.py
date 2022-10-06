@@ -64,10 +64,18 @@ def draw_rank(final_filename1, final_filename2):
             # else:
             #     x_axis.append(i+1)
             #     y_axis.append(101)
+    for i in range(1,101):
+        if i not in y_axis:
+            print(i)
+            y_axis.append(i)
+            x_axis.append(101)
+            # else:
+            #     x_axis.append(i+1)
+            #     y_axis.append(101)
     # draw line
     x_line =np.arange(0,102,1)
     y_line = x_line            
-    fig = plt.figure()
+    fig = plt.figure(figsize=(10,10))
     # 将画图窗口分成1行1列，选择第一块区域作子图
     ax1 = fig.add_subplot(1, 1, 1)
     # 设置标题
@@ -75,15 +83,27 @@ def draw_rank(final_filename1, final_filename2):
     # 设置横坐标名称
     ax1.set_xlabel('chr12 p value < 0.001')
     # 设置纵坐标名称
-    ax1.set_ylabel('chr12 p value < 0.005')
+    ax1.set_ylabel('chr12 p value < 0.01')
     # 画散点图
-    plt.scatter(x_axis, y_axis, color='b')
-    plt.scatter(x_axis, y_axis, marker='o', edgecolors='g', s=20)
+    for i in range(len(x_axis)):
+        if x_axis[i] == 101 and y_axis[i] != 101:
+            # print("aa",x_axis[i], y_axis[i])
+            plt.scatter(x_axis[i], y_axis[i], color='darkblue', s=15)
+            # plt.scatter(x_axis, y_axis, marker='o', edgecolors='g', s=20)
+        elif y_axis[i] == 101 and x_axis[i] != 101:
+            # print("bb",x_axis[i], y_axis[i])
+            plt.scatter(x_axis[i], y_axis[i], color='steelblue', s=15)
+            # plt.scatter(x_axis, y_axis, marker='o', edgecolors='g', s=20)
+        else:
+            # print("cc",x_axis[i], y_axis[i])
+            plt.scatter(x_axis[i], y_axis[i], color='mediumorchid', s=15)
+            
+    # plt.scatter(x_axis, y_axis, marker='o', edgecolors='g', s=20)
     # draw line
-    ax1.plot(x_line, y_line, c='b', ls='--')
+    ax1.plot(x_line, y_line, c='brown', ls='--')
     # 调整横坐标的上下界
-    plt.xlim(xmax = 101, xmin = 0)
-    plt.ylim(ymax = 102, ymin = 0)
+    plt.xlim(xmax = 103, xmin = 0)
+    plt.ylim(ymax = 103, ymin = 0)
     # 显示
     plt.savefig('normal_vs_noise_rank.pdf', bbox_inches='tight')
     plt.show()
