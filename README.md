@@ -66,13 +66,13 @@ a result_score file
 score_size.pdf 
 ## function4:
 ### description:
-* This function can draw the process of cluster distribution with weights in this area
+* This function can draw the number of the clusters in each class.
 ### input:
-a result_draw file
+a result_cluster_weight.csv file
 ### command example:
-    python3 Gaussion_0711_main.py draw -input new_files/new_csv_files/result_draw.csv -start 6717000  -end 6724000
+    python3 Gaussion_0711_main.py draw_cluster_weight -input new_files/new_csv_files/result_cluster_weightcsv
 ### output:       
-drawing.pdf  
+png file
   
 
 
