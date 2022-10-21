@@ -83,7 +83,16 @@ built in the program
 ### output:       
 png file
 
-
+## other useful tools
+## function1:
+### description:
+* This function can copy start line to end line from the original file to a new file
+### input:
+bed files in bed_files folder
+### command example:
+    python3 Gaussion_0711_main.py cutting_file -input bed_files/chr12.bed -start 0 -end 1000 -output output.bed
+### output:       
+output.bed
 
 
 
