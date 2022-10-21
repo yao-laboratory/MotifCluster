@@ -30,10 +30,12 @@ and result.csv and result_middle.csv produced by step1
         python3 Gaussion_0711_main.py calculate_score -input0 bed_files/chr12.bed -input1 result.csv -input2 result_middle.csv -debug True
 ### output:       
 each output produces two output files: result_score.csv,  result_cluster_weight.csv    
+* notice: result_score.csv is the final file 
 #### example: result_score.csv 
 <img src="https://user-images.githubusercontent.com/94155451/197212803-ff87d228-dc2e-4a80-a664-e11ab749f87f.png" width=80% height=80%>  <br>
 #### example: result_cluster_weight.csv    
 <img src="https://user-images.githubusercontent.com/94155451/197209239-508e452d-4e9a-42ab-be86-8347005ef6c1.png" width=40% height=40%>  <br>
+
 
 
 
