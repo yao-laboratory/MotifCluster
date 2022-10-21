@@ -95,16 +95,42 @@ bed files in bed_files folder
 output.bed
 
 ## tools for other methods
-## method1:
+## method1:single DBSCAN
 ### description:
-* This function can copy start line to end line from the original file to a new file
+* This function can run the single DBSCAN result
+### input:
+the bed file in bed_files folder, for example: bed_files/chr12.bed  
+### command example:
+    python3 Gaussion_main.py cluster_and_merge_simple_dbscan -input bed_files/chr12.bed -start 6717000 -end 6724000 
+the optional parameters: the -start -end can only process part of the chr12.bed files,  
+if not put this optional parameters, then the whole bed file will be processed
+### output:       
+each output produces three output files: result.csv,  result_middle.csv, result_draw.csv  
+then use the main functions step 2 command can produce the final score result
+## method2:only union without merge and also no weight information used
+### description:
+* This function can run only union without merge and also no weight information used
+### input:
+the bed file in bed_files folder, for example: bed_files/chr12.bed  
+### command example:
+    python3 Gaussion_main.py cluster_and_merge_simple_dbscan -merge_switch close -weight-switch close -input bed_files/chr12.bed -start 6717000 -end 6724000 
+the optional parameters: the -start -end can only process part of the chr12.bed files,  
+if not put this optional parameters, then the whole bed file will be processed
+### output:       
+each output produces three output files: result.csv,  result_middle.csv, result_draw.csv  
+then use the main functions step 2 command can produce the final score result
+## method3:union without merge clusters and with using weight information
+### description:
+* This function can run union without merge clusters and with using weight information
 ### input:
 bed files in bed_files folder
 ### command example:
-    python3 Gaussion_0711_main.py cutting_file -input bed_files/chr12.bed -start 0 -end 1000 -output output.bed
+    python3 Gaussion_main.py cluster_and_merge_simple_dbscan -merge_switch close -weight-switch open -input bed_files/chr12.bed -start 6717000 -end 6724000 
+    the optional parameters: the -start -end can only process part of the chr12.bed files,  
+if not put this optional parameters, then the whole bed file will be processed
 ### output:       
-output.bed
-
+each output produces three output files: result.csv,  result_middle.csv, result_draw.csv  
+then use the main functions step 2 command can produce the final score result
 
 
 
