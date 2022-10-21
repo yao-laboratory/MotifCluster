@@ -73,7 +73,16 @@ a result_cluster_weight.csv file
     python3 Gaussion_0711_main.py draw_cluster_weight -input new_files/new_csv_files/result_cluster_weightcsv
 ### output:       
 png file
-  
+## function5:
+### description:
+* This function can draw the GMM distribution of each class.
+### input:
+built in the program
+### command example:
+    python3 Gaussion_0711_main.py draw_GMM
+### output:       
+png file
+
 
 
 
