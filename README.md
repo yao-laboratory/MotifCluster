@@ -39,6 +39,15 @@ each output produces two output files: result_score.csv,  result_cluster_weight.
 ## drawing functions
 ## function1:
 ### description:
+* This function can draw the process of cluster distribution with weights in this area
+### input:
+a result_draw file
+### command example:
+    python3 Gaussion_0711_main.py draw -input new_files/new_csv_files/result_draw.csv -start 6717000  -end 6724000
+### output:       
+drawing.pdf  
+## function2:
+### description:
 * This function can draw the top 100 score ranking between those two csv files.
 ### input:
 two result_score files
@@ -46,15 +55,6 @@ two result_score files
     python3 Gaussion_0711_main.py draw_rank -input1 new_files/new_csv_files/result_score_chr12.csv -input2 new_files/new_csv_files/result_score_chr12_noise.csv
 ### output:       
 normal_vs_noise_rank.pdf  
-## function2:
-### description:
-* This function can draw in top 100 score ranking clusters, each cluster's the relationship between score and cluster size. 
-### input:
-a result_score file
-### command example:
-    python3 Gaussion_0711_main.py draw_score_size -input new_files/new_csv_files/result_score.csv
-### output:       
-score_size.pdf 
 ## function3:
 ### description:
 * This function can draw in top 100 score ranking clusters, each cluster's the relationship between score and cluster size. 
@@ -63,7 +63,16 @@ a result_score file
 ### command example:
     python3 Gaussion_0711_main.py draw_score_size -input new_files/new_csv_files/result_score.csv
 ### output:       
-score_size.pdf  
+score_size.pdf 
+## function4:
+### description:
+* This function can draw the process of cluster distribution with weights in this area
+### input:
+a result_draw file
+### command example:
+    python3 Gaussion_0711_main.py draw -input new_files/new_csv_files/result_draw.csv -start 6717000  -end 6724000
+### output:       
+drawing.pdf  
   
 
 
