@@ -1,3 +1,4 @@
+
 # MotifCluster
 # Tutorial
 ## Main functions
@@ -35,17 +36,37 @@ each output produces two output files: result_score.csv,  result_cluster_weight.
 <img src="https://user-images.githubusercontent.com/94155451/197212803-ff87d228-dc2e-4a80-a664-e11ab749f87f.png" width=80% height=80%>  <br>
 #### example: result_cluster_weight.csv    
 <img src="https://user-images.githubusercontent.com/94155451/197209239-508e452d-4e9a-42ab-be86-8347005ef6c1.png" width=40% height=40%>  <br>
-## other useful functions
+## drawing functions
 ## function1:
+### description:
+* This function can draw the top 100 score ranking between those two csv files.
 ### input:
-the bed file in bed_files folder, for example: bed_files/chr12.bed  
-
-    chr12	60025	60042	TCCATTCCCTAGAAGGC	-1421	+	MA0752.1	P-value=5.29e-04  
-    chr12	60063	60080	TCCATTCCCTAGAAGGC	-1421	+	MA0752.1	P-value=5.29e-04  
+two result_score files
 ### command example:
     python3 Gaussion_0711_main.py draw_rank -input1 new_files/new_csv_files/result_score_chr12.csv -input2 new_files/new_csv_files/result_score_chr12_noise.csv
 ### output:       
-normal_vs_noise_rank.pdf   
+normal_vs_noise_rank.pdf  
+## function2:
+### description:
+* This function can draw in top 100 score ranking clusters, each cluster's the relationship between score and cluster size. 
+### input:
+a result_score file
+### command example:
+    python3 Gaussion_0711_main.py draw_score_size -input new_files/new_csv_files/result_score.csv
+### output:       
+score_size.pdf 
+## function3:
+### description:
+* This function can draw in top 100 score ranking clusters, each cluster's the relationship between score and cluster size. 
+### input:
+a result_score file
+### command example:
+    python3 Gaussion_0711_main.py draw_score_size -input new_files/new_csv_files/result_score.csv
+### output:       
+score_size.pdf  
+  
+
+
 
 
 
