@@ -1,2 +1,4 @@
 # MotifCluster
-Tutorial
+#Tutorial
+#step0. 
+Input
