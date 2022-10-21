@@ -6,14 +6,14 @@
 ### input:
 the bed file in bed_files folder, for example: bed_files/chr12.bed  
 
-chr12	60025	60042	TCCATTCCCTAGAAGGC	-1421	+	MA0752.1	P-value=5.29e-04  
-chr12	60063	60080	TCCATTCCCTAGAAGGC	-1421	+	MA0752.1	P-value=5.29e-04  
+    chr12	60025	60042	TCCATTCCCTAGAAGGC	-1421	+	MA0752.1	P-value=5.29e-04  
+    chr12	60063	60080	TCCATTCCCTAGAAGGC	-1421	+	MA0752.1	P-value=5.29e-04  
 ### command example:
-python3 Gaussion_main.py cluster_and_merge -input bed_files/chr12.bed -merge_switch open  
-or  
-python3 Gaussion_main.py cluster_and_merge -input bed_files/chr12.bed -merge_switch open  -start 6717000 -end 6724000 
+    python3 Gaussion_main.py cluster_and_merge -input bed_files/chr12.bed -merge_switch open  
+
+    python3 Gaussion_main.py cluster_and_merge -input bed_files/chr12.bed -merge_switch open  -start 6717000 -end 6724000 
 Difference between two commands: the -start -end can only process part of the chr12.bed files
-### output:       
+### *  output:       
 each output produces three output files: result.csv,  result_middle.csv, result_draw.csv      
 ### example: result_union.csv 
 ![image](https://user-images.githubusercontent.com/94155451/197208679-74be634f-5a80-46e6-a7c3-a0cbd648ce14.png)
