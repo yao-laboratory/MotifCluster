@@ -83,7 +83,7 @@ built in the program
 ### output:       
 png file
 
-## other useful tools
+## Other useful tools
 ## function1:
 ### description:
 * This function can copy start line to end line from the original file to a new file
@@ -94,8 +94,8 @@ bed files in bed_files folder
 ### output:       
 output.bed
 
-# Tools for other methods
-## Method 1:  single DBSCAN
+## Tools for other methods
+### Method 1:  single DBSCAN
 ### description:
 * This function can run the single DBSCAN result
 ### input:
@@ -107,7 +107,7 @@ if not put this optional parameters, then the whole bed file will be processed
 ### output:       
 each output produces three output files: result.csv,  result_middle.csv, result_draw.csv  
 then use the main functions step 2 command can produce the final score result
-## method 2:  only union without merge and also no weight information used
+### Method 2:  only union without merge and also no weight information used
 ### description:
 * This function can run only union without merge and also no weight information used
 ### input:
@@ -119,7 +119,7 @@ if not put this optional parameters, then the whole bed file will be processed
 ### output:       
 each output produces three output files: result.csv,  result_middle.csv, result_draw.csv  
 then use the main functions step 2 command can produce the final score result
-## method 3:  union without merge clusters and with using weight information
+### Method 3:  union without merge clusters and with using weight information
 ### description:
 * This function can run union without merge clusters and with using weight information
 ### input:
