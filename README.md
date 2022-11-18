@@ -2,7 +2,7 @@
 # MotifCluster
 # Tutorial
 ## Main functions
-## step1
+## step1:
 
 ### input:
 the bed file in bed_files folder, for example: bed_files/chr12.bed  
@@ -23,7 +23,7 @@ each output produces three output files: result.csv,  result_middle.csv, result_
 #### result_draw_union.csv  
 <img src="https://user-images.githubusercontent.com/94155451/197209514-eb137d8a-7659-4c08-9d22-cd6398b332c3.png" width=120% height=120%>    
 
-## step2
+## step2:
 ### input:
 the bed file in bed_files folder, for example: bed_files/chr12.bed  
 and result.csv and result_middle.csv produced by step1
