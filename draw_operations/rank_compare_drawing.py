@@ -45,8 +45,6 @@ def draw_rank(final_filename1, final_filename2):
     flag = False
     for i in range(len(group_axis_head1)):
         for j in range(len(group_axis_head2)):
-            # if group_axis_head2[j] > group_axis_tail1[i]:
-            #     break
             temp_count = 0
             temp_place = group_axis_head2[j]
             while temp_place < group_axis_tail2[j]:
@@ -61,50 +59,38 @@ def draw_rank(final_filename1, final_filename2):
             print(i)
             x_axis.append(i)
             y_axis.append(101)
-            # else:
-            #     x_axis.append(i+1)
-            #     y_axis.append(101)
     for i in range(1,101):
         if i not in y_axis:
             print(i)
             y_axis.append(i)
             x_axis.append(101)
-            # else:
-            #     x_axis.append(i+1)
-            #     y_axis.append(101)
     # draw line
     x_line =np.arange(0,102,1)
     y_line = x_line            
     fig = plt.figure(figsize=(10,10))
-    # 将画图窗口分成1行1列，选择第一块区域作子图
+    # split window to the one column, one row, pick the first part
     ax1 = fig.add_subplot(1, 1, 1)
-    # 设置标题
+    # set title
     ax1.set_title('rank')
-    # 设置横坐标名称
+    # set x-axis name
     ax1.set_xlabel('chr12 p value < 0.001')
-    # 设置纵坐标名称
+    # set y-axis name
     ax1.set_ylabel('chr12 p value < 0.01')
-    # 画散点图
+    # draw plots
     for i in range(len(x_axis)):
         if x_axis[i] == 101 and y_axis[i] != 101:
-            # print("aa",x_axis[i], y_axis[i])
             plt.scatter(x_axis[i], y_axis[i], color='darkblue', s=15)
-            # plt.scatter(x_axis, y_axis, marker='o', edgecolors='g', s=20)
         elif y_axis[i] == 101 and x_axis[i] != 101:
-            # print("bb",x_axis[i], y_axis[i])
             plt.scatter(x_axis[i], y_axis[i], color='steelblue', s=15)
-            # plt.scatter(x_axis, y_axis, marker='o', edgecolors='g', s=20)
         else:
-            # print("cc",x_axis[i], y_axis[i])
             plt.scatter(x_axis[i], y_axis[i], color='mediumorchid', s=15)
-            
-    # plt.scatter(x_axis, y_axis, marker='o', edgecolors='g', s=20)
+  
     # draw line
     ax1.plot(x_line, y_line, c='brown', ls='--')
-    # 调整横坐标的上下界
+    # adjust bundaries of x-axis
     plt.xlim(xmax = 103, xmin = 0)
     plt.ylim(ymax = 103, ymin = 0)
-    # 显示
+    # show
     plt.savefig('normal_vs_noise_rank.pdf', bbox_inches='tight')
     plt.show()
     
@@ -138,12 +124,9 @@ def draw_score_size(final_filename):
     ax1.spines['left'].set_linewidth(3)
     ax1.yaxis.label.set_color('b')
     ax1.set_ylim([0, int(max(group_score))+5])
-    # ax1.scatter(x, y1, marker='o', edgecolors='b', s=20)
     ax1.set_ylabel('Y values for score')
-    # ax1.set_title("Double Y axis")
-    # ax1.grid(linestyle='--',alpha=0.5)
-
-    ax2 = ax1.twinx()  # this is the important function
+    # this is the important function
+    ax2 = ax1.twinx()  
     fig2 = ax2.plot(x, y2, color="r",label="cluster size")
     ax2.scatter(x, y2, color='r',s=18)
     ax2.spines['right'].set_color('r')
