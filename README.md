@@ -1,11 +1,26 @@
 
 # MotifCluster
 # Tutorial
-## Main functions
+## Preprocessing functions
 ## step1:
+### input:
+the fimo.tsv file
+
+motif		NC_000001.10	249204897	249204907	-	12	3.32e-05	0.424	GGCTCCAGCTC
+motif		NC_000001.10	249216504	249216514	+	12	3.32e-05	0.424	AGCCTCGGCCT
+### command example:
+python3 main_operations/new_genes_test_step1.py
+### output: 
+sorted bed files, stored directly in the bed_files folder.
+chr1	11703	11713	GGCCCCAGCCC		-		P-value=1.83e-06
+chr1	12383	12393	GGCTTTGGCCC		+		P-value=1.77e-05
+chr1	12979	12989	GGCCTGGGCTC		-		P-value=1e-05
 
 ### input:
-the bed file in bed_files folder, for example: bed_files/chr12.bed  
+## Main functions
+## step1:
+### input:
+the bed file(need sorted bed file) in bed_files folder, for example: bed_files/chr12.bed  
 
     chr12	60025	60042	TCCATTCCCTAGAAGGC	-1421	+	MA0752.1	P-value=5.29e-04  
     chr12	60063	60080	TCCATTCCCTAGAAGGC	-1421	+	MA0752.1	P-value=5.29e-04  
