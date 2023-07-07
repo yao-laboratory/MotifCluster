@@ -61,7 +61,7 @@ a result_draw file
 ### command example:
     python3 MotifCluster_main.py draw -input new_files/new_csv_files/result_draw.csv -start 6717000  -end 6724000
 ### output:  
-<img src="https://github.com/yao-laboratory/MotifCluster/blob/main/output_files/new_figure/figure2_human_chr12_classes.pdf" width=80% height=80%>  <br> 
+<img src="https://github.com/yao-laboratory/MotifCluster/blob/main/output_files/new_figure/Gaussion_select_global_number.png" width=80% height=80%>  <br> 
 ## function2:
 ### description:
 * This function can draw the top 100 score ranking between those two csv files.
