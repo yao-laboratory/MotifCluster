@@ -61,7 +61,7 @@ a result_draw file
 ### command example:
     python3 MotifCluster_main.py draw -input new_files/new_csv_files/result_draw.csv -start 6717000  -end 6724000
 ### output:  
-<img src="https://github.com/yao-laboratory/MotifCluster/blob/main/output_files/new_figure/Gaussion_select_global_number.png" width=80% height=80%>  <br> 
+<img src="https://github.com/yao-laboratory/MotifCluster/blob/main/output_files/example_figures/figure2_human_chr12_classes_function1.png" width=80% height=80%> <br> 
 ## function2:
 ### description:
 * This function can draw the top 100 score ranking between those two csv files.
@@ -70,7 +70,7 @@ two result_score files
 ### command example:
     python3 MotifCluster_main.py draw_rank -input1 new_files/new_csv_files/result_score_chr12.csv -input2 new_files/new_csv_files/result_score_chr12_noise.csv
 ### output:       
-normal_vs_noise_rank.pdf  
+<img src="https://github.com/yao-laboratory/MotifCluster/blob/main/output_files/example_figures/normal_vs_noise_rank_0.01_function2.png" width=80% height=80%> <br> 
 ## function3:
 ### description:
 * This function can draw in top 100 score ranking clusters, each cluster's the relationship between score and cluster size. 
@@ -79,7 +79,7 @@ a result_score file
 ### command example:
     python3 MotifCluster_main.py draw_score_size -input new_files/new_csv_files/result_score.csv
 ### output:       
-score_size.pdf 
+<img src="https://github.com/yao-laboratory/MotifCluster/blob/main/output_files/example_figures/figure2_human_chr12_function3.png" width=80% height=80%>  <br>  
 ## function4:
 ### description:
 * This function can draw the number of clusters in each class.
@@ -88,7 +88,7 @@ a result_cluster_weight.csv file
 ### command example:
     python3 MotifCluster_main.py draw_cluster_weight -input new_files/new_csv_files/result_cluster_weight.csv
 ### output:       
-png file
+<img src="https://github.com/yao-laboratory/MotifCluster/blob/main/output_files/example_figures/chr12_10clusters_weight_function4.png" width=80% height=80%>  <br>  
 ## function5:
 ### description:
 * This function can draw the GMM distribution of each class.
@@ -97,7 +97,7 @@ built in the program
 ### command example:
     python3 MotifCluster_main.py draw_GMM
 ### output:       
-png file
+<img src="https://github.com/yao-laboratory/MotifCluster/blob/main/output_files/example_figures/GMM_draw_function5.png" width=80% height=80%>  <br>  
 
 ## Other useful tools
 ## function1:
@@ -108,7 +108,7 @@ bed files in the bed_files folder
 ### command example:
     python3 MotifCluster_main.py cutting_file -input bed_files/chr12.bed -start 0 -end 1000 -output output.bed
 ### output:       
-output.bed
+the top 1000 line of chr12.bed to output.bed
 
 ## Tools for other methods
 ### Method 1:  single DBSCAN
