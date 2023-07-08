@@ -1,18 +1,34 @@
 
 # MotifCluster
 # Tutorial
-## Main functions
-## step1
+## Preprocessing functions
+## step1:
+### input:
+the fimo.tsv file
+
+    motif		NC_000001.10	249204897	249204907	-	12	3.32e-05	0.424	GGCTCCAGCTC
+    motif		NC_000001.10	249216504	249216514	+	12	3.32e-05	0.424	AGCCTCGGCCT
+### command example:
+    python3 main_operations/new_genes_test_step1.py
+### output: 
+sorted bed files, stored directly in the bed_files folder.
+
+    chr1	11703	11713	GGCCCCAGCCC		-		P-value=1.83e-06
+    chr1	12383	12393	GGCTTTGGCCC		+		P-value=1.77e-05
+    chr1	12979	12989	GGCCTGGGCTC		-		P-value=1e-05
 
 ### input:
-the bed file in bed_files folder, for example: bed_files/chr12.bed  
+## Main functions
+## step1:
+### input:
+the bed file(need sorted bed file) in bed_files folder, for example: bed_files/chr12.bed  
 
     chr12	60025	60042	TCCATTCCCTAGAAGGC	-1421	+	MA0752.1	P-value=5.29e-04  
     chr12	60063	60080	TCCATTCCCTAGAAGGC	-1421	+	MA0752.1	P-value=5.29e-04  
 ### command example:
-    python3 Gaussion_main.py cluster_and_merge -input bed_files/chr12.bed -merge_switch open  
+    python3 MotifCluster_main.py cluster_and_merge -input bed_files/chr12.bed -merge_switch on  
 
-    python3 Gaussion_main.py cluster_and_merge -input bed_files/chr12.bed -merge_switch open  -start 6717000 -end 6724000 
+    python3 MotifCluster_main.py cluster_and_merge -input bed_files/chr12.bed -merge_switch on  -start 6717000 -end 6724000 
 Difference between two commands: the -start -end can only process part of the chr12.bed files
 ### output:       
 each output produces three output files: result.csv,  result_middle.csv, result_draw.csv      
@@ -23,12 +39,12 @@ each output produces three output files: result.csv,  result_middle.csv, result_
 #### result_draw_union.csv  
 <img src="https://user-images.githubusercontent.com/94155451/197209514-eb137d8a-7659-4c08-9d22-cd6398b332c3.png" width=120% height=120%>    
 
-## step2
+## step2:
 ### input:
 the bed file in bed_files folder, for example: bed_files/chr12.bed  
 and result.csv and result_middle.csv produced by step1
 ### command example:
-        python3 Gaussion_0711_main.py calculate_score -input0 bed_files/chr12.bed -input1 result.csv -input2 result_middle.csv -debug True
+        python3 MotifCluster_main.py calculate_score -input0 bed_files/chr12.bed -input1 result.csv -input2 result_middle.csv -debug True
 ### output:       
 each output produces two output files: result_score.csv,  result_cluster_weight.csv    
 * notice: result_score.csv is the final file 
@@ -43,16 +59,16 @@ each output produces two output files: result_score.csv,  result_cluster_weight.
 ### input:
 a result_draw file
 ### command example:
-    python3 Gaussion_0711_main.py draw -input new_files/new_csv_files/result_draw.csv -start 6717000  -end 6724000
-### output:       
-drawing.pdf  
+    python3 MotifCluster_main.py draw -input new_files/new_csv_files/result_draw.csv -start 6717000  -end 6724000
+### output:  
+<img src="https://github.com/yao-laboratory/MotifCluster/blob/main/output_files/new_figure/Gaussion_select_global_number.png" width=80% height=80%>  <br> 
 ## function2:
 ### description:
 * This function can draw the top 100 score ranking between those two csv files.
 ### input:
 two result_score files
 ### command example:
-    python3 Gaussion_0711_main.py draw_rank -input1 new_files/new_csv_files/result_score_chr12.csv -input2 new_files/new_csv_files/result_score_chr12_noise.csv
+    python3 MotifCluster_main.py draw_rank -input1 new_files/new_csv_files/result_score_chr12.csv -input2 new_files/new_csv_files/result_score_chr12_noise.csv
 ### output:       
 normal_vs_noise_rank.pdf  
 ## function3:
@@ -61,16 +77,16 @@ normal_vs_noise_rank.pdf
 ### input:
 a result_score file
 ### command example:
-    python3 Gaussion_0711_main.py draw_score_size -input new_files/new_csv_files/result_score.csv
+    python3 MotifCluster_main.py draw_score_size -input new_files/new_csv_files/result_score.csv
 ### output:       
 score_size.pdf 
 ## function4:
 ### description:
-* This function can draw the number of the clusters in each class.
+* This function can draw the number of clusters in each class.
 ### input:
 a result_cluster_weight.csv file
 ### command example:
-    python3 Gaussion_0711_main.py draw_cluster_weight -input new_files/new_csv_files/result_cluster_weightcsv
+    python3 MotifCluster_main.py draw_cluster_weight -input new_files/new_csv_files/result_cluster_weight.csv
 ### output:       
 png file
 ## function5:
@@ -79,59 +95,70 @@ png file
 ### input:
 built in the program
 ### command example:
-    python3 Gaussion_0711_main.py draw_GMM
+    python3 MotifCluster_main.py draw_GMM
 ### output:       
 png file
 
-## other useful tools
+## Other useful tools
 ## function1:
 ### description:
-* This function can copy start line to end line from the original file to a new file
+* This function can copy the start line to the end line from the original file to a new file
 ### input:
-bed files in bed_files folder
+bed files in the bed_files folder
 ### command example:
-    python3 Gaussion_0711_main.py cutting_file -input bed_files/chr12.bed -start 0 -end 1000 -output output.bed
+    python3 MotifCluster_main.py cutting_file -input bed_files/chr12.bed -start 0 -end 1000 -output output.bed
 ### output:       
 output.bed
 
-## tools for other methods
-## method1:single DBSCAN
+## Tools for other methods
+### Method 1:  single DBSCAN
 ### description:
 * This function can run the single DBSCAN result
 ### input:
 the bed file in bed_files folder, for example: bed_files/chr12.bed  
 ### command example:
-    python3 Gaussion_main.py cluster_and_merge_simple_dbscan -input bed_files/chr12.bed -start 6717000 -end 6724000 
+    python3 MotifCluster_main.py cluster_and_merge_simple_dbscan -input bed_files/chr12.bed -start 6717000 -end 6724000 
 the optional parameters: the -start -end can only process part of the chr12.bed files,  
-if not put this optional parameters, then the whole bed file will be processed
+if not put this optional parameter, then the whole bed file will be processed
 ### output:       
 each output produces three output files: result.csv,  result_middle.csv, result_draw.csv  
 then use the main functions step 2 command can produce the final score result
-## method2:only union without merge and also no weight information used
+### Method 2:  only union without merge and also no weight information used
 ### description:
 * This function can run only union without merge and also no weight information used
 ### input:
 the bed file in bed_files folder, for example: bed_files/chr12.bed  
 ### command example:
-    python3 Gaussion_main.py cluster_and_merge_simple_dbscan -merge_switch close -weight-switch close -input bed_files/chr12.bed -start 6717000 -end 6724000 
+    python3 MotifCluster_main.py cluster_and_merge_simple_dbscan -merge_switch off -weight-switch off -input bed_files/chr12.bed -start 6717000 -end 6724000 
 the optional parameters: the -start -end can only process part of the chr12.bed files,  
-if not put this optional parameters, then the whole bed file will be processed
+if not put this optional parameter, then the whole bed file will be processed
 ### output:       
 each output produces three output files: result.csv,  result_middle.csv, result_draw.csv  
 then use the main functions step 2 command can produce the final score result
-## method3:union without merge clusters and with using weight information
+### Method 3:  union without merge clusters and with using weight information
 ### description:
-* This function can run union without merge clusters and with using weight information
+* This function can run union without merging clusters and by using weight information
 ### input:
 bed files in bed_files folder
 ### command example:
-    python3 Gaussion_main.py cluster_and_merge_simple_dbscan -merge_switch close -weight-switch open -input bed_files/chr12.bed -start 6717000 -end 6724000 
+    python3 MotifCluster_main.py cluster_and_merge_simple_dbscan -merge_switch off -weight-switch on -input bed_files/chr12.bed -start 6717000 -end 6724000 
     the optional parameters: the -start -end can only process part of the chr12.bed files,  
-if not put this optional parameters, then the whole bed file will be processed
+if not put this optional parameter, then the whole bed file will be processed
 ### output:       
 each output produces three output files: result.csv,  result_middle.csv, result_draw.csv  
 then use the main functions step 2 command can produce the final score result
-
+### Method 4:  union and merge clusters but no weight information used
+### description:
+* This function can run union and merge clusters but without using weight information
+### input:
+bed files in bed_files folder
+### command example:
+    python3 MotifCluster_main.py cluster_and_merge_simple_dbscan -merge_switch on -weight-switch off -input bed_files/chr12.bed -start 6717000 -end 6724000 
+    the optional parameters: the -start -end can only process part of the chr12.bed files,  
+if not put this optional parameter, then the whole bed file will be processed
+### output:       
+each output produces three output files: result.csv,  result_middle.csv, result_draw.csv  
+then use the main functions step 2 command can produce the final score result
 
 
 
