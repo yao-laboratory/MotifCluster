@@ -16,8 +16,8 @@
 ### 3rd step: install packages
 
     conda install python="3.9.10"
-    conda install --file required_packages/requirements_conda.txt
-    pip install -r required_packages/requirements_pip.txt
+    conda install --file installation_packages/requirements_conda.txt
+    pip install -r installation_packages/requirements_pip.txt
 
 ## Preprocessing functions
 ## step1:
