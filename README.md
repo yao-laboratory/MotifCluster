@@ -2,22 +2,22 @@
 # MotifCluster
 # Tutorial
 ## Installation instructions
-###first step: create a new conda environment
+### 1st step: create a new conda environment
 
-conda create -n motifcluster
+    conda create -n motifcluster
 
-###second step: check channels:(using conda config --show channels)
-####if not have either of them:defaults/bioconda/conda-forge, please use the following instructions to add channels.
+### 2nd step: check channels:(using conda config --show channels)
+#### If not have either of them:(defaults/bioconda/conda-forge), please use the following instructions to add channels.
 
-conda config --add channels defaults 
-conda config --add channels bioconda 
-conda config --add channels conda-forge
+    conda config --add channels defaults 
+    conda config --add channels bioconda 
+    conda config --add channels conda-forge
 
-###third step: install packages
+### 3rd step: install packages
 
-conda install python="3.9.10"
-conda install --file required_packages/requirements_conda.txt
-pip install -r required_packages/requirements_pip.txt
+    conda install python="3.9.10"
+    conda install --file required_packages/requirements_conda.txt
+    pip install -r required_packages/requirements_pip.txt
 
 ## Preprocessing functions
 ## step1:
