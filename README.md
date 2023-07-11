@@ -20,7 +20,6 @@
     pip install -r installation_packages/requirements_pip.txt
 
 ## Preprocessing functions
-## step1:
 ### input:
 the fimo.tsv file
 
@@ -35,7 +34,6 @@ sorted bed files, stored directly in the bed_files folder.
     chr1	12383	12393	GGCTTTGGCCC		+		P-value=1.77e-05
     chr1	12979	12989	GGCCTGGGCTC		-		P-value=1e-05
 
-### input:
 ## Main functions
 ## step1:
 ### input:
