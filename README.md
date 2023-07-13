@@ -70,7 +70,9 @@ each output produces two output files: result_score.csv,  result_cluster_weight.
 #### example: result_score.csv 
 <img src="https://user-images.githubusercontent.com/94155451/197212803-ff87d228-dc2e-4a80-a664-e11ab749f87f.png" width=80% height=80%>  <br>
 #### example: result_cluster_weight.csv    
-<img src="https://user-images.githubusercontent.com/94155451/197209239-508e452d-4e9a-42ab-be86-8347005ef6c1.png" width=40% height=40%>  <br>
+![20230713122142](https://github.com/yao-laboratory/MotifCluster/assets/94155451/b0dc493b-bc6f-4d3b-8e5e-caa972909574)
+
+
 ## drawing functions
 ## function1:
 ### description:
