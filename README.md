@@ -4,8 +4,9 @@
 ## Installation instructions
 ### (Note: need to install in Linux environment, and has been tested working in Ubuntu 20.04.6 LTS System)
 ### step1: 
-#### create a new conda environment
-
+#### Download code and create a new conda environment
+    git clone https://github.com/yao-laboratory/MotifCluster.git (you will download MC_package folder)
+    cd MC_package/
     conda create -n motifcluster
 
 ### step2: 
@@ -18,7 +19,7 @@
     conda config --add channels conda-forge
 
 ### step3: 
-#### install packages
+#### install packages (located: MC_package/installation_packages)
 
     conda install python="3.9.10"
     pip install -r installation_packages/requirements_pip.txt
@@ -55,27 +56,27 @@ sorted bed files, stored directly in the bed_files folder.
      -end   NUM          NUM: the end position of  processing this input bed file
 
 ### input:
-the bed file (here needs sorted bed file) in input_files folder (which located in the Motif_Cluster folder),         
-you should put any sorted bed files you wanna test to this input_files folder when using this command.     
-the following example: chr12.bed default in input_files folder,     
+The bed file (here needs sorted bed file) in input_files folder (located: MC_package/Motif_Cluster/input_files);         
+You should put any sorted bed files you wanna test this input_files folder when using this command.     
+The following example: human_chr12_origin.bed default in input_files folder shown as below:     
 
     chr12	60025	60042	TCCATTCCCTAGAAGGC	-1421	+	MA0752.1	P-value=5.29e-04  
     chr12	60063	60080	TCCATTCCCTAGAAGGC	-1421	+	MA0752.1	P-value=5.29e-04  
     ...
 ### command example:
-    python3 MotifCluster/MotifCluster.py cluster_and_merge -input chr12.bed -merge_switch on  -output_folder example_output
+    python3 MotifCluster/MotifCluster.py cluster_and_merge -input human_chr12_origin.bed -merge_switch on  -output_folder example_final_output
 
-    python3 MotifCluster/MotifCluster.py cluster_and_merge -input chr12.bed -merge_switch on  -output_folder example_output -start 6717000 -end 6724000 
+    python3 MotifCluster/MotifCluster.py cluster_and_merge -input human_chr12_origin.bed -merge_switch on  -output_folder example_output -start 6717000 -end 6724000 
     
 Difference between two commands: the -start -end can only process part of the chr12.bed files
 ### output:       
-store the output files in the folder you specified by -output_folder parameter, here is 'example_output' folder
-middle processing files:
-n+1 middle files: n is class number, 1,2,...,n.bdg, total.bdg
-final files:
-3 output files: result.csv,  result_middle.csv, result_draw.csv  
-#### result_union.csv 
-
+Store the output files in the folder you specified by -output_folder parameter, in this example is 'example_final_output' folder    
+    
+automatically produced Middle processing files(users don't need to use) and their folder example_middle_output (located: MC_package/example_middle_output):        
+n+1+3 middle files: n is class number, 1,2,...,n.bdg, total.bdg, GMM_covariances.npy,GMM_means.npy,GMM_weights.npy        
+    
+Final files in example_final_output folder (located: MC_package/example_final_output):        
+3 output files: result.csv,  result_middle.csv, result_draw.csv    
 #### result_union.csv    
 <img src="https://user-images.githubusercontent.com/94155451/197208679-74be634f-5a80-46e6-a7c3-a0cbd648ce14.png" width=40% height=40%>  <br>
 #### result_middle_union.csv    
