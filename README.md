@@ -2,6 +2,7 @@
 # MotifCluster
 # Tutorial
 ## Installation instructions
+###(need to install in linux environment)
 ### step1: 
 #### create a new conda environment
 
@@ -11,6 +12,7 @@
 #### check channels:(command: conda config --show channels)
 #### If not have either of them:(defaults/bioconda/conda-forge), please use the following instructions to add channels.
 
+    conda activate motifcluster
     conda config --add channels defaults 
     conda config --add channels bioconda 
     conda config --add channels conda-forge
