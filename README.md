@@ -41,18 +41,39 @@ sorted bed files, stored directly in the bed_files folder.
 
 ## Main functions
 ## step1:
+### overview
+
+     usage: python3 MotifCluster/MotifCluster.py -merge_switch -output_folder [-start -end]
+    
+     required arguments: 
+     -merge_switch STATUS,   STATUS=on or off,
+                                    on: run the program including merge step, off: run the program without including merge step
+     -output_folder FOLDER,  FOLDER: your customized output folder name
+    
+     optional arguments:
+     -start NUM          NUM: the start position of processing this input bed file 
+     -end   NUM          NUM: the end position of  processing this input bed file
+
 ### input:
-the bed file(need sorted bed file) in bed_files folder, for example: bed_files/chr12.bed  
+the bed file (here needs sorted bed file) in input_files folder (which located in the Motif_Cluster folder), for example: input_files/chr12.bed, you can put any sorted bed files in the input_files folder when using this command. 
 
     chr12	60025	60042	TCCATTCCCTAGAAGGC	-1421	+	MA0752.1	P-value=5.29e-04  
     chr12	60063	60080	TCCATTCCCTAGAAGGC	-1421	+	MA0752.1	P-value=5.29e-04  
+    ...
 ### command example:
-    python3 MotifCluster_main.py cluster_and_merge -input bed_files/chr12.bed -merge_switch on  
+    python3 MotifCluster/MotifCluster.py cluster_and_merge -input input_files/chr12.bed -merge_switch on  -output_folder example_output
 
-    python3 MotifCluster_main.py cluster_and_merge -input bed_files/chr12.bed -merge_switch on  -start 6717000 -end 6724000 
+    python3 MotifCluster/MotifCluster.py cluster_and_merge -input input_files/chr12.bed -merge_switch on  -start 6717000 -end 6724000 
+    
 Difference between two commands: the -start -end can only process part of the chr12.bed files
 ### output:       
-each output produces three output files: result.csv,  result_middle.csv, result_draw.csv      
+store the output files in the folder you specified by -output_folder parameter, here is 'example_output' folder
+middle processing files:
+n+1 middle files: n is class number, 1,2,...,n.bdg, total.bdg
+final files:
+3 output files: result.csv,  result_middle.csv, result_draw.csv  
+#### result_union.csv 
+
 #### result_union.csv    
 <img src="https://user-images.githubusercontent.com/94155451/197208679-74be634f-5a80-46e6-a7c3-a0cbd648ce14.png" width=40% height=40%>  <br>
 #### result_middle_union.csv    
