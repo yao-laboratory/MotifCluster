@@ -2,7 +2,7 @@
 # MotifCluster
 # Tutorial
 ## Installation instructions
-### (need to install in Linux environment, and has been tested in Ubuntu 20.04.6 LTS System)
+### (Note: need to install in Linux environment, and has been tested working in Ubuntu 20.04.6 LTS System)
 ### step1: 
 #### create a new conda environment
 
@@ -46,8 +46,8 @@ sorted bed files, stored directly in the bed_files folder.
      usage: python3 MotifCluster/MotifCluster.py -merge_switch -output_folder [-start -end]
     
      required arguments: 
-     -merge_switch STATUS,   STATUS=on or off,
-                                    on: run the program including merge step, off: run the program without including merge step
+     -merge_switch STATUS,   STATUS: on or off,
+                                     on: run the program including merge step, off: run the program without including merge step
      -output_folder FOLDER,  FOLDER: your customized output folder name
     
      optional arguments:
@@ -55,15 +55,17 @@ sorted bed files, stored directly in the bed_files folder.
      -end   NUM          NUM: the end position of  processing this input bed file
 
 ### input:
-the bed file (here needs sorted bed file) in input_files folder (which located in the Motif_Cluster folder), for example: input_files/chr12.bed, you can put any sorted bed files in the input_files folder when using this command. 
+the bed file (here needs sorted bed file) in input_files folder (which located in the Motif_Cluster folder),         
+you should put any sorted bed files you wanna test to this input_files folder when using this command.     
+the following example: chr12.bed default in input_files folder,     
 
     chr12	60025	60042	TCCATTCCCTAGAAGGC	-1421	+	MA0752.1	P-value=5.29e-04  
     chr12	60063	60080	TCCATTCCCTAGAAGGC	-1421	+	MA0752.1	P-value=5.29e-04  
     ...
 ### command example:
-    python3 MotifCluster/MotifCluster.py cluster_and_merge -input input_files/chr12.bed -merge_switch on  -output_folder example_output
+    python3 MotifCluster/MotifCluster.py cluster_and_merge -input chr12.bed -merge_switch on  -output_folder example_output
 
-    python3 MotifCluster/MotifCluster.py cluster_and_merge -input input_files/chr12.bed -merge_switch on  -start 6717000 -end 6724000 
+    python3 MotifCluster/MotifCluster.py cluster_and_merge -input chr12.bed -merge_switch on  -output_folder example_output -start 6717000 -end 6724000 
     
 Difference between two commands: the -start -end can only process part of the chr12.bed files
 ### output:       
