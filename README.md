@@ -79,12 +79,14 @@ produce sorted bed file, stored directly in the input_files folder. eg. sorted_c
      -end   NUM               NUM: the end position of  processing this input bed file
 ```
 ### input:
-```
-The bed file (here needs sorted bed file, if fimo.tsv file, can use above "Preprocessing functions"
-input parameters: -merge_switch,-weight_switch,-output_folder (explained in overview)
-```
-Note:You should put any sorted bed files you wanna test in this input_files folder when using this command.         
-The following example: human_chr12_origin.bed default in input_files folder shown as below:     
+
+#### input file: 
+The bed file (sorted bed file, if fimo.tsv, can use above "Preprocessing functions" to change.
+#### input parameters:     
+-merge_switch,-weight_switch,-output_folder (explained in overview)
+#### Note: You should put any sorted bed files you wanna test in this input_files folder when using this command. 
+
+#### The following example: human_chr12_origin.bed default in input_files folder shown as below:     
 
     chr12	60025	60042	TCCATTCCCTAGAAGGC	-1421	+	MA0752.1	P-value=5.29e-04  
     chr12	60063	60080	TCCATTCCCTAGAAGGC	-1421	+	MA0752.1	P-value=5.29e-04  
@@ -94,21 +96,22 @@ The following example: human_chr12_origin.bed default in input_files folder show
     python3 MotifCluster/MotifCluster.py cluster_and_merge -input human_chr12_origin.bed -merge_switch on  -weight_switch on -output_folder example_output_step1_1
     python3 MotifCluster/MotifCluster.py cluster_and_merge -input human_chr12_origin.bed -merge_switch on  -weight_switch on -output_folder example_output_step1_2 -start 6716000 -end 6724000 
 ```    
-Difference between two commands: the -start -end can only process part of the chr12.bed files
+#### Difference between two commands: 
+the -start -end can only process part of the chr12.bed files
 ### output:       
-Store the output files in the folder you specified by -output_folder parameter,     
-in this example is 'example_output_step1_1/2' folder(located: MC_package/example_output_step1_1/2)   
+#### Store the output files in the folder you specified by -output_folder parameter,     
+#### in this example is 'example_output_step1_1/2' folder(located: MC_package/example_output_step1_1/2)   
     
-automatically produced Middle processing files(users don't need to use),their folder example_middle_output (located: MC_package/example_middle_output):  
+#### automatically produced Middle processing files(users don't need to use),their folder example_middle_output (located: MC_package/example_middle_output): 
+#### (Note: do not change cause it is the middle processing result and it will update by themselves.)
+including files: n+1+3 middle files: n is class number
 ```
-    including files: n+1+3 middle files:
-    n is class number, 1,2,...,n.bdg, total.bdg,
-    GMM_covariances.npy,GMM_means.npy,GMM_weights.npy
-    (Note: do not change cause it is the middle processing result and it will update by themselves.)
+     1,2,...,n.bdg, total.bdg,
+     GMM_covariances.npy,GMM_means.npy,GMM_weights.npy
 ```    
-Final files in example_final_output folder (located: MC_package/example_output_step1_1):
+#### Final files in example_final_output folder (located: MC_package/example_output_step1_1):
+3 output files:
 ```
-    3 output files:
     result.csv,  result_middle.csv, result_draw.csv
 ```  
 #### result_union.csv    
