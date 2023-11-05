@@ -1,4 +1,3 @@
-
 # MotifCluster
 # Tutorial
 ## Installation instructions
@@ -26,57 +25,70 @@
     conda install --file installation_packages/requirements_conda.txt
 
 ## Preprocessing functions
+### overview    
+     usage: python3 MotifCluster/MotifCluster.py pre_process -input_name -output_name -chrome
+    
+     required arguments: 
+     -input_name FILENAME,   FILENAME: your input file name, the file should be put into the input_files folder. (located: MC_package/Motif_Cluster/input_files)    
+     -output_name FILENAME,  FILENAME: your customized output file name, the file automatically put into the input_files folder.
+     -chrome CHROME,         CHROME: chrome name in the bed file, eg.chr16
+
 ### input:
-the fimo.tsv file
-
-    motif		NC_000001.10	249204897	249204907	-	12	3.32e-05	0.424	GGCTCCAGCTC
-    motif		NC_000001.10	249216504	249216514	+	12	3.32e-05	0.424	AGCCTCGGCCT
+input file: eg.fimo.tsv, input parameter: chrome name.
+eg. chr16 's fimo.tsv file:       
+    motif_id	motif_alt_id	sequence_name	start	stop	strand	score	p-value	q-value	matched_sequence
+    motif		NC_000016.9	122369	122379	+	12.8	1.53e-07	0.0699	GGCCCCGGCCC
+    motif		NC_000016.9	122375	122385	+	12.8	1.53e-07	0.0699	GGCCCCGGCCC
+    motif		NC_000016.9	188276	188286	-	12.8	1.53e-07	0.0699	GGCCCCGGCCCT
 ### command example:
-    python3 main_operations/new_genes_test_step1.py
+    python3 MotifCluster/MotifCluster.py pre_process -input_name fimo_chr16.tsv -output_name sorted_chr16.bed -chrome chr16
 ### output: 
-sorted bed files, stored directly in the bed_files folder.
-
-    chr1	11703	11713	GGCCCCAGCCC		-		P-value=1.83e-06
-    chr1	12383	12393	GGCTTTGGCCC		+		P-value=1.77e-05
-    chr1	12979	12989	GGCCTGGGCTC		-		P-value=1e-05
+produce sorted bed file, stored directly in the input_files folder. eg. sorted_chr16.bed:   
+    chr16	61384	61394	GGCCCCAGCCC		-		P-value=1.83e-06
+    chr16	62064	62074	GGCTTTGGCCC		+		P-value=1.77e-05
+    chr16	62660	62670	GGCCTGGGCTC		-		P-value=1e-05
 
 ## Main functions
 ## step1:
 ### overview
-
-     usage: python3 MotifCluster/MotifCluster.py -merge_switch -output_folder [-start -end]
+     usage: python3 MotifCluster/MotifCluster.py cluster_and_merge -input -merge_switch -weight_switch -output_folder [-start -end]
     
      required arguments: 
-     -merge_switch STATUS,   STATUS: on or off,
-                                     on: run the program including merge step, off: run the program without including merge step
-     -output_folder FOLDER,  FOLDER: your customized output folder name
+     -input        FILENAME,  FILENAME: your input file name(Note: sorted bed file),the file should be put into the input_files folder. (located: MC_package/Motif_Cluster/input_files)   
+     -merge_switch STATUS,    STATUS: on or off,
+                                     on: run the program including merge step, off: run the program without including merge step    
+     -weight_switch STATUS,   STATUS: on or off,
+                                     on: run the program including weight information, off: run the program without weight information    
+     -output_folder FOLDER,   FOLDER: your customized output folder name
     
      optional arguments:
      -start NUM          NUM: the start position of processing this input bed file 
      -end   NUM          NUM: the end position of  processing this input bed file
 
 ### input:
-The bed file (here needs sorted bed file) in input_files folder (located: MC_package/Motif_Cluster/input_files);         
-You should put any sorted bed files you wanna test this input_files folder when using this command.     
+The bed file (here needs sorted bed file, if fimo.tsv file, can use above "Preprocessing functions"),  
+input parameters: -merge_switch,-weight_switch,-output_folder (explained in overview)
+Note:You should put any sorted bed files you wanna test in this input_files folder when using this command.         
 The following example: human_chr12_origin.bed default in input_files folder shown as below:     
 
     chr12	60025	60042	TCCATTCCCTAGAAGGC	-1421	+	MA0752.1	P-value=5.29e-04  
     chr12	60063	60080	TCCATTCCCTAGAAGGC	-1421	+	MA0752.1	P-value=5.29e-04  
     ...
 ### command example:
-    python3 MotifCluster/MotifCluster.py cluster_and_merge -input human_chr12_origin.bed -merge_switch on  -output_folder example_final_output
-
-    python3 MotifCluster/MotifCluster.py cluster_and_merge -input human_chr12_origin.bed -merge_switch on  -output_folder example_output -start 6717000 -end 6724000 
+    python3 MotifCluster/MotifCluster.py cluster_and_merge -input human_chr12_origin.bed -merge_switch on  -weight_switch on -output_folder example_output_step1_1
+    python3 MotifCluster/MotifCluster.py cluster_and_merge -input human_chr12_origin.bed -merge_switch on  -weight_switch on -output_folder example_output_step1_2 -start 6716000 -end 6724000 
     
 Difference between two commands: the -start -end can only process part of the chr12.bed files
 ### output:       
-Store the output files in the folder you specified by -output_folder parameter, in this example is 'example_final_output' folder    
+Store the output files in the folder you specified by -output_folder parameter,     
+in this example is 'example_output_step1_1/2' folder(located: MC_package/example_output_step1_1/2)   
     
-automatically produced Middle processing files(users don't need to use) and their folder example_middle_output (located: MC_package/example_middle_output):        
-n+1+3 middle files: n is class number, 1,2,...,n.bdg, total.bdg, GMM_covariances.npy,GMM_means.npy,GMM_weights.npy        
+automatically produced Middle processing files(users don't need to use),their folder example_middle_output (located: MC_package/example_middle_output):            
+    including files: n+1+3 middle files: n is class number, 1,2,...,n.bdg, total.bdg, GMM_covariances.npy,GMM_means.npy,GMM_weights.npy
+    (Note: do not change cause it is the middle processing result and it will update by themselves.)
     
-Final files in example_final_output folder (located: MC_package/example_final_output):        
-3 output files: result.csv,  result_middle.csv, result_draw.csv    
+Final files in example_final_output folder (located: MC_package/example_output_step1_1):        
+    3 output files: result.csv,  result_middle.csv, result_draw.csv    
 #### result_union.csv    
 <img src="https://user-images.githubusercontent.com/94155451/197208679-74be634f-5a80-46e6-a7c3-a0cbd648ce14.png" width=40% height=40%>  <br>
 #### result_middle_union.csv    
