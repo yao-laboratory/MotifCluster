@@ -10,8 +10,10 @@
     conda create -n motifcluster
 ```
 ### step2: 
-#### check channels:(command: conda config --show channels)
-#### If not have either of them:(defaults/bioconda/conda-forge), please use the following instructions to add channels.
+#### check channels:
+(command: conda config --show channels)
+#### If not have either of them:
+(defaults/bioconda/conda-forge), please use the following instructions to add channels.
 ```
     conda activate motifcluster
     conda config --add channels defaults 
@@ -19,14 +21,15 @@
     conda config --add channels conda-forge
 ```
 ### step3: 
-#### install packages (located: MC_package/installation_packages)
+#### Install packages 
+(located: MC_package/installation_packages)
 ```
     conda install python="3.9.10"
     pip install -r installation_packages/requirements_pip.txt
     conda install --file installation_packages/requirements_conda.txt
 ```
 ## Preprocessing functions
-### overview  
+### Overview:  
 ```
      usage: python3 MotifCluster/MotifCluster.py pre_process -input_name -output_name -chrome
     
@@ -37,27 +40,29 @@
                                        put into the input_files folder.
      -chrome CHROME,         CHROME:   chrome name in the bed file, eg.chr16
 ```
-### input:
-input file: eg.fimo.tsv, input parameter: chrome name.
+### Input:
+input file: eg.fimo.tsv, 
+input parameter: 1.chrome name.
+                 2.You can define which folder you wanna put the output results in.
 eg. chr16 's fimo.tsv file:
 ```
-    motif_id	motif_alt_id	sequence_name	start	stop	strand	score	p-value	q-value	matched_sequence
     motif		NC_000016.9	122369	122379	+	12.8	1.53e-07	0.0699	GGCCCCGGCCC
     motif		NC_000016.9	122375	122385	+	12.8	1.53e-07	0.0699	GGCCCCGGCCC
     motif		NC_000016.9	188276	188286	-	12.8	1.53e-07	0.0699	GGCCCCGGCCCT
 ```
-### command example:
+### Command example:
     python3 MotifCluster/MotifCluster.py pre_process -input_name fimo_chr16.tsv -output_name sorted_chr16.bed -chrome chr16
-### output: 
+### Output: 
 produce sorted bed file, stored directly in the input_files folder. eg. sorted_chr16.bed:   
 ```
     chr16	61384	61394	GGCCCCAGCCC		-		P-value=1.83e-06
     chr16	62064	62074	GGCTTTGGCCC		+		P-value=1.77e-05
     chr16	62660	62670	GGCCTGGGCTC		-		P-value=1e-05
 ```
-## Main functions
-## step1:
-### overview
+## MotifCluster Method
+### (Note: When wanna get final score file, need to execute step1, then step2. Don't execute other commands between them)
+## Step1:
+### Overview:
 ```
      usage: python3 MotifCluster/MotifCluster.py cluster_and_merge
                     -input -merge_switch -weight_switch -output_folder [-start -end]
@@ -78,172 +83,351 @@ produce sorted bed file, stored directly in the input_files folder. eg. sorted_c
      -start NUM               NUM: the start position of processing this input bed file 
      -end   NUM               NUM: the end position of  processing this input bed file
 ```
-### input:
-
-#### input file: 
-The bed file (sorted bed file, if fimo.tsv, can use above "Preprocessing functions" to change.
-#### input parameters:     
--merge_switch,-weight_switch,-output_folder (explained in overview)
+### Input:
+Input file: The bed file (sorted bed file, if fimo.tsv, can use above "Preprocessing functions" to change.    
+Input parameters:     '-merge_switch', '-weight_switch' ,'-output_folder' (explained in overview). You can define which folder you wanna put the output results in.
 #### Note: You should put any sorted bed files you wanna test in this input_files folder when using this command. 
 
-#### The following example: human_chr12_origin.bed default in input_files folder shown as below:     
+human_chr12_origin.bed default in input_files folder shown as below:     
 
     chr12	60025	60042	TCCATTCCCTAGAAGGC	-1421	+	MA0752.1	P-value=5.29e-04  
     chr12	60063	60080	TCCATTCCCTAGAAGGC	-1421	+	MA0752.1	P-value=5.29e-04  
     ...
-### command example:
+### Command example:
 ```
     python3 MotifCluster/MotifCluster.py cluster_and_merge -input human_chr12_origin.bed -merge_switch on  -weight_switch on -output_folder example_output_step1_1
     python3 MotifCluster/MotifCluster.py cluster_and_merge -input human_chr12_origin.bed -merge_switch on  -weight_switch on -output_folder example_output_step1_2 -start 6716000 -end 6724000 
 ```    
-#### Difference between two commands: 
-the -start -end can only process part of the chr12.bed files
-### output:       
-#### Store the output files in the folder you specified by -output_folder parameter,     
-#### in this example is 'example_output_step1_1/2' folder(located: MC_package/example_output_step1_1/2)   
+Difference between two commands: the -start -end can only process part of the chr12.bed files.
+### Output:       
+Store the output files in the folder you specified by -output_folder parameter,     
+In this example is 'example_output_step1_1' folder (located: MC_package/example_output_step1_1).       
     
-#### automatically produced Middle processing files(users don't need to use),their folder example_middle_output (located: MC_package/example_middle_output): 
-#### (Note: do not change cause it is the middle processing result and it will update by themselves.)
-including files: n+1+3 middle files: n is class number
+1.Middle processing files:
+Users don't need to use, their folder 'example_middle_output' (located: MC_package/example_middle_output).
+#### (Note: do not change cause it is the middle processing result since useful in step 2 and it will update by itself.)
+Including files: n+1+3 middle files. n is class number.
 ```
      1,2,...,n.bdg, total.bdg,
      GMM_covariances.npy,GMM_means.npy,GMM_weights.npy
 ```    
-#### Final files in example_final_output folder (located: MC_package/example_output_step1_1):
-3 output files:
+2.Final files' examples:
+In 'example_final_output' folder (located: MC_package/example_output_step1_1).        
+#### 3 output files:
+#### result.csv    
 ```
-    result.csv,  result_middle.csv, result_draw.csv
+    id,center_pos,start_pos,end_pos,class_id,weight
+    
+    1,60033,60025,60042,4,3.2765443279648143
+    
+    2,60071,60063,60080,4,3.2765443279648143
+    
+    3,60109,60101,60118,4,3.2765443279648143
+    ...
+``` 
+#### result_middle.csv  
+```
+    id,data_count_new,cluster_belong_new,data_count_sum
+    
+    1,3,4,3
+    
+    2,1,-1,4
+    
+    3,1,-1,5
+    ...
+```
+
+#### result_draw.csv  
+```
+    id,center_pos,weight,draw_input0,draw_input1,draw_input2,draw_input3,draw_input4,draw_input5,draw_input6,draw_input7,draw_input8,draw_input9,arr_final,arr_final_draw
+    
+    0,60033,3.2765443279648143,0,0,0,0,0,0,0,0,0,0,0,0
+    
+    1,60071,3.2765443279648143,0,0,0,0,0,0,0,0,0,0,0,0
+    
+    2,60109,3.2765443279648143,0,0,0,0,0,0,0,0,0,0,0,0
+    ...
 ```  
-#### result_union.csv    
-<img src="https://user-images.githubusercontent.com/94155451/197208679-74be634f-5a80-46e6-a7c3-a0cbd648ce14.png" width=40% height=40%>  <br>
-#### result_middle_union.csv    
-<img src="https://user-images.githubusercontent.com/94155451/197209239-508e452d-4e9a-42ab-be86-8347005ef6c1.png" width=40% height=40%>  <br>
-#### result_draw_union.csv  
-<img src="https://user-images.githubusercontent.com/94155451/197209514-eb137d8a-7659-4c08-9d22-cd6398b332c3.png" width=120% height=120%>    
 
-## step2:
-### input:
-the bed file in bed_files folder, for example: bed_files/chr12.bed  
-and result.csv and result_middle.csv produced by step1
-### command example:
-        python3 MotifCluster_main.py calculate_score -input0 bed_files/chr12.bed -input1 result.csv -input2 result_middle.csv -debug True
-### output:       
-each output produces two output files: result_score.csv,  result_cluster_weight.csv    
-* notice: result_score.csv is the final file 
-#### example: result_score.csv 
-<img src="https://user-images.githubusercontent.com/94155451/197212803-ff87d228-dc2e-4a80-a664-e11ab749f87f.png" width=80% height=80%>  <br>
-#### example: result_cluster_weight.csv    
-![20230713122142](https://github.com/yao-laboratory/MotifCluster/assets/94155451/b0dc493b-bc6f-4d3b-8e5e-caa972909574)
+## Step2:
+### Overview:
+```
+     usage: python3 MotifCluster/MotifCluster.py  calculate_score
+                    -input_bed -input_result -input_middle -weight_switch -output_folder 
+    
+     required arguments: 
+     -input_bed   FILENAME,  FILENAME:  your input file name(Note: step 1's sorted bed file)
+                                        the file should be put into the input_files folder.
+                                        (located: MC_package/Motif_Cluster/input_files)   
+     -input_bed   FILENAME,  FILENAME:  your input file name(Note: result*.csv),
+                                        the file generated in the output file in step1
+                                        (located: MC_package/example_output_step1_1)
+     -input_bed   FILENAME,  FILENAME:  your input file name(Note: result_middle*.csv),
+                                        the file generated in the output file in step1
+                                        (located: MC_package/example_output_step1_1)
+     -weight_switch STATUS,  STATUS:    on or off,
+                                        on: run the program including weight information,
+                                        off: run the program without weight information    
+     -output_folder FOLDER,  FOLDER:    your customized output folder name
 
-
-## drawing functions
-## function1:
-### description:
+```
+### Input:
+Input files:The bed file should use the same one in step 1, and already in input_files folder.    
+result.csv and result_middle.csv produced by step1 in the step1's output folder.    
+Input parameter:'-weight_switch';You can define which folder you wanna put the output results in.
+### Command example:
+         python3 MotifCluster/MotifCluster.py  calculate_score -input_bed human_chr12_origin.bed -input_result example_output_step1_1/result.csv -input_middle example_output_step1_1/result_middle.csv -weight_switch on -output_folder example_output_step1_1
+### Output: 
+In this example，output_folder: example_output_step1_1 (located: MC_package/Motif_Cluster/example_output_step1_1).    
+Each output produces two output files:     
+result_score.csv,  result_cluster_weight.csv. Notice: result_score.csv is the final file. 
+#### 2 output files:
+#### result_score.csv 
+    ```
+    rank_id,start_pos,start_pos_head_axis,end_pos,end_pos_tail_axis,cluster_size,belong_which_class,max_weight,average_gap,score
+    
+    1,96048706,96048698,96049258,96049267,18,4,5.10902,32.470588,80.03299
+    
+    2,6717043,6717035,6717299,6717308,8,4,8.218245,36.571429,60.059913
+    
+    3,82498733,82498725,82499113,82499122,15,4,4.416801,27.142857,45.105223
+    ```
+#### result_cluster_weight.csv    
+    ```
+    ,cluster0,cluster1,cluster2,cluster3,cluster4,cluster5,cluster6,cluster7,cluster8,cluster9,cluster_length0,cluster_length1,cluster_length2,cluster_length3,cluster_length4,cluster_length5,cluster_length6,cluster_length7,cluster_length8,cluster_length9
+    0,3.0,3.0,3.0,3.0,3.0,3.0,3.0,3.0,3.0,3.0,18152,17751,15467,19329,20885,20475,17415,18307,19820,20939
+    1,3.0,3.0,3.0,3.0,3.0,3.0,3.0,3.0,3.0,3.0,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
+    2,3.0,3.0,3.0,3.0,3.0,3.0,3.0,3.0,3.0,3.0,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
+    ```
+## Drawing functions
+## Function1:
+### Description:
 * This function can draw the process of cluster distribution with weights in this area
-### input:
-a result_draw file
-### command example:
-    python3 MotifCluster_main.py draw -input new_files/new_csv_files/result_draw.csv -start 6717000  -end 6724000
-### output:  
+### Overview:
+```
+     usage: python3 MotifCluster/MotifCluster.py draw
+                    -inputbed -inputcsv -method -output_folder [-start] [-end]
+    
+     required arguments:
+     -inputbed   FILENAME,  FILENAME:  your input file name(Note: step 1's sorted bed file)
+                                        the file should be put into the input_files folder.
+                                        (located: MC_package/Motif_Cluster/input_files)   
+     -inputcsv   FILENAME,  FILENAME:  your input file name(Note: result_draw*.csv),
+                                        the file generated in the output file in step1
+                                        (located: MC_package/example_output_step1_1)
+     -method      NUM,        NUM:      The method you use:
+                                        NUM = 1: MotifCluster: with peak intensity, with cluster merge (method d)
+                                        NUM = 2: direct DBSCAN without groups (method a)
+                                        NUM = 3: No peak intensity, no cluster merge (method b1)
+                                        NUM = 4: No peak intensity, with cluster merge (method b2)
+                                        NUM = 5: with peak intensity, no cluster merge (method c)
+     -output_folder FOLDER,  FOLDER:    your customized output folder name
+
+     optional arguments:
+     -start NUM               NUM: the start position of drawing this input bed file 
+     -end   NUM               NUM: the end position of drawing this input bed file
+```
+
+### Input:
+Input files: sorted bed file in step1 still need here, result_draw file generated in the output file in step1
+Input parameter:'-method', You can define which folder you wanna put the output results in,'-start','-end'
+### Command example:
+``` 
+     python3 MotifCluster/MotifCluster.py draw -inputbed human_chr12_origin.bed -inputcsv example_output_step1_1/result_draw.csv -method 1 -output_folder drawing_f1 -start 6716500 -end 6724000
+```
+### Output:  
+1 output file: draw_figure.pdf in the output folder you defined (eg.drawing_f1), located: MC_package/drawing_f1    
 <img src="https://github.com/yao-laboratory/MotifCluster/blob/main/output_files/example_figures/figure2_human_chr12_classes_function1.png" width=80% height=80%> <br> 
-## function2:
-### description:
+
+## Function2:
+### Description:
 * This function can draw the top 100 score ranking between those two csv files.
-### input:
-two result_score files
-### command example:
-    python3 MotifCluster_main.py draw_rank -input1 new_files/new_csv_files/result_score_chr12.csv -input2 new_files/new_csv_files/result_score_chr12_noise.csv
-### output:       
-<img src="https://github.com/yao-laboratory/MotifCluster/blob/main/output_files/example_figures/normal_vs_noise_rank_0.01_function2.png" width=80% height=80%> <br> 
-## function3:
-### description:
-* This function can draw in top 100 score ranking clusters, each cluster's the relationship between score and cluster size. 
-### input:
-a result_score file
-### command example:
-    python3 MotifCluster_main.py draw_score_size -input new_files/new_csv_files/result_score.csv
-### output:       
+### Overview:
+```
+     usage:  python3 MotifCluster/MotifCluster.py draw_rank
+                    -input1 -input2 -output_folder
+    
+     required arguments:
+     -input1       FILENAME,  FILENAME:  your input file name(result_score.csv without noise)
+                                        the file should be put into the input_files folder.
+                                        (located: MC_package/Motif_Cluster/input_files)   
+     -input2       FILENAME,  FILENAME:  your input file name(result_score.csv with noise),
+                                        the file generated in the output file in step1
+                                        (located: MC_package/example_output_step1_1)
+     -output_folder FOLDER,   FOLDER:    your customized output folder name
+```
+### Input:
+two result_score files located: MC_package/Motif_Cluster/input_files, and You can define which folder you wanna put the output results in,'-start','-end'
+### Command example:
+    python3 MotifCluster/MotifCluster.py draw_rank -input1 result_score_chr12.csv -input2 result_score_chr12_half_noise-0.005.csv -output_folder drawing_f2
+	python3 MotifCluster/MotifCluster.py draw_rank -input1 result_score_chr12.csv -input2 result_score_chr12_whole_noise-0.01.csv -output_folder drawing_f2
+### Output:  
+1 output file: normal_vs_noise_rank.pdf in the output folder you defined (eg.drawing_f2), located: MC_package/drawing_f2    
+<img src="https://github.com/yao-laboratory/MotifCluster/blob/main/output_files/example_figures/normal_vs_noise_rank_0.01_function2.png" width=80% height=80%> <br>
+
+## Function3:
+### Description:
+* This function can draw in top 100 score ranking clusters, each cluster's the relationship between score and cluster size.
+### Overview:
+```
+     usage:  python3 MotifCluster/MotifCluster.py  draw_score_size
+                    -input -output_folder
+    
+     required arguments:
+     -input1       FILENAME,  FILENAME: your input file name(result_score.csv)
+                                        the file generated in the output file in step2
+                                        (located: MC_package/example_output_step1_1)  
+     -output_folder FOLDER,   FOLDER:   your customized output folder name
+```
+### Input:
+1 result_score.csv file located:  MC_package/example_output_step1_1, and you can define which folder you wanna put the output results in
+### Command example:
+   python3 MotifCluster/MotifCluster.py  draw_score_size -input example_output_step1_1/result_score.csv -output_folder drawing_f3
+### Output:  
+1 output file: score_size.pdf in the output folder you defined (eg.drawing_f3), located: MC_package/drawing_f3         
 <img src="https://github.com/yao-laboratory/MotifCluster/blob/main/output_files/example_figures/figure2_human_chr12_function3.png" width=80% height=80%>  <br>  
-## function4:
-### description:
+
+## Function4:
+### Description:
 * This function can draw the number of clusters in each class.
-### input:
-a result_cluster_weight.csv file
-### command example:
-    python3 MotifCluster_main.py draw_cluster_weight -input new_files/new_csv_files/result_cluster_weight.csv
-### output:       
-<img src="https://github.com/yao-laboratory/MotifCluster/blob/main/output_files/example_figures/chr12_10clusters_weight_function4.png" width=80% height=80%>  <br>  
-## function5:
-### description:
+* ### Overview:
+```
+     usage:  python3 MotifCluster/MotifCluster.py  draw_cluster_weight
+                    -input -output_folder
+    
+     required arguments:
+     -input       FILENAME,  FILENAME: your input file name(result_cluster_weight.csv)
+                                        the file generated in the output file in step2
+                                        (located: MC_package/example_output_step1_1)  
+     -output_folder FOLDER,   FOLDER:   your customized output folder name
+```
+### Input:
+1 result_cluster_weight.csv file located:  MC_package/example_output_step1_1, and you can define which folder you wanna put the output results in
+### Command example:
+    python3 MotifCluster/MotifCluster.py  draw_cluster_weight -input example_output_step1_1/result_cluster_weight.csv -output_folder drawing_f4
+### Output:  
+1 output file: cluster_weight_draw.pdf in the output folder you defined (eg.drawing_f4), located: MC_package/drawing_f4         
+<img src="https://github.com/yao-laboratory/MotifCluster/blob/main/output_files/example_figures/chr12_10clusters_weight_function4.png" width=80% height=80%>  <be>  
+
+
+## Function5:
+### Description:
 * This function can draw the GMM distribution of each class.
+### Overview:
+```
+     usage:  python3 MotifCluster/MotifCluster.py draw_GMM
+                    -input -output_folder
+    
+     required arguments:
+     -output_folder FOLDER,   FOLDER:   your customized output folder name
+```
 ### input:
-built in the program
+3 hidden files being used, 3 npy file: GMM_covariances.npy,GMM_means.npy,GMM_weights.npy being used in the folder 'example_middle_output' 
+(located: MC_package/example_middle_output). So this command will use the recent running result.
 ### command example:
-    python3 MotifCluster_main.py draw_GMM
-### output:       
+     python3 MotifCluster/MotifCluster.py draw_GMM  -output_folder drawing_f5
+### output:
+1 output file: GMM_drawing.pdf in the output folder you defined (eg.drawing_f5), located: MC_package/drawing_f5
 <img src="https://github.com/yao-laboratory/MotifCluster/blob/main/output_files/example_figures/GMM_draw_function5.png" width=80% height=80%>  <br>  
 
-## Other useful tools
-## function1:
-### description:
-* This function can copy the start line to the end line from the original file to a new file
-### input:
-bed files in the bed_files folder
-### command example:
-    python3 MotifCluster_main.py cutting_file -input bed_files/chr12.bed -start 0 -end 1000 -output output.bed
-### output:       
-the top 1000 line of chr12.bed to output.bed
-
 ## Tools for other methods
-### Method 1:  single DBSCAN
-### description:
+### method a :  direct DBSCAN without groups
+### Description:
 * This function can run the single DBSCAN result
-### input:
+### Overview:
+step1
+```
+     usage:  python3 MotifCluster/MotifCluster.py draw_GMM
+                    -input -output_folder
+    
+     required arguments:
+     -output_folder FOLDER,   FOLDER:   your customized output folder name
+```
+### Input:
 the bed file in bed_files folder, for example: bed_files/chr12.bed  
-### command example:
-    python3 MotifCluster_main.py cluster_and_merge_simple_dbscan -input bed_files/chr12.bed -start 6717000 -end 6724000 
+### Command example:
+     python3 MotifCluster/MotifCluster.py cluster_and_merge_simple_dbscan -input human_chr12_origin.bed  -output_folder other_method1  -start 6716000 -end 6724000
+     python3 MotifCluster/MotifCluster.py calculate_score -input_bed human_chr12_origin.bed -input_result other_method1/result_simple_DBSCAN.csv -input_middle other_method1/result_middle_simple_DBSCAN.csv -output_folder other_method1 -weight_switch off
 the optional parameters: the -start -end can only process part of the chr12.bed files,  
 if not put this optional parameter, then the whole bed file will be processed
-### output:       
-each output produces three output files: result.csv,  result_middle.csv, result_draw.csv  
-then use the main functions step 2 command can produce the final score result
-### Method 2:  only union without merge and also no weight information used
-### description:
-* This function can run only union without merge and also no weight information used
-### input:
-the bed file in bed_files folder, for example: bed_files/chr12.bed  
-### command example:
-    python3 MotifCluster_main.py cluster_and_merge_simple_dbscan -merge_switch off -weight-switch off -input bed_files/chr12.bed -start 6717000 -end 6724000 
-the optional parameters: the -start -end can only process part of the chr12.bed files,  
-if not put this optional parameter, then the whole bed file will be processed
-### output:       
-each output produces three output files: result.csv,  result_middle.csv, result_draw.csv  
-then use the main functions step 2 command can produce the final score result
-### Method 3:  union without merge clusters and with using weight information
-### description:
-* This function can run union without merging clusters and by using weight information
-### input:
-bed files in bed_files folder
-### command example:
-    python3 MotifCluster_main.py cluster_and_merge_simple_dbscan -merge_switch off -weight-switch on -input bed_files/chr12.bed -start 6717000 -end 6724000 
-    the optional parameters: the -start -end can only process part of the chr12.bed files,  
-if not put this optional parameter, then the whole bed file will be processed
-### output:       
-each output produces three output files: result.csv,  result_middle.csv, result_draw.csv  
-then use the main functions step 2 command can produce the final score result
-### Method 4:  union and merge clusters but no weight information used
-### description:
-* This function can run union and merge clusters but without using weight information
-### input:
-bed files in bed_files folder
-### command example:
-    python3 MotifCluster_main.py cluster_and_merge_simple_dbscan -merge_switch on -weight-switch off -input bed_files/chr12.bed -start 6717000 -end 6724000 
-    the optional parameters: the -start -end can only process part of the chr12.bed files,  
-if not put this optional parameter, then the whole bed file will be processed
-### output:       
+### Output:       
 each output produces three output files: result.csv,  result_middle.csv, result_draw.csv  
 then use the main functions step 2 command can produce the final score result
 
+
+
+
+### Other Method 2-4:
+### Overview: Use Main Function step1,step2
+Step 1:
+```
+     usage: python3 MotifCluster/MotifCluster.py cluster_and_merge
+                    -input -merge_switch -weight_switch -output_folder [-start -end]
+```
+Step 2:
+```
+     usage: python3 MotifCluster/MotifCluster.py  calculate_score
+                    -input_bed -input_result -input_middle -weight_switch -output_folder 
+
+```
+### Method b1:  No peak intensity, no cluster merge
+### Description:
+* This function can run only union without merge and also no weight information used
+### Step 1：
+#### Input & Output:
+Input files same as MotifCluster method's step 1 command.    
+Input parameters:-merge_switch off  -weight_switch on.    
+Same as MotifCluster method's step 1 command, only file name different, 
+now is result_union.csv,result_draw_union,result_middle_union.csv (compared with MotifCluster method step 1's 
+result.csv,result_draw.csv,result_middle.csv)
+#### Command example:
+    python3 MotifCluster/MotifCluster.py cluster_and_merge -input human_chr12_origin.bed -merge_switch off  -weight_switch off -output_folder other_method2
+### Step 2：
+#### Input & Output:
+Input only change -weight_switch: off, output files only has result_score.csv.
+### command example:
+python3 MotifCluster/MotifCluster.py  calculate_score -input_bed human_chr12_origin.bed -input_result other_method2/result_union.csv -input_middle other_method2/result_middle_union.csv -weight_switch off -output_folder other_method2
+
+### Drawing:
+6716000-6724000 part in human_chr12_origin.bed file
+
+### Method b2:  No peak intensity, with cluster merge
+### Description:
+* This function can run union without merging clusters and by using weight information
+### Step 1：
+### Input:
+input files same as MotifCluster method's step 1 command.
+input parameters:-merge_switch off  -weight_switch on
+### Command example:
+    python3 MotifCluster/MotifCluster.py cluster_and_merge -input human_chr12_origin.bed -merge_switch off  -weight_switch on -output_folder other_method3
+### Output:       
+Output files same as MotifCluster method's step 2 command in your defined output folder.
+### Step 2：
+### Input:
+input files same as MotifCluster method's step 2 command.
+input parameters:-merge_switch off  -weight_switch off
+### command example:
+python3 MotifCluster/MotifCluster.py  calculate_score -input_bed human_chr12_origin.bed -input_result other_method3/result.csv -input_middle other_method3/result_middle.csv -weight_switch off -output_folder other_method3
+### Output: 
+Output files same as MotifCluster method's step 2 command in your defined output folder.
+
+### Method c:  with peak intensity, no cluster merge
+### Description:
+* This function can run union and merge clusters but without using weight information
+### Step 1：
+### Input:
+same as MotifCluster method's step 1 command.
+### Command example:
+    python3 MotifCluster/MotifCluster.py cluster_and_merge -input human_chr12_origin.bed -merge_switch on  -weight_switch off -output_folder other_method4
+### Output:       
+Output files same as MotifCluster method's step 2 command in your defined output folder.
+### Step 2：
+### Input:
+same as MotifCluster method's step 2 command.
+### command example:
+python3 MotifCluster/MotifCluster.py  calculate_score -input_bed human_chr12_origin.bed -input_result other_method4/result.csv -input_middle other_method4/result_middle.csv -weight_switch off -output_folder other_method4
+### Output: 
+Output files same as MotifCluster method's step 2 command in your defined output folder.
 
 
 
