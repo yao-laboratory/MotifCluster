@@ -98,7 +98,8 @@ human_chr12_origin.bed default in input_files folder shown as below:
     python3 MotifCluster/MotifCluster.py cluster_and_merge -input human_chr12_origin.bed -merge_switch on  -weight_switch on -output_folder example_output_step1_1
     python3 MotifCluster/MotifCluster.py cluster_and_merge -input human_chr12_origin.bed -merge_switch on  -weight_switch on -output_folder example_output_step1_2 -start 6716000 -end 6724000 
 ```    
-Difference between two commands: the -start -end can only process part of the chr12.bed files.
+Use either of the commands one time	
+Difference between two commands: command the -start -end can only process part of the chr12.bed files.
 ### Output:       
 Store the output files in the folder you specified by -output_folder parameter,     
 In this example is 'example_output_step1_1' folder (located: MC_package/example_output_step1_1).       
@@ -363,6 +364,8 @@ Output: produces three output files same format as MotifCluster step1, only name
 ### Command example:
      python3 MotifCluster/MotifCluster.py cluster_and_merge_simple_dbscan -input human_chr12_origin.bed  -output_folder other_method1 
      python3 MotifCluster/MotifCluster.py cluster_and_merge_simple_dbscan -input human_chr12_origin.bed  -output_folder other_method1  -start 6716000 -end 6724000
+Use either of the commands one time	
+Difference between two commands: command the -start -end can only process part of the chr12.bed files.
 ### step2
 ### Input & Output:
 Same as MotifCluster method's step 2 command, input only change -weight_switch: off, output files format same.
@@ -372,14 +375,13 @@ Same as MotifCluster method's step 2 command, input only change -weight_switch: 
 	``` 
 ### Drawing:
 #### Input & Output:
-same as 'draw' command above, input only change -method 1, output format same
+same as 'draw' command above, input only change -method 2, output format same
 #### command example:
 	``` 
-     python3 MotifCluster/MotifCluster.py draw -inputbed human_chr12_origin.bed -inputcsv other_method3/result_draw.csv -method 1 -output_folder drawing_f3 -start 6716500 -end 6724000
+     python3 MotifCluster/MotifCluster.py draw -inputbed human_chr12_origin.bed -inputcsv other_method1/result_draw_simple_DBSCAN.csv -method 2 -output_folder drawing_m1 -start 6716500 -end 6724000
 	```
-6716000-6724000 part in human_chr12_origin.bed file
-
-
+Output: Drawing 6716000-6724000 part in human_chr12_origin.bed file	
+![draw_figure-1](https://github.com/yao-laboratory/MotifCluster/assets/94155451/902dcda5-a89d-49af-8150-57037494aefd)
 
 ## Method b1 & Method b2 & Method c:
 #### Overview: Use Main Function step1,step2
@@ -410,8 +412,11 @@ now is result_union.csv,result_draw_union,result_middle_union.csv (compared with
 result.csv,result_draw.csv,result_middle.csv)
 #### Command example:
 ``` 
-    python3 MotifCluster/MotifCluster.py cluster_and_merge -input human_chr12_origin.bed -merge_switch off  -weight_switch off -output_folder other_method2
-``` 
+	python3 MotifCluster/MotifCluster.py cluster_and_merge -input human_chr12_origin.bed -merge_switch off  -weight_switch off -output_folder other_method2
+	python3 MotifCluster/MotifCluster.py cluster_and_merge -input human_chr12_origin.bed -merge_switch off  -weight_switch off -output_folder other_method2 -start 6716500 -end 6724000
+```
+Use either of the commands one time	
+Difference between two commands: command the -start -end can only process part of the chr12.bed files.
 ### Step 2：
 #### Input & Output:
 Same as MotifCluster method's step 2 command, input only change -weight_switch: off, output files same.
@@ -421,12 +426,18 @@ Same as MotifCluster method's step 2 command, input only change -weight_switch: 
 ``` 
 ### Drawing:
 #### Input & Output:
-Same as MotifCluster method's step 2 command, input only change -method 2,
+Same as MotifCluster method's step 2 command, input only change -method 3.
+Output: Drawing 6716000-6724000 part in human_chr12_origin.bed file	
+
+![draw_figure-1](https://github.com/yao-laboratory/MotifCluster/assets/94155451/45afb77e-4ce0-4638-98e2-9305c1a1626f)
+
+
 #### command example:
 ``` 
-     python3 MotifCluster/MotifCluster.py draw -inputbed human_chr12_origin.bed -inputcsv other_method2/result_draw.csv -method 2 -output_folder drawing_f2 -start 6716500 -end 6724000
+     python3 MotifCluster/MotifCluster.py draw -inputbed human_chr12_origin.bed -inputcsv other_method2/result_draw_union.csv -method 3 -output_folder drawing_m2 -start 6716500 -end 6724000
 ```
 6716000-6724000 part in human_chr12_origin.bed file
+
 
 ## Method b2:  No peak intensity, with cluster merge
 ### Description:
@@ -437,23 +448,30 @@ Input: Input files same as MotifCluster method's step 1 command.Input parameters
 Ouput: Same format as MotifCluster method's step 1 command
 #### Command example:
 ``` 
-    python3 MotifCluster/MotifCluster.py cluster_and_merge -input human_chr12_origin.bed -merge_switch on  -weight_switch off -output_folder other_method3
-``` 
+	python3 MotifCluster/MotifCluster.py cluster_and_merge -input human_chr12_origin.bed -merge_switch on  -weight_switch off -output_folder other_method3
+	python3 MotifCluster/MotifCluster.py cluster_and_merge -input human_chr12_origin.bed -merge_switch on  -weight_switch off -output_folder other_method3 -start 6716500 -end 6724000
+```
+Use either of the commands one time	
+Difference between two commands: command the -start -end can only process part of the chr12.bed files.
 ### Step 2：
 #### Input & Output:
 Same as MotifCluster method's step 2 command, input only change -weight_switch: off, output files same.
 #### command example:
 ``` 
-	python3 MotifCluster/MotifCluster.py  calculate_score -input_bed human_chr12_origin.bed -input_result other_method3/result_union.csv -input_middle other_method3/result_middle_union.csv -weight_switch off -output_folder other_method3
+	python3 MotifCluster/MotifCluster.py  calculate_score -input_bed human_chr12_origin.bed -input_result other_method3/result.csv -input_middle other_method3/result_middle.csv -weight_switch off -output_folder other_method3
 ``` 
 ### Drawing:
 #### Input & Output:
-same as 'draw' command , input only change -method 3
+same as 'draw' command , input only change -method 4
 #### command example:
 ``` 
-     python3 MotifCluster/MotifCluster.py draw -inputbed human_chr12_origin.bed -inputcsv other_method3/result_draw.csv -method 3 -output_folder drawing_f3 -start 6716500 -end 6724000
+     python3 MotifCluster/MotifCluster.py draw -inputbed human_chr12_origin.bed -inputcsv other_method3/result_draw.csv -method 4 -output_folder drawing_m3 -start 6716500 -end 6724000
 ```
-6716000-6724000 part in human_chr12_origin.bed file
+6716000-6724000 part in human_chr12_origin.bed file	
+
+![draw_figure-1](https://github.com/yao-laboratory/MotifCluster/assets/94155451/757ed118-6abc-428f-abdb-ae099a5ec95a)
+
+
 
 ## Method c:  with peak intensity, no cluster merge
 ### Description:
@@ -467,8 +485,11 @@ now is result_union.csv,result_draw_union,result_middle_union.csv (compared with
 result.csv,result_draw.csv,result_middle.csv)
 #### Command example:
 ``` 
-    python3 MotifCluster/MotifCluster.py cluster_and_merge -input human_chr12_origin.bed -merge_switch off  -weight_switch on -output_folder other_method4
-``` 
+	python3 MotifCluster/MotifCluster.py cluster_and_merge -input human_chr12_origin.bed -merge_switch off  -weight_switch on -output_folder other_method4
+	python3 MotifCluster/MotifCluster.py cluster_and_merge -input human_chr12_origin.bed -merge_switch off  -weight_switch on -output_folder other_method4 -start 6716500 -end 6724000
+```
+Use either of the commands one time	
+Difference between two commands: command the -start -end can only process part of the chr12.bed files.
 ### Step 2：
 #### Input & Output:
 Same as MotifCluster method's step 2 command, input -weight_switch: on, output files same format.
@@ -478,13 +499,16 @@ Same as MotifCluster method's step 2 command, input -weight_switch: on, output f
 ``` 
 ### Drawing:
 #### Input & Output:
-same as 'draw' command , input only change -method 4
+same as 'draw' command , input only change -method 5
 #### command example:
 ``` 
-     python3 MotifCluster/MotifCluster.py draw -inputbed human_chr12_origin.bed -inputcsv other_method2/result_draw.csv -method 4 -output_folder drawing_f4 -start 6716500 -end 6724000
+     python3 MotifCluster/MotifCluster.py draw -inputbed human_chr12_origin.bed -inputcsv other_method4/result_draw.csv -method 5 -output_folder drawing_m4 -start 6716500 -end 6724000
 ```
 6716000-6724000 part in human_chr12_origin.bed file
 
+
+
+![draw_figure-1](https://github.com/yao-laboratory/MotifCluster/assets/94155451/645cb35a-8f1f-4a31-8896-481f2fb0fffd)
 
 
 
