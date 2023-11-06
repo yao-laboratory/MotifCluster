@@ -238,7 +238,7 @@ Input parameter:'-method', You can define which folder you want to put the outpu
 ```
 ### Output:  
 1 output file: draw_figure.pdf in the output folder you defined (eg.drawing_f1), located: MC_package/drawing_f1    
-<img src="https://github.com/yao-laboratory/MotifCluster/blob/main/output_files/example_figures/figure2_human_chr12_classes_function1.png" width=80% height=80%> <br> 
+<img src="./img/draw_figure-0.png" width=80% height=80%> <br> 
 
 ## Function2:
 ### Description:
@@ -264,7 +264,7 @@ two result_score files located: MC_package/Motif_Cluster/input_files, and You ca
 	python3 MotifCluster/MotifCluster.py draw_rank -input1 result_score_chr12.csv -input2 result_score_chr12_whole_noise-0.01.csv -output_folder drawing_f2
 ### Output:  
 1 output file: normal_vs_noise_rank.pdf in the output folder you defined (eg.drawing_f2), located: MC_package/drawing_f2    
-<img src="https://github.com/yao-laboratory/MotifCluster/blob/main/output_files/example_figures/normal_vs_noise_rank_0.01_function2.png" width=80% height=80%> <br>
+<img src="./img/normal_vs_noise_rank-1.png" width=80% height=80%> <br>
 
 ## Function3:
 ### Description:
@@ -288,7 +288,7 @@ two result_score files located: MC_package/Motif_Cluster/input_files, and You ca
 ``` 
 ### Output:  
 1 output file: score_size.pdf in the output folder you defined (eg.drawing_f3), located: MC_package/drawing_f3         
-<img src="https://github.com/yao-laboratory/MotifCluster/blob/main/output_files/example_figures/figure2_human_chr12_function3.png" width=80% height=80%>  <br>  
+<img src="./img/score_size-1.png" width=80% height=80%>  <br>  
 
 ## Function4:
 ### Description:
@@ -312,7 +312,7 @@ two result_score files located: MC_package/Motif_Cluster/input_files, and You ca
 ``` 
 ### Output:  
 1 output file: cluster_weight_draw.pdf in the output folder you defined (eg.drawing_f4), located: MC_package/drawing_f4         
-<img src="https://github.com/yao-laboratory/MotifCluster/blob/main/output_files/example_figures/chr12_10clusters_weight_function4.png" width=80% height=80%>  <be>  
+<img src="./img/cluster_weight_draw-1.png" width=80% height=80%>  <be>  
 
 
 ## Function5:
@@ -335,7 +335,7 @@ two result_score files located: MC_package/Motif_Cluster/input_files, and You ca
 ``` 
 ### Output:
 1 output file: GMM_drawing.pdf in the output folder you defined (eg.drawing_f5), located: MC_package/drawing_f5
-<img src="https://github.com/yao-laboratory/MotifCluster/blob/main/output_files/example_figures/GMM_draw_function5.png" width=80% height=80%>  <br>  
+<img src="./img/GMM_drawing-1.png" width=80% height=80%>  <br>  
 
 # Tools for other Methods
 ## Method a :  direct DBSCAN without groups
@@ -381,7 +381,7 @@ same as 'draw' command above, input only change -method 2, output format same
      python3 MotifCluster/MotifCluster.py draw -inputbed human_chr12_origin.bed -inputcsv other_method1/result_draw_simple_DBSCAN.csv -method 2 -output_folder drawing_m1 -start 6716500 -end 6724000
 	```
 Output: Drawing 6716000-6724000 part in human_chr12_origin.bed file	
-![draw_figure-1](https://github.com/yao-laboratory/MotifCluster/assets/94155451/902dcda5-a89d-49af-8150-57037494aefd)
+![draw_figure-1](./img/draw_figure-1.png)
 
 ## Method b1 & Method b2 & Method c:
 #### Overview: Use Main Function step1,step2
@@ -429,7 +429,7 @@ Same as MotifCluster method's step 2 command, input only change -weight_switch: 
 Same as MotifCluster method's step 2 command, input only change -method 3.
 Output: Drawing 6716000-6724000 part in human_chr12_origin.bed file	
 
-![draw_figure-1](https://github.com/yao-laboratory/MotifCluster/assets/94155451/45afb77e-4ce0-4638-98e2-9305c1a1626f)
+![draw_figure-1](./img/draw_figure-2.png)
 
 
 #### command example:
@@ -469,7 +469,7 @@ same as 'draw' command , input only change -method 4
 ```
 6716000-6724000 part in human_chr12_origin.bed file	
 
-![draw_figure-1](https://github.com/yao-laboratory/MotifCluster/assets/94155451/757ed118-6abc-428f-abdb-ae099a5ec95a)
+![draw_figure-1](./img/draw_figure-3.png)
 
 
 
@@ -508,7 +508,7 @@ same as 'draw' command , input only change -method 5
 
 
 
-![draw_figure-1](https://github.com/yao-laboratory/MotifCluster/assets/94155451/645cb35a-8f1f-4a31-8896-481f2fb0fffd)
+![draw_figure-1](./img/draw_figure-4.png)
 
 
 
