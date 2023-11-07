@@ -54,7 +54,7 @@ It can produce sorted bed file, stored directly in the input_files folder. eg. s
     chr16	62660	62670	GGCCTGGGCTC		-		P-value=1e-05
 
 # MotifCluster Method
-### (Note: When want to get final score file, need to execute step1, then step2. Don't execute other commands between them)
+#### (Note: step2 and draw function need step1's output, so rename step1's output folder when needed in case covering step1's output results)
 ## Step1: cluster and merge
 ### Overview:
 
@@ -100,7 +100,7 @@ Store the output files in the folder you specified by -output_folder parameter, 
 #### 1.Middle processing files:
 
 Users don't need to use.(located: example_output_step1_1/tmp_output)
-#### (Note: do not change cause it is the middle processing result since useful in step 2(score and rank) and drawing, it will update by itself.)
+#### (Note: do not change cause it is the middle processing result, useful in step 2 (score and rank) and drawing, it will update by itself.)
 Including files: n+1+3 middle files. n is class number.
 
      1,2,...,n.bdg, total.bdg,
