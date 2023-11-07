@@ -37,9 +37,7 @@
      -chrome CHROME,         CHROME:   chrome name in the bed file, eg.chr16
 
 ### Input:
-Input file: eg.fimo.tsv,      
-Input parameter: 1.chrome name.
-                 2.You can define which folder you want to put the output results in.
+Input file: eg.fimo.tsv, Input parameter: 1.chrome name. 2.You can define which folder you want to put the output results in.
 eg. chr16 's fimo.tsv file:
 
     motif		NC_000016.9	122369	122379	+	12.8	1.53e-07	0.0699	GGCCCCGGCCC
@@ -97,8 +95,7 @@ human_chr12_origin.bed default in input_files folder shown as below:
 Use either of the commands one time	
 Difference between two commands: command the -start -end can only process part of the chr12.bed files.
 ### Output:       
-Store the output files in the folder you specified by -output_folder parameter,     
-In this example is 'example_output_step1_1' folder (located:example_output_step1_1).       
+Store the output files in the folder you specified by -output_folder parameter, In this example is 'example_output_step1_1' folder (located:example_output_step1_1).       
     
 1.Middle processing files:
 Users don't need to use, their folder 'example_middle_output' (located: example_middle_output).
@@ -112,12 +109,9 @@ Including files: n+1+3 middle files. n is class number.
 In 'example_final_output' folder (located: example_output_step1_1).        
 #### 3 output files:
 #### result.csv    (NOTE: In the paper, called cluster-union.csv instead)
-#### description:
+#### example example description:
 In the result.csv file:  
-Each line is the nth line(peak) of original bed file's information: same as the bed file, they have the start coordinate of every line(peak) as 'center_pos', the end coordinate as 'end_pos'. Also 'weight' shows the weight of this line(peak).However the different part is 'class_id' shows which group this line(peak) belong to, then it can show which peaks or binding sites belong to the same cluster. For example in the below data,   
-the continuous peaks' class_id all are 4, so it means they belong to same groups, then those peaks can combine as a same cluster.
-
-
+Each line is the nth line(peak) of the original bed file's information: same as the bed file, they have the start coordinate of every line(peak) as 'center_pos', the end coordinate as 'end_pos'. Also 'weight' shows the weight of this line(peak). However the different part is 'class_id' shows which group this line(peak) belongs to, then it can show which peaks or binding sites belong to the same cluster. For example in the below data, the continuous peaks' class_id all are 4, so it means they belong to the same groups, then those peaks can combine as the same cluster.
 
     id,center_pos,start_pos,end_pos,class_id,weight
     
@@ -129,7 +123,7 @@ the continuous peaks' class_id all are 4, so it means they belong to same groups
     ...
  
 #### result_middle.csv
-#### description:
+#### example example description:
 In the result_middle.csv file:     
 Each line is the nth cluster's information, they have the number of original bed files' regions as 'data_count_new', and which group they belong to as'cluster_belong_new','data_count_sum' for the inner code use.
 ```
@@ -144,9 +138,9 @@ id,data_count_new,cluster_belong_new,data_count_sum
 ```
 
 #### result_draw.csv
-#### description:
+#### example example description:
 In the result_draw.csv file:  
-Each line is one peak in different groups and this peak's color in each subfigure stored from 'draw_input0' to 'arr_final_draw', also weight information which can draw the weight in the figure. In this motifcluster method file, it is 12 subfigures so the number from 'draw_input0' to 'arr_final_draw' is 12 columns.
+Each line is one peak in different groups and this peak's color in each subfigure is stored from 'draw_input0' to 'arr_final_draw', as well as weight information which can draw the weight in the figure. In this motifcluster method file, it is 12 subfigures so the number from 'draw_input0' to 'arr_final_draw' is 12 columns.
 
     id,center_pos,weight,draw_input0,draw_input1,draw_input2,draw_input3,draw_input4,draw_input5,draw_input6,draw_input7,draw_input8,draw_input9,arr_final,arr_final_draw
     
@@ -181,9 +175,8 @@ Each line is one peak in different groups and this peak's color in each subfigur
 
 
 ### Input:
-Input files:The bed file should use the same one in step 1, and already in input_files folder.    
-result.csv and result_middle.csv produced by step1 in the step1's output folder.    
-Input parameter:'-weight_switch';You can define which folder you want to put the output results in.
+Input files: The bed file should use the same one in step 1, and already in the input_files folder. result.csv and result_middle.csv produced by step1 in the step1's output folder.    
+Input parameter:'-weight_switch'; You can define which folder you want to put the output results in.
 ### Command example:
 ```
 python3 MotifCluster/MotifCluster.py  calculate_score -input_bed human_chr12_origin.bed -input_result example_output_step1_1/result.csv -input_middle example_output_step1_1/result_middle.csv -weight_switch on -output_folder example_output_step1_1
@@ -194,7 +187,7 @@ Each output produces two output files:
 result_score.csv,  result_cluster_weight.csv. Notice: result_score.csv is the final file. 
 #### 2 output files:
 #### result_score.csv (NOTE: In the paper, called cluster-score.csv instead)
-#### description:
+#### example description:
 In the result_score.csv file:  
 Each line is the nth top score cluster's information: they have the start coordinate of this cluster as 'start_pos_head_axis', the end coordinate of this cluster as 'start_pos_head_axis'. Also 'cluster_size' shows the number of the peaks in this cluster,'belong_which_class' is the groups this cluster belongs to ,'max_weight' is the highest weight among those peaks in this cluster, and 'average_gap' is the averge gaps of those peaks in this cluster, 'score' is this cluster's final score.
 
@@ -207,7 +200,7 @@ Each line is the nth top score cluster's information: they have the start coordi
     3,82498733,82498725,82499113,82499122,15,4,4.416801,27.142857,45.105223
     
 #### result_cluster_weight.csv
-#### description:
+#### example description:
 In the result_cluster_weight.csv file:  
 The first line is the number of the clusters in each group. This example has 10 groups, so they show each group's total cluster number written from 'cluster_length0' to 'cluster_length9'. Other information not important to users.
 From the second line, the first 'cluster0' to 'cluster9',they show all peaks' weights in this cluster. Other information not important to users.
@@ -220,7 +213,7 @@ From the second line, the first 'cluster0' to 'cluster9',they show all peaks' we
 # Drawing functions
 ## Function1:
 ### Description:
-* This function can draw a region of interest and it shows the distinctively colored clusters view.
+This function can draw a region of interest and it shows the distinctively colored clusters view.
 ### Overview:
 
      usage:
@@ -255,14 +248,14 @@ python3 MotifCluster/MotifCluster.py draw -inputbed human_chr12_origin.bed -inpu
 
 ### Output:  
 1 output file: draw_figure.pdf in the output folder you defined (eg.drawing_f1), located: drawing_f1 
-#### Description:
-This figure below shows using MotifCluster Method, the area in Human genome chr12:6,716,600-6,724,000 which is the ZNF410 binding clusters on the CHD4 promoter region.The x-axis is the coordinate from 6.717*10^6 to 6.724*10^6 in the chr12, and y-axis is the weight of each peak.12 line's figure. In this situation, with weight, groups(10), union-split(1), merge(1).
+#### example description:
+* This figure below shows using MotifCluster Method, the area in Human genome chr12:6,716,600-6,724,000 which is the ZNF410 binding clusters on the CHD4 promoter region.The x-axis is the coordinate from 6.717*10^6 to 6.724*10^6 in the chr12, and y-axis is the weight of each peak.12 line's figure. In this situation, with weight, groups(10), union-split(1), merge(1).
   
 <img src="./README_images/draw_figure-0.png" width=80% height=80%> <br> 
 
 ## Function2:
 ### Description:
-* This function can draw the performance(ranks) of top 100 clusters in without-noise data in noise data.
+This function can draw the performance(ranks) of top 100 clusters in without-noise data in noise data.
 ### Overview:
 
      usage: _rank
@@ -278,19 +271,21 @@ This figure below shows using MotifCluster Method, the area in Human genome chr1
      -output_folder FOLDER,   FOLDER:    your customized output folder name
 
 ### Input:
-two result_score files located: Motif_Cluster/input_files, and You can define which folder you want to put the output results in,'-start','-end'
+Two result_score files located: Motif_Cluster/input_files, and You can define which folder you want to put the output results in,'-start','-end'
 ### Command example:
-   _rank -input1 result_score_chr12.csv -input2 result_score_chr12_half_noise-0.005.csv -output_folder drawing_f2
-	python3 MotifCluster/MotifCluster.py draw_rank -input1 result_score_chr12.csv -input2 result_score_chr12_whole_noise-0.01.csv -output_folder drawing_f2
+```
+python3 MotifCluster/MotifCluster.py draw_rank -input1 result_score_chr12.csv -input2 result_score_chr12_half_noise-0.005.csv -output_folder drawing_f2
+python3 MotifCluster/MotifCluster.py draw_rank -input1 result_score_chr12.csv -input2 result_score_chr12_whole_noise-0.01.csv -output_folder drawing_f2
+```
 ### Output:  
 1 output file: normal_vs_noise_rank.pdf in the output folder you defined (eg.drawing_f2), located: drawing_f2    
-#### Description:
-In this figure, x-axis is the rank in the without noise chr12, y-axis is its' corresponding rank in the noise chr12. And the purple dots means both rank <=100, light blue dots means rank <= 100 in chr12 p-value < 0.001 but its' corresponding rank > 100 in p-value < 0.01, and deep blue dots means rank <= 100 in chr12 p-value < 0.01 but its' corresponding rank > 100 in p-value < 0.001.    
+#### example description:
+* In this figure, x-axis is the rank in the without noise chr12, y-axis is its' corresponding rank in the noise chr12. And the purple dots means both rank <=100, light blue dots means rank <= 100 in chr12 p-value < 0.001 but its' corresponding rank > 100 in p-value < 0.01, and deep blue dots means rank <= 100 in chr12 p-value < 0.01 but its' corresponding rank > 100 in p-value < 0.001.    
 <img src="./README_images/normal_vs_noise_rank-1.png" width=80% height=80%> <br>
 
 ## Function3:
 ### Description:
-* This function can draw corresponding cluster score and cluster size for the top 100 clusters in specific genome. 
+This function can draw corresponding cluster score and cluster size for the top 100 clusters in specific genome. 
 ### Overview:
 
      usage:  python3 MotifCluster/MotifCluster.py  draw_score_size
@@ -310,13 +305,13 @@ In this figure, x-axis is the rank in the without noise chr12, y-axis is its' co
  
 ### Output:  
 1 output file: score_size.pdf in the output folder you defined (eg.drawing_f3), located: drawing_f3 
-#### Description:
-In this figure, x-axis is the rank id, left y-axis is their corresponding score, right y-axis is their corresponding cluster size.         
+#### example description:
+* In this figure, x-axis is the rank id, left y-axis is their corresponding score, right y-axis is their corresponding cluster size.         
 <img src="./README_images/score_size-1.png" width=80% height=80%>  <br>  
 
 ## Function4:
 ### Description:
-* This function can draw: In every Gaussian component which those clusters best fitted separately, it shows the clusters' weight distributions (weights from 0-10, calculate the number of clusters in 10 intervals (weight values between 0-1,1-2,...9-10).
+This function can draw: In every Gaussian component which those clusters best fitted separately, it shows the clusters' weight distributions (weights from 0-10, calculate the number of clusters in 10 intervals (weight values between 0-1,1-2,...9-10).
 ### Overview:
 
      usage:  python3 MotifCluster/MotifCluster.py  draw_cluster_weight
@@ -336,7 +331,7 @@ In this figure, x-axis is the rank id, left y-axis is their corresponding score,
  
 ### Output:  
 1 output file: cluster_weight_draw.pdf in the output folder you defined (eg.drawing_f4), located: drawing_f4
-#### Description:
+#### example description:
 * In this figure, have 10 subfigures, the nth subfigure shows the clusters' weight distribution, and these clusters are required to best fit the nth Gaussion components.
 In each subfigure, x-axis is the weight value, and y-axis is the number of clusters.
 
@@ -347,10 +342,10 @@ In each subfigure, x-axis is the weight value, and y-axis is the number of clust
 
 ## Function5:
 ### Description:
-* This function can draw all Gaussian components' GMM distributions. 
+This function can draw all Gaussian components' GMM distributions. 
 ### Overview:
 
-     usage: _GMM
+     usage: python3 MotifCluster/MotifCluster.py draw_GMM
                     -input -output_folder
     
      required arguments:
@@ -361,12 +356,12 @@ In each subfigure, x-axis is the weight value, and y-axis is the number of clust
 (located: example_middle_output). So this command will use the recent running result.
 ### Command example:
  
-    _GMM  -output_folder drawing_f5
+    python3 MotifCluster/MotifCluster.py draw_GMM  -output_folder drawing_f5
  
 ### Output:
 1 output file: GMM_drawing.pdf in the output folder you defined (eg.drawing_f5), located: drawing_f5     
-#### Description:
-This is they found the 10 most probable Gaussian components in human chr12 data, x-axis
+#### example description:
+* This is they found the 10 most probable Gaussian components in human chr12 data, x-axis
 shows the variables that is being measured, y-axis shows the probability density of each variable.
 
 <img src="./README_images/GMM_drawing-1.png" width=80% height=80%>  <br>  
@@ -416,9 +411,8 @@ same as 'draw' command above, input only change -method 2, output format same
 ```	 
 python3 MotifCluster/MotifCluster.py draw -inputbed human_chr12_origin.bed -inputcsv other_method1/result_draw_simple_DBSCAN.csv -method 2 -output_folder drawing_m1 -start 6716500 -end 6724000
 ```	
-Output: 
-#### Description:
-*This figure below shows using Method a : direct DBSCAN without groups, the area in Human genome chr12:6,716,600-6,724,000 which is the ZNF410 binding clusters on the CHD4 promoter region.The x-axis is the coordinate from 6.717*10^6 to 6.724*10^6 in the chr12, and y-axis is the weight of each peak. Only 1 line figure, cause only itself as one group, no union, no merge.
+#### example description:
+* This figure below shows using Method a : direct DBSCAN without groups, the area in Human genome chr12:6,716,600-6,724,000 which is the ZNF410 binding clusters on the CHD4 promoter region.The x-axis is the coordinate from 6.717*10^6 to 6.724*10^6 in the chr12, and y-axis is the weight of each peak. Only 1 line figure, cause only itself as one group, no union, no merge.
 
 ![draw_figure-1](./README_images/draw_figure-1.png)
 
@@ -442,7 +436,7 @@ draw:
 
 ## Method b1:  No peak intensity, no cluster merge
 ### Description:
-* This function can run only union without merge and also no weight information used
+This function can run only union without merge and also no weight information used
 ### Step 1：
 #### Input & Output:
 Input: Input files same as MotifCluster method's step 1 command.Input parameters:-merge_switch off  -weight_switch on.    
@@ -464,23 +458,22 @@ python3 MotifCluster/MotifCluster.py  calculate_score -input_bed human_chr12_ori
 ### Drawing:
 #### Input & Output:
 Same as MotifCluster method's step 2 command, input only change -method 3.
-Output: Drawing 6716000-6724000 part in human_chr12_origin.bed file
-#### Description
-* This figure below shows Method b1:  No peak intensity, no cluster merge, the area in Human genome chr12:6,716,600-6,724,000 which is the ZNF410 binding clusters on the CHD4 promoter region.The x-axis is the coordinate from 6.717*10^6 to 6.724*10^6 in the chr12, and y-axis is the weight of each peak. 11 line's figure. In this situation, no weight, groups(10), union-split(1), no merge.	
-
-![draw_figure-1](./README_images/draw_figure-2.png)
 
 
 #### command example:
 ```
 python3 MotifCluster/MotifCluster.py draw -inputbed human_chr12_origin.bed -inputcsv other_method2/result_draw_union.csv -method 3 -output_folder drawing_m2 -start 6716500 -end 6724000
 ```
-6716000-6724000 part in human_chr12_origin.bed file
+#### example description:
+* This figure below shows Method b1:  No peak intensity, no cluster merge, the area in Human genome chr12:6,716,600-6,724,000 which is the ZNF410 binding clusters on the CHD4 promoter region.The x-axis is the coordinate from 6.717*10^6 to 6.724*10^6 in the chr12, and y-axis is the weight of each peak. 11 line's figure. In this situation, no weight, groups(10), union-split(1), no merge.	
+
+![draw_figure-1](./README_images/draw_figure-2.png)
+
 
 
 ## Method b2:  No peak intensity, with cluster merge
 ### Description:
-* This function can run union without merging clusters and by using weight information
+This function can run union without merging clusters and by using weight information
 ### Step 1：
 #### Input & Output:
 Input: Input files same as MotifCluster method's step 1 command.Input parameters:-merge_switch on  -weight_switch off.    
@@ -506,8 +499,7 @@ same as 'draw' command , input only change -method 4
 ```
 python3 MotifCluster/MotifCluster.py draw -inputbed human_chr12_origin.bed -inputcsv other_method3/result_draw.csv -method 4 -output_folder drawing_m3 -start 6716500 -end 6724000
 ```
-6716000-6724000 part in human_chr12_origin.bed file
-#### Description
+#### example description:
 * This figure below shows Method b2:  No peak intensity, with cluster merge, the area in Human genome chr12:6,716,600-6,724,000 which is the ZNF410 binding clusters on the CHD4 promoter region.The x-axis is the coordinate from 6.717*10^6 to 6.724*10^6 in the chr12, and y-axis is the weight of each peak. 12 line's figure. In this situation, no weight, groups(10), union-split(1), merge(1).		
 
 ![draw_figure-1](./README_images/draw_figure-3.png)
@@ -516,7 +508,7 @@ python3 MotifCluster/MotifCluster.py draw -inputbed human_chr12_origin.bed -inpu
 
 ## Method c:  with peak intensity, no cluster merge
 ### Description:
-* This function can run union and merge clusters but without using weight information
+This function can run union and merge clusters but without using weight information
 ### Step 1：
 #### Input & Output:
 Input files same as MotifCluster method's step 1 command.    
@@ -544,8 +536,7 @@ same as 'draw' command , input only change -method 5
 ```
 python3 MotifCluster/MotifCluster.py draw -inputbed human_chr12_origin.bed -inputcsv other_method4/result_draw.csv -method 5 -output_folder drawing_m4 -start 6716500 -end 6724000
 ```
-6716000-6724000 part in human_chr12_origin.bed file
-#### Description
+#### example description:
 * This figure below shows Method c:  with peak intensity, no cluster merge, the area in Human genome chr12:6,716,600-6,724,000 which is the ZNF410 binding clusters on the CHD4 promoter region.The x-axis is the coordinate from 6.717*10^6 to 6.724*10^6 in the chr12, and y-axis is the weight of each peak. 11 line's figure. In this situation, with weight, groups(10), union-split(1), no merge.
 
 
