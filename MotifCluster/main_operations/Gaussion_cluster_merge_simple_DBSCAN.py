@@ -109,7 +109,7 @@ def cluster_and_merge_simple_dbscan(input_file1, start_axis, end_axis,output_fol
     line_temp = []
     draw_input = []
     package_path = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
-    middle_results_path = os.path.abspath(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))) + "/example_middle_output/"
+    middle_results_path = os.path.abspath(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))) + output_folder +  "/tmp_output/"
     output_path = os.path.abspath(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))) + "/" + output_folder + "/"
     if not os.path.exists(middle_results_path):
         os.makedirs(middle_results_path)

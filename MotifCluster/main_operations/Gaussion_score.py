@@ -80,7 +80,7 @@ def score(input_file_0, input_file_score_1, input_file_score_2, weight_switch,ou
     data_count_sum = []
     col_types_csv1=[int,int,int,int,int,str]
     # reload GMM Model
-    middle_results_path = os.path.abspath(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))) + "/example_middle_output/"
+    middle_results_path = os.path.abspath(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))) + output_folder +  "/tmp_output/"
     if not os.path.exists(middle_results_path):
         os.makedirs(middle_results_path)
     means = np.load(middle_results_path + 'GMM_means.npy')

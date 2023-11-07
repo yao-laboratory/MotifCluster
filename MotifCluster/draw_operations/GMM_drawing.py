@@ -12,7 +12,7 @@ def draw_gmm(output_folder):
     # reload
     package_path = os.path.abspath(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
     print(package_path)
-    middle_results_path = package_path + "/example_middle_output/"
+    middle_results_path = package_path + output_folder +  "/tmp_output/"
     output_path = package_path + "/" + output_folder + "/"
     if not os.path.exists(middle_results_path):
         os.makedirs(middle_results_path)

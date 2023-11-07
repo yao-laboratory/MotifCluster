@@ -97,18 +97,20 @@ Difference between two commands: command the -start -end can only process part o
 ### Output:       
 Store the output files in the folder you specified by -output_folder parameter, In this example is 'example_output_step1_1' folder (located:example_output_step1_1).       
     
-1.Middle processing files:
-Users don't need to use, their folder 'example_middle_output' (located: example_middle_output).
+#### 1.Middle processing files:
+
+Users don't need to use.(located: example_output_step1_1/tmp_output)
 #### (Note: do not change cause it is the middle processing result since useful in step 2(score and rank) and drawing, it will update by itself.)
 Including files: n+1+3 middle files. n is class number.
 
      1,2,...,n.bdg, total.bdg,
      GMM_covariances.npy,GMM_means.npy,GMM_weights.npy
     
-2.Final files' examples:
-In 'example_final_output' folder (located: example_output_step1_1).        
-#### 3 output files:
-#### result.csv    (NOTE: In the paper, called cluster-union.csv instead)
+#### 2.User final files:
+
+located: example_output_step1_1/result.csv example_output_step1_1/result_middle.csv,example_output_step1_1/result_draw.csv)
+
+#### 2.1 result.csv    (NOTE: In the paper, called cluster-union.csv instead)
 #### example example description:
 In the result.csv file:  
 Each line is the nth line(peak) of the original bed file's information: same as the bed file, they have the start coordinate of every line(peak) as 'center_pos', the end coordinate as 'end_pos'. Also 'weight' shows the weight of this line(peak). However the different part is 'class_id' shows which group this line(peak) belongs to, then it can show which peaks or binding sites belong to the same cluster. For example in the below data, the continuous peaks' class_id all are 4, so it means they belong to the same groups, then those peaks can combine as the same cluster.
@@ -122,7 +124,7 @@ Each line is the nth line(peak) of the original bed file's information: same as 
     3,60109,60101,60118,4,3.2765443279648143
     ...
  
-#### result_middle.csv
+#### 2.2 result_middle.csv
 #### example example description:
 In the result_middle.csv file:     
 Each line is the nth cluster's information, they have the number of original bed files' regions as 'data_count_new', and which group they belong to as'cluster_belong_new','data_count_sum' for the inner code use.
@@ -137,7 +139,7 @@ id,data_count_new,cluster_belong_new,data_count_sum
 ...
 ```
 
-#### result_draw.csv
+#### 2.3 result_draw.csv
 #### example example description:
 In the result_draw.csv file:  
 Each line is one peak in different groups and this peak's color in each subfigure is stored from 'draw_input0' to 'arr_final_draw', as well as weight information which can draw the weight in the figure. In this motifcluster method file, it is 12 subfigures so the number from 'draw_input0' to 'arr_final_draw' is 12 columns.
@@ -352,8 +354,7 @@ This function can draw all Gaussian components' GMM distributions.
      -output_folder FOLDER,   FOLDER:   your customized output folder name
 
 ### Input:
-3 npy file: GMM_covariances.npy,GMM_means.npy,GMM_weights.npy being used in the folder 'example_middle_output' 
-(located: example_middle_output). So this command will use the recent running result.
+3 npy file: GMM_covariances.npy,GMM_means.npy,GMM_weights.npy being used in the folder  (located: example_output_step1_1/tmp_output). So this command will use the recent running result.
 ### Command example:
  
     python3 MotifCluster/MotifCluster.py draw_GMM  -output_folder drawing_f5
@@ -440,7 +441,7 @@ This function can run only union without merge and also no weight information us
 ### Step 1：
 #### Input & Output:
 Input: Input files same as MotifCluster method's step 1 command.Input parameters:-merge_switch off  -weight_switch on.    
-Ouput: same format as MotifCluster method's step 1 command, only file name different, now is result_union.csv, result_draw_union, result_middle_union.csv (compared with MotifCluster method step 1's result.csv,result_draw.csv,result_middle.csv)
+Ouput: same format as MotifCluster method's step 1 command, only file name different, now is result_union.csv, result_draw_union, result_middle_union.csv (compared with MotifCluster method step 1's result.csv, result_draw.csv, result_middle.csv)
 #### Command example:
  
 	python3 MotifCluster/MotifCluster.py cluster_and_merge -input human_chr12_origin.bed -merge_switch off  -weight_switch off -output_folder other_method2
@@ -513,8 +514,7 @@ This function can run union and merge clusters but without using weight informat
 #### Input & Output:
 Input files same as MotifCluster method's step 1 command.    
 Input parameters:-merge_switch off  -weight_switch on.    
-Output: Same format as MotifCluster method's step 1 command, only file name different, now is result_union.csv, result_draw_union result_middle_union.csv (compared with MotifCluster method step 1's 
-result.csv,result_draw.csv,result_middle.csv)
+Output: Same format as MotifCluster method's step 1 command, only file name different, now is result_union.csv, result_draw_union result_middle_union.csv (compared with MotifCluster method step 1's result.csv, result_draw.csv, result_middle.csv)
 #### Command example:
  
 	python3 MotifCluster/MotifCluster.py cluster_and_merge -input human_chr12_origin.bed -merge_switch off  -weight_switch on -output_folder other_method4
