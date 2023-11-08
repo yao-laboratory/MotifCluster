@@ -1,10 +1,11 @@
 # MotifCluster
 # Tutorial
 # Installation instructions
-### (Note: need to install in Linux environment, and has been tested working in Ubuntu 20.04.6 LTS System)
+### (Note: need to install in Linux environment)
 #### Download code and create a new conda environment
 
     git clone https://github.com/yao-laboratory/MotifCluster.git 
+    cd MotifCluster
     conda create -n motifcluster
 
 #### Check channels:
