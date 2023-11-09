@@ -13,88 +13,81 @@ from draw_operations.cluster_weight_draw import draw_cluster_weight
 import argparse
 import time
 def main():
-    parser = argparse.ArgumentParser(prog='mc_')
+    parser = argparse.ArgumentParser(prog='MotifCluster')
 
-    subparsers = parser.add_subparsers(dest='subcommand', help='sub-command help')
+    subparsers = parser.add_subparsers(dest='subcommand', help='Sub Commands Help')
     #add sub command
-    parser_cm = subparsers.add_parser("cluster_and_merge_simple_dbscan", help='add help')
-    parser_cm.add_argument('-input', required = True, type=str, help='input file', default="total_chr12.bed")
-    parser_cm.add_argument('-output_folder', required = True, type=str, help='output folder name', default="all")
+    parser_cm = subparsers.add_parser("cluster_and_merge_simple_dbscan", help='Using direct DBSCAN method to identify local motif clusters')
+    parser_cm.add_argument('-input', required = True, type=str, help='input file', default="none")
+    parser_cm.add_argument('-output_folder', required = True, type=str, help='output folder name', default="none")
     # optional parameter
-    parser_cm.add_argument('-start', required = False, type=str, help='start_axis', default="all")
-    parser_cm.add_argument('-end', required = False, type=str, help='end_axis', default="all")
+    parser_cm.add_argument('-start', required = False, type=str, help='start_axis', default="none")
+    parser_cm.add_argument('-end', required = False, type=str, help='end_axis', default="none")
     # parser_cm.set_defaults(func=cluster_and_merge_simple_dbscan)
     
     #add sub command
-    parser_cm = subparsers.add_parser("cluster_and_merge", help='add help')
-    parser_cm.add_argument('-input', required = True, type=str, help='input file', default="total_chr12.bed")
-    parser_cm.add_argument('-merge_switch', required = True, type=str, help='merge or not merge', default="open")
-    parser_cm.add_argument('-weight_switch', required = True, type=str, help='with weight or no weight', default="open")
-    parser_cm.add_argument('-output_folder', required = True, type=str, help='output folder name', default="all")
+    parser_cm = subparsers.add_parser("cluster_and_merge", help='Identify local motif clusters')
+    parser_cm.add_argument('-input', required = True, type=str, help='input file', default="none")
+    parser_cm.add_argument('-merge_switch', required = True, type=str, help='merge or not merge', default="none")
+    parser_cm.add_argument('-weight_switch', required = True, type=str, help='with weight or no weight', default="none")
+    parser_cm.add_argument('-output_folder', required = True, type=str, help='output folder name', default="none")
     #optional parameter
-    parser_cm.add_argument('-start', required = False, type=str, help='start_axis', default="all")
-    parser_cm.add_argument('-end', required = False, type=str, help='end_axis', default="all")
+    parser_cm.add_argument('-start', required = False, type=str, help='start_axis', default="none")
+    parser_cm.add_argument('-end', required = False, type=str, help='end_axis', default="none")
 
     parser_cm.set_defaults(func=cluster_and_merge)
     
     #add sub command
-    parser_cm = subparsers.add_parser("pre_process", help='add help')
-    parser_cm.add_argument('-input_name', required = True, type=str, help='input file', default="total_chr12.bed")
-    parser_cm.add_argument('-output_name', required = True, type=str, help='output folder name', default="all")
-    parser_cm.add_argument('-chrome', required = True, type=str, help='output folder name', default="all")
+    parser_cm = subparsers.add_parser("pre_process", help='Convert fimo.tsv file into the sorted bed file')
+    parser_cm.add_argument('-input_name', required = True, type=str, help='input file', default="none")
+    parser_cm.add_argument('-output_name', required = True, type=str, help='output folder name', default="none")
+    parser_cm.add_argument('-chrome', required = True, type=str, help='chrome name in the bed file', default="none")
 
     parser_cm.set_defaults(func=pre_process)
 
     
     #add sub command
-    parser_cs = subparsers.add_parser("calculate_score", help='sub help')
-    parser_cs.add_argument('-input_bed', required = True, type=str, help='input file', default="chr12.bed")
-    parser_cs.add_argument('-input_result', required = True, type=str, help='input file', default="result.csv")
-    parser_cs.add_argument('-input_middle', required = True, type=str, help='input file', default="result_middle.csv")
-    parser_cs.add_argument('-weight_switch', required = True, type=str, help='with weight or no weight', default="open")
-    parser_cs.add_argument('-output_folder', required = True, type=str, help='output folder name', default="all")
+    parser_cs = subparsers.add_parser("calculate_score", help='conduct scores and give ranks for all clusters')
+    parser_cs.add_argument('-input_bed', required = True, type=str, help='input file', default="none")
+    parser_cs.add_argument('-input_result', required = True, type=str, help='input file', default="none")
+    parser_cs.add_argument('-input_middle', required = True, type=str, help='input file', default="none")
+    parser_cs.add_argument('-weight_switch', required = True, type=str, help='with weight or no weight', default="none")
+    parser_cs.add_argument('-output_folder', required = True, type=str, help='output folder name', default="none")
     parser_cs.set_defaults(func=score)
     
+
     #add sub command
-    parser_cs = subparsers.add_parser("calculate_score_simple_dbscan", help='sub help')
-    parser_cs.add_argument('-input_bed', required = True, type=str, help='input file', default="chr12.bed")
-    parser_cs.add_argument('-input_result', required = True, type=str, help='input file', default="result.csv")
-    parser_cs.add_argument('-input_middle', required = True, type=str, help='input file', default="result_middle.csv")
-    parser_cs.add_argument('-output_folder', required = True, type=str, help='output folder name', default="all")
-    parser_cs.set_defaults(func=score)
-    
-    #add sub command
-    parser_draw = subparsers.add_parser("draw", help='add help')
-    parser_draw.add_argument('-inputcsv', required = True, type=str, help='input file', default="total_chr12.bed")
-    parser_draw.add_argument('-inputbed', required = True, type=str, help='input file', default="total_chr12.bed")
-    parser_draw.add_argument('-output_folder', required = True, type=str, help='output folder name', default="all")
-    parser_draw.add_argument('-start', required = True, type=str, help='start_axis', default="all")
-    parser_draw.add_argument('-end', required = True, type=str, help='end_axis', default="all")
-    parser_draw.add_argument('-method', required = True, type=int, help='which method used', default="all")
+    parser_draw = subparsers.add_parser("draw", help='Draw a region of interest and it shows the distinctively colored clusters view.')
+    parser_draw.add_argument('-inputcsv', required = True, type=str, help='input file', default="none")
+    parser_draw.add_argument('-inputbed', required = True, type=str, help='input file', default="none")
+    parser_draw.add_argument('-output_folder', required = True, type=str, help='output folder name', default="none")
+    parser_draw.add_argument('-start', required = True, type=str, help='start_axis', default="none")
+    parser_draw.add_argument('-end', required = True, type=str, help='end_axis', default="none")
+    parser_draw.add_argument('-method', required = True, type=int, help='which method used', default="none")
     parser_draw.set_defaults(func=draw)
     
     #add sub command
-    parser_draw = subparsers.add_parser("draw_GMM", help='add help')
-    parser_draw.add_argument('-output_folder', required = True, type=str, help='output folder name', default="all")
+    parser_draw = subparsers.add_parser("draw_GMM", help="Draw all Gaussian components\' GMM distributions.")
+    parser_draw.add_argument('-output_folder', required = True, type=str, help='output folder name', default="none")
     parser_draw.set_defaults(func=draw_gmm)
     
     #add sub command
-    parser_draw = subparsers.add_parser("draw_cluster_weight",help="add help")
-    parser_draw.add_argument('-input', required = True, type=str, help='input file', default="result_cluster_weight.csv")
-    parser_draw.add_argument('-output_folder', required = True, type=str, help='output folder name', default="all")
+    parser_draw = subparsers.add_parser("draw_cluster_weight",help="drawing the distribution of peaks' weights in every Gausssion component")
+    parser_draw.add_argument('-input', required = True, type=str, help='input file', default="none")
+    parser_draw.add_argument('-output_folder', required = True, type=str, help='output folder name', default="none")
     parser_draw.set_defaults(func=draw_cluster_weight)
     
     #add sub command
-    parser_draw = subparsers.add_parser("draw_rank",help="add help")
-    parser_draw.add_argument('-input1', required = True, type=str, help='input file 1', default="result_cluster_weight.csv")
-    parser_draw.add_argument('-input2', required = True, type=str, help='input file 2', default="result_cluster_weight.csv")
-    parser_draw.add_argument('-output_folder', required = True, type=str, help='output folder name', default="all")
+    parser_draw = subparsers.add_parser("draw_rank",help="Draw the performance(ranks) of top 100 clusters in without-noise data alongside their corresponding ranks in the noise data")
+    parser_draw.add_argument('-input1', required = True, type=str, help='input file 1', default="none")
+    parser_draw.add_argument('-input2', required = True, type=str, help='input file 2', default="none")
+    parser_draw.add_argument('-output_folder', required = True, type=str, help='output folder name',default="none")
     parser_draw.set_defaults(func=draw_rank)
     
     #add sub command
-    parser_draw = subparsers.add_parser("draw_score_size",help="add help")
-    parser_draw.add_argument('-input', required = True, type=str, help='input file 1', default="result_cluster_weight.csv")
-    parser_draw.add_argument('-output_folder', required = True, type=str, help='output folder name', default="all")
+    parser_draw = subparsers.add_parser("draw_score_size",help="Draw the corresponding cluster score and cluster size for the top 100 clusters in specific genome. ")
+    parser_draw.add_argument('-input', required = True, type=str, help='input file', default="none")
+    parser_draw.add_argument('-output_folder', required = True, type=str, help='output folder name', default="none")
     parser_draw.set_defaults(func=draw_score_size)
      
     #add sub command
@@ -116,6 +109,15 @@ def main():
     # parser_cm.add_argument('-merge_switch', required = True, type=str, help='merge or not merge', default="open")
     # parser_cm.add_argument('-output_folder', required = True, type=str, help='output folder name', default="all")
     # parser_cm.set_defaults(func=gaussion_aic)
+    
+    # #add sub commandd
+    # parser_cs = subparsers.add_parser("calculate_score_simple_dbscan", help='Using direct DBSCAN method to conduct scores and give ranks for all clusters')
+    # parser_cs.add_argument('-input_bed', required = True, type=str, help='input file', default="none")
+    # parser_cs.add_argument('-input_result', required = True, type=str, help='input file', default="none")
+    # parser_cs.add_argument('-input_middle', required = True, type=str, help='input file', default="none")
+    # parser_cs.add_argument('-output_folder', required = True, type=str, help='output folder name', default="none")
+    # parser_cs.set_defaults(func=score)
+    
 
     args = parser.parse_args()
     if args.subcommand=='cluster_and_merge_simple_dbscan':
