@@ -456,12 +456,13 @@ def cluster_and_merge(input_file1, start_axis, end_axis, merge_switch, weight_sw
     line_temp = []
     draw_input = []
     package_path = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
-    middle_results_path = os.path.abspath(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))) + output_folder +  "/tmp_output/"
     output_path = os.path.abspath(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))) + "/" + output_folder + "/"
-    if not os.path.exists(middle_results_path):
-        os.makedirs(middle_results_path)
     if not os.path.exists(output_path):
         os.makedirs(output_path)
+    middle_results_path = os.path.abspath(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))) + "/" + output_folder +  "/tmp_output/"
+    if not os.path.exists(middle_results_path):
+        os.makedirs(middle_results_path)
+   
     final_filename = package_path + "/input_files/" + input_file1
     print("first, start reading total file:\n")
     tmp = []

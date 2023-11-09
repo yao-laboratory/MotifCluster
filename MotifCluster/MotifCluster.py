@@ -7,11 +7,10 @@ from draw_operations.rank_compare_drawing import draw_rank
 from draw_operations.rank_compare_drawing import draw_score_size
 from draw_operations.GMM_drawing import draw_gmm
 from draw_operations.cluster_weight_draw import draw_cluster_weight
-# from main_operations.Gaussion_aic import gaussion_aic
-# from file_operations.Gaussion_files_operation import create_new_file
-# from file_operations.Gaussion_files_operation_copy import create_new_file
 import argparse
 import time
+
+
 def main():
     parser = argparse.ArgumentParser(prog='MotifCluster')
 
@@ -52,6 +51,7 @@ def main():
     parser_cs.add_argument('-input_result', required = True, type=str, help='input file', default="none")
     parser_cs.add_argument('-input_middle', required = True, type=str, help='input file', default="none")
     parser_cs.add_argument('-weight_switch', required = True, type=str, help='with weight or no weight', default="none")
+    parser_cs.add_argument('-step1_folder', required = True, type=str, help='step 1 output folder name', default="none")
     parser_cs.add_argument('-output_folder', required = True, type=str, help='output folder name', default="none")
     parser_cs.set_defaults(func=score)
     
@@ -60,6 +60,7 @@ def main():
     parser_draw = subparsers.add_parser("draw", help='Draw a region of interest and it shows the distinctively colored clusters view.')
     parser_draw.add_argument('-inputcsv', required = True, type=str, help='input file', default="none")
     parser_draw.add_argument('-inputbed', required = True, type=str, help='input file', default="none")
+    parser_draw.add_argument('-step1_folder', required = True, type=str, help='step 1 output folder name', default="none")
     parser_draw.add_argument('-output_folder', required = True, type=str, help='output folder name', default="none")
     parser_draw.add_argument('-start', required = True, type=str, help='start_axis', default="none")
     parser_draw.add_argument('-end', required = True, type=str, help='end_axis', default="none")
@@ -68,6 +69,7 @@ def main():
     
     #add sub command
     parser_draw = subparsers.add_parser("draw_GMM", help="Draw all Gaussian components\' GMM distributions.")
+    parser_draw.add_argument('-step1_folder', required = True, type=str, help='step 1 output folder name', default="none")
     parser_draw.add_argument('-output_folder', required = True, type=str, help='output folder name', default="none")
     parser_draw.set_defaults(func=draw_gmm)
     
@@ -90,33 +92,7 @@ def main():
     parser_draw.add_argument('-output_folder', required = True, type=str, help='output folder name', default="none")
     parser_draw.set_defaults(func=draw_score_size)
      
-    #add sub command
-    # parser_draw = subparsers.add_parser("cutting_file",help="add help")
-    # parser_draw.add_argument('-input', required = True, type=str, help='input file', default="result_cluster_weight.csv")
-    # parser_draw.add_argument('-output', required = True, type=str, help='output file', default="result_cluster_weight.csv")
-    # parser_draw.add_argument('-start', required = False, type=str, help='start_line', default="all")
-    # parser_draw.add_argument('-end', required = False, type=str, help='end_line', default="all")
-    # parser_draw.add_argument('-output_folder', required = True, type=str, help='output folder name', default="all")
-    # parser_draw.set_defaults(func=create_new_file)
     
-    
-    # #add sub command
-    # parser_cm = subparsers.add_parser("gaussion_aic_1", help='add help')
-    # parser_cm.add_argument('-input', required = True, type=str, help='input file', default="total_chr12.bed")
-    # #optional parameter
-    # parser_cm.add_argument('-start', required = False, type=str, help='start_axis', default="all")
-    # parser_cm.add_argument('-end', required = False, type=str, help='end_axis', default="all")
-    # parser_cm.add_argument('-merge_switch', required = True, type=str, help='merge or not merge', default="open")
-    # parser_cm.add_argument('-output_folder', required = True, type=str, help='output folder name', default="all")
-    # parser_cm.set_defaults(func=gaussion_aic)
-    
-    # #add sub commandd
-    # parser_cs = subparsers.add_parser("calculate_score_simple_dbscan", help='Using direct DBSCAN method to conduct scores and give ranks for all clusters')
-    # parser_cs.add_argument('-input_bed', required = True, type=str, help='input file', default="none")
-    # parser_cs.add_argument('-input_result', required = True, type=str, help='input file', default="none")
-    # parser_cs.add_argument('-input_middle', required = True, type=str, help='input file', default="none")
-    # parser_cs.add_argument('-output_folder', required = True, type=str, help='output folder name', default="none")
-    # parser_cs.set_defaults(func=score)
     
 
     args = parser.parse_args()
@@ -155,10 +131,11 @@ def main():
         original_file = args.input_bed
         input_file_score_1 = args.input_result
         input_file_score_2 = args.input_middle
+        step1_folder = args.step1_folder
         output_folder = args.output_folder
         weight_switch = args.weight_switch
         time_start_2 = time.time()
-        score(original_file, input_file_score_1, input_file_score_2,weight_switch, output_folder)
+        score(original_file, input_file_score_1, input_file_score_2,weight_switch,step1_folder, output_folder)
         time_end_2 = time.time()
         time_f= time_end_2 - time_start_2
         print('time cost', time_f, 's')
@@ -167,12 +144,14 @@ def main():
         input_bed= args.inputbed
         start_axis = args.start
         end_axis = args.end
+        step1_folder = args.step1_folder
         output_folder = args.output_folder
         method = args.method
-        draw(input_csv, input_bed, start_axis, end_axis, method, output_folder)
+        draw(input_csv, input_bed, start_axis, end_axis, method, step1_folder, output_folder)
     elif args.subcommand=="draw_GMM":
+        step1_folder = args.step1_folder
         output_folder = args.output_folder
-        draw_gmm(output_folder)
+        draw_gmm(step1_folder, output_folder)
     elif args.subcommand=="draw_cluster_weight":
         input_file = args.input
         output_folder = args.output_folder
@@ -181,30 +160,12 @@ def main():
         input_file1 = args.input1
         input_file2 = args.input2
         output_folder = args.output_folder
-        draw_rank(input_file1,input_file2,output_folder)
+        draw_rank(input_file1, input_file2, output_folder)
     elif args.subcommand=='draw_score_size':
         input_file = args.input
         output_folder = args.output_folder
-        draw_score_size(input_file,output_folder) 
+        draw_score_size(input_file, output_folder) 
 
-    # if args.subcommand=='gaussion_aic_1':
-    #     input_file1 = args.input
-    #     start_axis = args.start
-    #     end_axis = args.end
-    #     merge_switch = args.merge_switch
-    #     output_folder = args.output_folder
-    #     time_start = time.time()
-    #     gaussion_aic(input_file1, start_axis, end_axis, merge_switch, output_folder)
-    #     time_end = time.time()
-    #     time_c= time_end - time_start
-    #     print('time cost', time_c, 's')
-    # elif args.subcommand=='cutting_file':
-    #     input_file = args.input
-    #     output_file = args.output
-    #     start_line = args.start
-    #     end_line = args.end
-    #     output_folder = args.output_folder
-    #     create_new_file(input_file, output_file, start_line, end_line, output_folder)
     else:
         print("Wrong input. Check parameters")
 

@@ -1,22 +1,22 @@
-import math
-import threading
-import time
-import gc
+# import math
+# import threading
+# import time
+# import gc
 import matplotlib as mpl
-import pybedtools
+# import pybedtools
 import os
-import warnings
-import copy
-import csv,re
-import sys
+# import warnings
+# import copy
+# import csv,re
+# import sys
 from collections import namedtuple
 from draw_operations.Gaussion_draw_function import *
 from file_operations.Gaussion_files_operation import *
 
-from scipy import stats
+# from scipy import stats
 from sklearn.mixture import GaussianMixture
 from sklearn.cluster import DBSCAN
-from pybedtools import BedTool
+# from pybedtools import BedTool
 
 MAXIMUM_DISTANCE = 1000
 SINGLE_POINT = -5
@@ -35,7 +35,7 @@ mpl.rcParams['font.family'] = 'Arial'
 #     t.start()
 #     return t
 
-def draw(input_csv, input_bed, start_axis, end_axis,method, output_folder):
+def draw(input_csv, input_bed, start_axis, end_axis,method, step1_folder, output_folder):
     if method== 1:
         print("MotifCluster: with peak intensity, with cluster merge (method d)")
     elif method == 2:  
@@ -49,7 +49,7 @@ def draw(input_csv, input_bed, start_axis, end_axis,method, output_folder):
     # reload GMM Model
     package_path = os.path.abspath(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
     print(package_path)
-    middle_results_path = package_path + output_folder +  "/tmp_output/"
+    middle_results_path = package_path + "/" + step1_folder + "/tmp_output/"
     output_path = package_path + "/" + output_folder + "/"
     if not os.path.exists(middle_results_path):
         os.makedirs(middle_results_path)
@@ -72,7 +72,7 @@ def draw(input_csv, input_bed, start_axis, end_axis,method, output_folder):
     print("global_cluster_num", global_cluster_num)
     
     line_temp=[]
-    final_filename = os.path.join(package_path, input_csv)
+    final_filename = os.path.join(package_path + "/" + step1_folder, input_csv)
     data_axis = []
     data_weight = []
     arr_final = []

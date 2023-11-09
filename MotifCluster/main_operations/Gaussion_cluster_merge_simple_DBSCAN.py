@@ -105,12 +105,12 @@ def belong_which_cluster_better(cluster_0, cluster_1, id, distance, gm):
                 break;
     return -2
 
-def cluster_and_merge_simple_dbscan(input_file1, start_axis, end_axis,output_folder):
+def cluster_and_merge_simple_dbscan(input_file1, start_axis, end_axis, output_folder):
     line_temp = []
     draw_input = []
     package_path = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
-    middle_results_path = os.path.abspath(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))) + output_folder +  "/tmp_output/"
-    output_path = os.path.abspath(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))) + "/" + output_folder + "/"
+    middle_results_path = os.path.abspath(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))) + "/" + output_folder +  "/tmp_output/"
+    output_path = os.path.abspath(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))) + "/" + "/" + output_folder + "/"
     if not os.path.exists(middle_results_path):
         os.makedirs(middle_results_path)
     if not os.path.exists(output_path):
@@ -162,6 +162,7 @@ def cluster_and_merge_simple_dbscan(input_file1, start_axis, end_axis,output_fol
     # print("global_cluster_num", len(gm.means_))
     # print("\nCovariances:\n", gm.covariances_)
     # save GMM MODEL object
+    # print(middle_results_path)
     np.save(middle_results_path + 'GMM_weights', gm.weights_, allow_pickle=False)
     np.save(middle_results_path + 'GMM_means', gm.means_, allow_pickle=False)
     np.save(middle_results_path + 'GMM_covariances', gm.covariances_, allow_pickle=False)
@@ -192,9 +193,9 @@ def cluster_and_merge_simple_dbscan(input_file1, start_axis, end_axis,output_fol
     gc.disable()
     print("ave",ave)
     db_temp = DBSCAN(eps = ave, min_samples = 8).fit(X_ORIGIN, y = None, sample_weight = data_weight)
-    print("Gaussion mean:",gm.means_[0])
-    print("Gaussion covariance:",math.sqrt(gm.covariances_[0]))
-    print("Gaussion eps:",gm.means_[0]+ 2 * math.sqrt(gm.covariances_[0]))
+    # print("Gaussion mean:",gm.means_[0])
+    # print("Gaussion covariance:",math.sqrt(gm.covariances_[0]))
+    # print("Gaussion eps:",gm.means_[0]+ 2 * math.sqrt(gm.covariances_[0]))
     labels = db_temp.labels_
     label_values = []
     init_value = -2

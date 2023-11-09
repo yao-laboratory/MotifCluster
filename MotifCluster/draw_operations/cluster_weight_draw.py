@@ -1,8 +1,8 @@
 import matplotlib
 import numpy as np
 import matplotlib.pyplot as plt
-import operator
-import csv
+# import operator
+# import csv
 import os
 import pandas as pd
 

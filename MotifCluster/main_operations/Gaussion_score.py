@@ -58,7 +58,7 @@ def cal_distance_in_groups(data_axis,data_weight, gm):
     return group
 
 # data_axis as the all data input
-def score(input_file_0, input_file_score_1, input_file_score_2, weight_switch,output_folder):
+def score(input_file_0, input_file_score_1, input_file_score_2, weight_switch, step1_folder, output_folder):
     if weight_switch == "on":
         weight_switch = True
         print("weight switch swith on")
@@ -69,8 +69,8 @@ def score(input_file_0, input_file_score_1, input_file_score_2, weight_switch,ou
     package_path2 = os.path.abspath(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
     output_path = os.path.join(package_path2, output_folder)
     original_filename = os.path.join(package_path, input_file_0)
-    final_filename_1 = os.path.join(package_path2, input_file_score_1)
-    final_filename_2 = os.path.join(package_path2, input_file_score_2)
+    final_filename_1 = os.path.join(package_path2+ "/" + step1_folder, input_file_score_1)
+    final_filename_2 = os.path.join(package_path2+ "/" + step1_folder, input_file_score_2)
     data_axis = []
     data_weight=[]
     final_data =[]
@@ -80,7 +80,7 @@ def score(input_file_0, input_file_score_1, input_file_score_2, weight_switch,ou
     data_count_sum = []
     col_types_csv1=[int,int,int,int,int,str]
     # reload GMM Model
-    middle_results_path = os.path.abspath(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))) + output_folder +  "/tmp_output/"
+    middle_results_path = os.path.abspath(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))) + "/" + step1_folder +  "/tmp_output/"
     if not os.path.exists(middle_results_path):
         os.makedirs(middle_results_path)
     means = np.load(middle_results_path + 'GMM_means.npy')

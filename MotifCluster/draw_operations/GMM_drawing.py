@@ -8,11 +8,11 @@ import os
 def normal_distribution(x, gm, i):
     return (1 / math.sqrt(2 * np.pi * gm.covariances_[i])) * np.exp(-1 *((x - gm.means_[i])**2) / (2 * gm.covariances_[i]))
 
-def draw_gmm(output_folder):
+def draw_gmm(step1_folder, output_folder):
     # reload
     package_path = os.path.abspath(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
     print(package_path)
-    middle_results_path = package_path + output_folder +  "/tmp_output/"
+    middle_results_path = package_path + "/" + step1_folder + "/tmp_output/"
     output_path = package_path + "/" + output_folder + "/"
     if not os.path.exists(middle_results_path):
         os.makedirs(middle_results_path)

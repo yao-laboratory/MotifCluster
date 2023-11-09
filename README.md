@@ -88,7 +88,7 @@ It can produce sorted bed file, stored directly in the input_files folder. eg. s
 #### (Note: step2 and draw function need step1's output, so rename step1's output folder when needed in case covering step1's output results)
 ## Step1: cluster and merge
 ### Description:
-This cluster and merge command utilized our MotifCluster Method to identify local motif clusters.
+This cluster and merge command utilized our MotifCluster Method which employs both groupings and merging functions to identify local motif clusters.
 ### Overview:
 
      usage: python3 MotifCluster/MotifCluster.py cluster_and_merge
@@ -192,22 +192,25 @@ This score and rank command is designed to conduct score for each cluster and gi
 ### Overview:
 
      usage: python3 MotifCluster/MotifCluster.py  calculate_score
-                    -input_bed -input_result -input_middle -weight_switch -output_folder 
+                    -input_bed -input_result -input_middle -weight_switch -step1_folder -output_folder 
     
      required arguments: 
      -input_bed     FILENAME,  FILENAME:  your input file name(Note: step 1's sorted bed file)
-                                        the file should be put into the input_files folder.
-                                        (located: Motif_Cluster/input_files)   
+                                          the file should be put into the input_files folder.
+                                          (located: Motif_Cluster/input_files)
      -input_result  FILENAME,  FILENAME:  your input file name(Note: result*.csv),
-                                        the file generated in the output file in step1
-                                        (located: example_output_step1_1)
+                                          the file generated from step 1's output folder
+                                          (located: example_output_step1_1/result*.csv)
      -input_middle  FILENAME,  FILENAME:  your input file name(Note: result_middle*.csv),
-                                        the file generated in the output file in step1
-                                        (located: example_output_step1_1)
-     -weight_switch STATUS,  STATUS:    on or off,
-                                        on: run the program including weight information,
-                                        off: run the program without weight information    
-     -output_folder FOLDER,  FOLDER:    your customized output folder name
+                                          the file generated from step 1's output folder
+                                          (located: example_output_step1_1/result_middle*.csv)
+     -weight_switch STATUS,    STATUS:    on or off,
+                                          on: run the program including weight information,
+                                          off: run the program without weight information  
+     -step1_folder  FOLDER,    FOLDER:    This folder is the output folder name from step 1. It is 
+                                          necessary to utilize every file within it, as well as
+                                          the files in the tmp_output folder.  
+     -output_folder FOLDER,    FOLDER:    your customized output folder name
 
 
 ### Input:
@@ -215,7 +218,8 @@ Input files: The bed file should use the same one in step 1, and already in the 
 Input parameter:'-weight_switch'; You can define which folder you want to put the output results in.
 ### Command example:
 ```
-python3 MotifCluster/MotifCluster.py  calculate_score -input_bed human_chr12_origin.bed -input_result example_output_step1_1/result.csv -input_middle example_output_step1_1/result_middle.csv -weight_switch on -output_folder example_output_step1_1
+python3 MotifCluster/MotifCluster.py  calculate_score -step1_folder example_output_step1_1 -input_bed human_chr12_origin.bed -
+input_result result.csv -input_middle result_middle.csv -weight_switch on -output_folder example_output_step1_1
 ```
 ### Output: 
 In this example，output_folder: example_output_step1_1 (located: Motif_Cluster/example_output_step1_1).    
@@ -252,35 +256,38 @@ This command is designed to generate a pdf picture about a region of interest an
 ### Overview:
 
      usage: python3 MotifCluster/MotifCluster.py draw
-                    -inputbed -inputcsv -method -output_folder [-start] [-end]
+                    -inputbed -inputcsv -method -step1_folder -output_folder [-start] [-end]
     
      required arguments:
-     -inputbed   FILENAME,  FILENAME:  your input file name(Note: step 1's sorted bed file)
-                                        the file should be put into the input_files folder.
-                                        (located: Motif_Cluster/input_files)   
-     -inputcsv   FILENAME,  FILENAME:  your input file name(Note: result_draw*.csv),
-                                        the file generated in the output file in step1
-                                        (located: example_output_step1_1)
-     -method      NUM,        NUM:      The method you use:
-                                        NUM = 1: MotifCluster: with peak intensity, with cluster merge (method d)
-                                        NUM = 2: direct DBSCAN without groups (method a)
-                                        NUM = 3: No peak intensity, no cluster merge (method b1)
-                                        NUM = 4: No peak intensity, with cluster merge (method b2)
-                                        NUM = 5: with peak intensity, no cluster merge (method c)
-     -output_folder FOLDER,  FOLDER:    your customized output folder name
+     -inputbed      FILENAME,  FILENAME:  your input file name(Note: step 1's sorted bed file)
+                                          the file should be put into the input_files folder.
+                                          (located: Motif_Cluster/input_files)   
+     -inputcsv      FILENAME,  FILENAME:  your input file name(Note: result_draw*.csv),
+                                          the file generated in the output file in step1
+                                          (located: example_output_step1_1/result_draw*.csv)
+     -method        NUM,       NUM:       The method you use:
+                                          NUM = 1: MotifCluster: with peak intensity, with cluster merge (method d)
+                                          NUM = 2: direct DBSCAN without groups (method a)
+                                          NUM = 3: No peak intensity, no cluster merge (method b1)
+                                          NUM = 4: No peak intensity, with cluster merge (method b2)
+                                          NUM = 5: with peak intensity, no cluster merge (method c)
+    -step1_folder   FOLDER,    FOLDER:    This folder is the output folder name from step 1. It is 
+                                          necessary to utilize every file within it, as well as
+                                          the files in the tmp_output folder.                                    
+     -output_folder FOLDER,    FOLDER:    your customized output folder name
 
      optional arguments:
-     -start NUM               NUM: the start coordinate of drawing this input bed file 
-     -end   NUM               NUM: the end coordinate of drawing this input bed file
+     -start NUM                NUM:       the start coordinate of drawing this input bed file 
+     -end   NUM                NUM:       the end coordinate of drawing this input bed file
 
 
 ### Input:
 Input files: sorted bed file in step1 still need here, result_draw file generated in the output file in step1
 Input parameter:'-method', You can define which folder you want to put the output results in,'-start','-end'
 ### Command example:
- 
-python3 MotifCluster/MotifCluster.py draw -inputbed human_chr12_origin.bed -inputcsv example_output_step1_1/result_draw.csv -method 1 -output_folder drawing_f1 -start 6716500 -end 6724000
-
+```
+python3 MotifCluster/MotifCluster.py draw -step1_folder example_output_step1_1 -inputbed human_chr12_origin.bed -inputcsv result_draw.csv -method 1 -output_folder drawing_f1 -start 6716500 -end 6724000
+```
 ### Output:  
 1 output file: draw_figure.pdf in the output folder you defined (eg.drawing_f1), located: drawing_f1 
 #### example description:
@@ -353,7 +360,7 @@ This function can visualize: In every Gaussian component which those peaks best 
                     -input -output_folder
     
      required arguments:
-     -input       FILENAME,  FILENAME: your input file name(result_cluster_weight.csv)
+     -input       FILENAME,  FILENAME: your input file folder and name(result_cluster_weight.csv)
                                         the file generated in the output file in step2
                                         (located: example_output_step1_1)  
      -output_folder FOLDER,   FOLDER:   your customized output folder name
@@ -379,17 +386,20 @@ This function can visualize all Gaussian components' GMM distributions.
 ### Overview:
 
      usage: python3 MotifCluster/MotifCluster.py draw_GMM
-                    -input -output_folder
+                    -input -step1_folder -output_folder
     
      required arguments:
-     -output_folder FOLDER,   FOLDER:   your customized output folder name
+     -step1_folder  FOLDER,    FOLDER:    This folder is the output folder name from step 1. It is 
+                                          necessary to utilize every file within it, as well as
+                                          the files in the tmp_output folder.
+     -output_folder FOLDER,    FOLDER:    your customized output folder name
 
 ### Input:
 3 npy file: GMM_covariances.npy,GMM_means.npy,GMM_weights.npy being used in the folder  (located: example_output_step1_1/tmp_output). So this command will use the recent running result.
 ### Command example:
- 
-    python3 MotifCluster/MotifCluster.py draw_GMM  -output_folder drawing_f5
- 
+```
+python3 MotifCluster/MotifCluster.py draw_GMM  -step1_folder example_output_step1_1 -output_folder drawing_f5
+```
 ### Output:
 1 output file: GMM_drawing.pdf in the output folder you defined (eg.drawing_f5), located: drawing_f5     
 #### example description:
@@ -399,7 +409,7 @@ This function can visualize all Gaussian components' GMM distributions.
 # Tools for other Methods
 ## Method a :  direct DBSCAN without groups
 ### Description:
-* This function can run the single DBSCAN result
+* This displays the results for the direct DBSCAN method.
 ### Step 1:
 ### Overview:
 
@@ -431,15 +441,15 @@ Difference between two commands: command the -start -end can only process part o
 ### Input & Output:
 Same as MotifCluster method's step 2 command, input only change -weight_switch: off, output files format same.
 ### Command example:
-	 
-	python3 MotifCluster/MotifCluster.py calculate_score -input_bed human_chr12_origin.bed -input_result other_method1/result_simple_DBSCAN.csv -input_middle other_method1/result_middle_simple_DBSCAN.csv -output_folder other_method1 -weight_switch off
-	 
+``` 
+python3 MotifCluster/MotifCluster.py calculate_score -step1_folder other_method1 -input_bed human_chr12_origin.bed -input_result result_simple_DBSCAN.csv -input_middle result_middle_simple_DBSCAN.csv -output_folder other_method1 -weight_switch off
+``` 	 
 ### Drawing:
 #### Input & Output:
 same as 'draw' command above, input only change -method 2, output format same
 #### command example:
 ```	 
-python3 MotifCluster/MotifCluster.py draw -inputbed human_chr12_origin.bed -inputcsv other_method1/result_draw_simple_DBSCAN.csv -method 2 -output_folder drawing_m1 -start 6716500 -end 6724000
+python3 MotifCluster/MotifCluster.py draw -step1_folder other_method1 -inputbed human_chr12_origin.bed -inputcsv result_draw_simple_DBSCAN.csv -method 2 -output_folder drawing_m1 -start 6716500 -end 6724000
 ```	
 #### example description:
 * This figure below shows using Method a : direct DBSCAN without groups, the area in the human genome region chr12:6,716,600-6,724,000 which are the ZNF410 binding clusters on the CHD4 promoter region. The x-axis is the coordinate from `6.717*10^6` to `6.724*10^6` in the chr12, and y-axis is the weight of each peak. Only 1 line figure, cause only itself as one group, no union, no merge.
@@ -456,17 +466,17 @@ Step 1 (cluster and merge):
 Step 2 (score and rank):
 
      usage: python3 MotifCluster/MotifCluster.py  calculate_score
-                    -input_bed -input_result -input_middle -weight_switch -output_folder 
+                    -input_bed -input_result -input_middle -weight_switch -step1_folder -output_folder 
 
 
 draw:
 
      usage: python3 MotifCluster/MotifCluster.py draw
-                    -inputbed -inputcsv -method -output_folder [-start] [-end]
+                    -inputbed -inputcsv -method -step1_folder -output_folder [-start] [-end]
 
 ## Method b1:  No peak intensity, no cluster merge
 ### Description:
-This function can run only union without merge and also no weight information used
+This displays the results for Method b1: only union-split without merge and also no weight information used.
 ### Step 1：
 #### Input & Output:
 Input: Input files same as MotifCluster method's step 1 command.Input parameters:-merge_switch off  -weight_switch on.    
@@ -483,7 +493,7 @@ Difference between two commands: command the -start -end can only process part o
 Same as MotifCluster method's step 2 command, input only change -weight_switch: off, output files same.
 #### command example:
 ``` 
-python3 MotifCluster/MotifCluster.py  calculate_score -input_bed human_chr12_origin.bed -input_result other_method2/result_union.csv -input_middle other_method2/result_middle_union.csv -weight_switch off -output_folder other_method2
+python3 MotifCluster/MotifCluster.py  calculate_score -step1_folder other_method2 -input_bed human_chr12_origin.bed -input_result result_union.csv -input_middle result_middle_union.csv -weight_switch off -output_folder other_method2
 ```
 ### Drawing:
 #### Input & Output:
@@ -492,7 +502,7 @@ Same as MotifCluster method's step 2 command, input only change -method 3.
 
 #### command example:
 ```
-python3 MotifCluster/MotifCluster.py draw -inputbed human_chr12_origin.bed -inputcsv other_method2/result_draw_union.csv -method 3 -output_folder drawing_m2 -start 6716500 -end 6724000
+python3 MotifCluster/MotifCluster.py draw -step1_folder other_method2 -inputbed human_chr12_origin.bed -inputcsv result_draw_union.csv -method 3 -output_folder drawing_m2 -start 6716500 -end 6724000
 ```
 #### example description:
 * The figure below depicts Method b1: There are no weight information and no cluster merging in the human genome region chr12:6,716,600-6,724,000 which are the ZNF410 binding clusters on the CHD4 promoter region.  The x-axis reflects the chromosome 12 coordinates from 6,717,000 to 6,724,000, and the y-axis represents the weight of each peak. This visualization is composed of 11 lines, indicating data categorized into 10 groups with one union-split, and no merging of clusters is depicted.	
@@ -503,7 +513,7 @@ python3 MotifCluster/MotifCluster.py draw -inputbed human_chr12_origin.bed -inpu
 
 ## Method b2:  No peak intensity, with cluster merge
 ### Description:
-This function can run union without merging clusters and by using weight information
+This displays the results for Method b2: have union-split with merging clusters but without using weight information.
 ### Step 1：
 #### Input & Output:
 Input: Input files same as MotifCluster method's step 1 command.Input parameters:-merge_switch on  -weight_switch off.    
@@ -520,14 +530,14 @@ Difference between two commands: command the -start -end can only process part o
 Same as MotifCluster method's step 2 command, input only change -weight_switch: off, output files same.
 #### command example:
  
-	python3 MotifCluster/MotifCluster.py  calculate_score -input_bed human_chr12_origin.bed -input_result other_method3/result.csv -input_middle other_method3/result_middle.csv -weight_switch off -output_folder other_method3
+	python3 MotifCluster/MotifCluster.py  -step1_folder other_method3 calculate_score -input_bed human_chr12_origin.bed -input_result result.csv -input_middle result_middle.csv -weight_switch off -output_folder other_method3
  
 ### Drawing:
 #### Input & Output:
 same as 'draw' command , input only change -method 4
 #### command example:
 ```
-python3 MotifCluster/MotifCluster.py draw -inputbed human_chr12_origin.bed -inputcsv other_method3/result_draw.csv -method 4 -output_folder drawing_m3 -start 6716500 -end 6724000
+python3 MotifCluster/MotifCluster.py draw -step1_folder other_method3 -inputbed human_chr12_origin.bed -inputcsv other_method3/result_draw.csv -method 4 -output_folder drawing_m3 -start 6716500 -end 6724000
 ```
 #### example description:
 * The figure below shows Method b2, characterized by the without weights but including cluster merging within the human genome region chr12:6,716,600-6,724,000 which are the ZNF410 binding clusters on the CHD4 promoter region. The x-axis denotes coordinates ranging from 6,717,000 to 6,724,000 on chromosome 12, and the y-axis quantifies the weight of each peak. The diagram consists of 12 lines and illustrates data grouped into ten Gassian components with one union-split and a merge, although no weights information.	
@@ -538,7 +548,7 @@ python3 MotifCluster/MotifCluster.py draw -inputbed human_chr12_origin.bed -inpu
 
 ## Method c:  with peak intensity, no cluster merge
 ### Description:
-This function can run union and merge clusters but without using weight information
+This displays the results for Method c: has union-split with utilizing weight information but without merge clusters.
 ### Step 1：
 #### Input & Output:
 Input files same as MotifCluster method's step 1 command.    
@@ -556,14 +566,14 @@ Difference between two commands: command the -start -end can only process part o
 Same as MotifCluster method's step 2 command, input -weight_switch: on, output files same format.
 #### command example:
  
-	python3 MotifCluster/MotifCluster.py  calculate_score -input_bed human_chr12_origin.bed -input_result other_method4/result_union.csv -input_middle other_method4/result_middle_union.csv -weight_switch on -output_folder other_method4
+	python3 MotifCluster/MotifCluster.py  calculate_score -step1_folder other_method4 -input_bed human_chr12_origin.bed -input_result result_union.csv -input_middle result_middle_union.csv -weight_switch on -output_folder other_method4
  
 ### Drawing:
 #### Input & Output:
 same as 'draw' command , input only change -method 5
 #### command example:
 ```
-python3 MotifCluster/MotifCluster.py draw -inputbed human_chr12_origin.bed -inputcsv other_method4/result_draw.csv -method 5 -output_folder drawing_m4 -start 6716500 -end 6724000
+python3 MotifCluster/MotifCluster.py draw -step1_folder other_method4 -inputbed human_chr12_origin.bed -inputcsv result_draw.csv -method 5 -output_folder drawing_m4 -start 6716500 -end 6724000
 ```
 #### example description:
 * The figure below illustrates Method c, which displays weights' information without cluster merging in the human genome region chr12:6,716,600-6,724,000, corresponding to the ZNF410 binding clusters on the CHD4 promoter region. The x-axis represents coordinates from 6,717,000 to 6,724,000 on chromosome 12, while the y-axis measures the weight of each peak. This 11-line graph depicts the data as weighted groups, with ten distinct groups and one union-split, yet no clusters are merged.
