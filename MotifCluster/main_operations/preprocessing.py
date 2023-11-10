@@ -1,9 +1,7 @@
-import pandas as pd
-import numpy as np
-import re
-import csv
-import sys
 import os
+
+import pandas as pd
+
 
 #new codes of dealing with files
 def pre_process(input_name,output_name,chrome):

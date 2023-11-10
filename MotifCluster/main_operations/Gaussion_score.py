@@ -1,18 +1,10 @@
-import threading
-import time
-import gc
-from tkinter import Y
-import matplotlib.pyplot as plt
-import pybedtools
-import warnings
-import operator
-import copy
-from scipy import stats
-from sklearn.mixture import GaussianMixture
-from sklearn.cluster import DBSCAN
-from pybedtools import BedTool
+import math
+import os
 from collections import namedtuple
+
+import numpy as np
 from file_operations.Gaussion_files_operation import *
+from sklearn.mixture import GaussianMixture
 
 MINIMUM_VALUE = math.pow(10,-20)
 SINGLE_POINT = -5
@@ -174,14 +166,3 @@ def score(input_file_0, input_file_score_1, input_file_score_2, weight_switch, s
     write_score_result(res_path, data_axis, data_weight, final_data, p_score_final, data_count_sum, data_count_new,to_left,to_right)
     write_weight_result(res_path2, data_weight_cluster, global_cluster_num)
     print("done.")
-
- 
-    
-    
-    
-        
-
-        
-   
-
-   

@@ -1,22 +1,12 @@
-# import math
-# import threading
-# import time
-# import gc
-import matplotlib as mpl
-# import pybedtools
 import os
-# import warnings
-# import copy
-# import csv,re
-# import sys
 from collections import namedtuple
+
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+import numpy as np
 from draw_operations.Gaussion_draw_function import *
 from file_operations.Gaussion_files_operation import *
-
-# from scipy import stats
 from sklearn.mixture import GaussianMixture
-from sklearn.cluster import DBSCAN
-# from pybedtools import BedTool
 
 MAXIMUM_DISTANCE = 1000
 SINGLE_POINT = -5

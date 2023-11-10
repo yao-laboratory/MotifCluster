@@ -218,8 +218,7 @@ Input files: The bed file should use the same one in step 1, and already in the 
 Input parameter:'-weight_switch'; You can define which folder you want to put the output results in.
 ### Command example:
 ```
-python3 MotifCluster/MotifCluster.py  calculate_score -step1_folder example_output_step1_1 -input_bed human_chr12_origin.bed -
-input_result result.csv -input_middle result_middle.csv -weight_switch on -output_folder example_output_step1_1
+python3 MotifCluster/MotifCluster.py  calculate_score -step1_folder example_output_step1_1 -input_bed human_chr12_origin.bed -input_result result.csv -input_middle result_middle.csv -weight_switch on -output_folder example_output_step1_1
 ```
 ### Output: 
 In this example，output_folder: example_output_step1_1 (located: Motif_Cluster/example_output_step1_1).    
@@ -342,9 +341,9 @@ This command is designed to generate a pdf picture about corresponding cluster s
 ### Input:
 1 result_score.csv file located:  example_output_step1_1, and you can define which folder you want to put the output results in
 ### Command example:
- 
+```
    python3 MotifCluster/MotifCluster.py  draw_score_size -input example_output_step1_1/result_score.csv -output_folder drawing_f3
- 
+``` 
 ### Output:  
 1 output file: score_size.pdf in the output folder you defined (eg.drawing_f3), located: drawing_f3 
 #### example description:
@@ -449,7 +448,7 @@ python3 MotifCluster/MotifCluster.py calculate_score -step1_folder other_method1
 same as 'draw' command above, input only change -method 2, output format same
 #### command example:
 ```	 
-python3 MotifCluster/MotifCluster.py draw -step1_folder other_method1 -inputbed human_chr12_origin.bed -inputcsv result_draw_simple_DBSCAN.csv -method 2 -output_folder drawing_m1 -start 6716500 -end 6724000
+python3 MotifCluster/MotifCluster.py draw -step1_folder other_method1 -inputbed human_chr12_origin.bed -inputcsv result_draw_simple_DBSCAN.csv -method 2 -output_folder drawing_m2 -start 6716500 -end 6724000
 ```	
 #### example description:
 * This figure below shows using Method a : direct DBSCAN without groups, the area in the human genome region chr12:6,716,600-6,724,000 which are the ZNF410 binding clusters on the CHD4 promoter region. The x-axis is the coordinate from `6.717*10^6` to `6.724*10^6` in the chr12, and y-axis is the weight of each peak. Only 1 line figure, cause only itself as one group, no union, no merge.
@@ -529,15 +528,16 @@ Difference between two commands: command the -start -end can only process part o
 #### Input & Output:
 Same as MotifCluster method's step 2 command, input only change -weight_switch: off, output files same.
 #### command example:
- 
-	python3 MotifCluster/MotifCluster.py  -step1_folder other_method3 calculate_score -input_bed human_chr12_origin.bed -input_result result.csv -input_middle result_middle.csv -weight_switch off -output_folder other_method3
+```
+python3 MotifCluster/MotifCluster.py calculate_score -step1_folder other_method3 -input_bed human_chr12_origin.bed -input_result result.csv -input_middle result_middle.csv -weight_switch off -output_folder other_method3
+```
  
 ### Drawing:
 #### Input & Output:
 same as 'draw' command , input only change -method 4
 #### command example:
 ```
-python3 MotifCluster/MotifCluster.py draw -step1_folder other_method3 -inputbed human_chr12_origin.bed -inputcsv other_method3/result_draw.csv -method 4 -output_folder drawing_m3 -start 6716500 -end 6724000
+python3 MotifCluster/MotifCluster.py draw -step1_folder other_method3 -inputbed human_chr12_origin.bed -inputcsv result_draw.csv -method 4 -output_folder drawing_m3 -start 6716500 -end 6724000
 ```
 #### example description:
 * The figure below shows Method b2, characterized by the without weights but including cluster merging within the human genome region chr12:6,716,600-6,724,000 which are the ZNF410 binding clusters on the CHD4 promoter region. The x-axis denotes coordinates ranging from 6,717,000 to 6,724,000 on chromosome 12, and the y-axis quantifies the weight of each peak. The diagram consists of 12 lines and illustrates data grouped into ten Gassian components with one union-split and a merge, although no weights information.	
@@ -565,15 +565,15 @@ Difference between two commands: command the -start -end can only process part o
 #### Input & Output:
 Same as MotifCluster method's step 2 command, input -weight_switch: on, output files same format.
 #### command example:
- 
-	python3 MotifCluster/MotifCluster.py  calculate_score -step1_folder other_method4 -input_bed human_chr12_origin.bed -input_result result_union.csv -input_middle result_middle_union.csv -weight_switch on -output_folder other_method4
- 
+``` 
+python3 MotifCluster/MotifCluster.py  calculate_score -step1_folder other_method4 -input_bed human_chr12_origin.bed -input_result result_union.csv -input_middle result_middle_union.csv -weight_switch on -output_folder other_method4
+``` 
 ### Drawing:
 #### Input & Output:
 same as 'draw' command , input only change -method 5
 #### command example:
 ```
-python3 MotifCluster/MotifCluster.py draw -step1_folder other_method4 -inputbed human_chr12_origin.bed -inputcsv result_draw.csv -method 5 -output_folder drawing_m4 -start 6716500 -end 6724000
+python3 MotifCluster/MotifCluster.py draw -step1_folder other_method4 -inputbed human_chr12_origin.bed -inputcsv result_draw_union.csv -method 5 -output_folder drawing_m4 -start 6716500 -end 6724000
 ```
 #### example description:
 * The figure below illustrates Method c, which displays weights' information without cluster merging in the human genome region chr12:6,716,600-6,724,000, corresponding to the ZNF410 binding clusters on the CHD4 promoter region. The x-axis represents coordinates from 6,717,000 to 6,724,000 on chromosome 12, while the y-axis measures the weight of each peak. This 11-line graph depicts the data as weighted groups, with ten distinct groups and one union-split, yet no clusters are merged.

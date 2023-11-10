@@ -1,14 +1,15 @@
-from main_operations.Gaussion_cluster_merge import cluster_and_merge
-from main_operations.Gaussion_cluster_merge_simple_DBSCAN import cluster_and_merge_simple_dbscan
-from main_operations.Gaussion_score import score
-from main_operations.preprocessing import pre_process
-from draw_operations.Gaussion_draw_figure import draw
-from draw_operations.rank_compare_drawing import draw_rank
-from draw_operations.rank_compare_drawing import draw_score_size
-from draw_operations.GMM_drawing import draw_gmm
-from draw_operations.cluster_weight_draw import draw_cluster_weight
 import argparse
 import time
+
+from draw_operations.cluster_weight_draw import draw_cluster_weight
+from draw_operations.Gaussion_draw_figure import draw
+from draw_operations.GMM_drawing import draw_gmm
+from draw_operations.rank_compare_drawing import draw_rank, draw_score_size
+from main_operations.Gaussion_cluster_merge import cluster_and_merge
+from main_operations.Gaussion_cluster_merge_simple_DBSCAN import \
+    cluster_and_merge_simple_dbscan
+from main_operations.Gaussion_score import score
+from main_operations.preprocessing import pre_process
 
 
 def main():

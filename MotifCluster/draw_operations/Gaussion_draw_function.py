@@ -1,8 +1,8 @@
-# from pickle import FALSE
-# from tkinter import Y
-import numpy as np
-import matplotlib.pyplot as plt
 import operator
+
+import matplotlib.pyplot as plt
+import numpy as np
+
 
 # extend x axis
 def extend_xplot(x, y, x_maxsize, id):

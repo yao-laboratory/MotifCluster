@@ -1,9 +1,10 @@
-from ast import Return
-import numpy as np
-import matplotlib.pyplot as plt
 import math
-from sklearn.mixture import GaussianMixture
 import os
+
+import matplotlib.pyplot as plt
+import numpy as np
+from sklearn.mixture import GaussianMixture
+
 
 def normal_distribution(x, gm, i):
     return (1 / math.sqrt(2 * np.pi * gm.covariances_[i])) * np.exp(-1 *((x - gm.means_[i])**2) / (2 * gm.covariances_[i]))

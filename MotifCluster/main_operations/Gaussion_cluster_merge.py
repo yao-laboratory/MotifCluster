@@ -1,19 +1,17 @@
-from email.headerregistry import Group
-import threading
-import time
-import gc
-from xml.dom.minidom import Identified
-import matplotlib.pyplot as plt
-import pybedtools
-import warnings
-import operator
 import copy
-import sys
-from scipy import stats
-from sklearn.mixture import GaussianMixture
-from sklearn.cluster import DBSCAN
-from pybedtools import BedTool
+import gc
+import math
+import os
+import threading
+import warnings
+
+import matplotlib.pyplot as plt
+import numpy as np
+import pybedtools
 from file_operations.Gaussion_files_operation import *
+from pybedtools import BedTool
+from sklearn.cluster import DBSCAN
+from sklearn.mixture import GaussianMixture
 
 MAXIMUM_DISTANCE = 1000
 SINGLE_POINT = -5

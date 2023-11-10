@@ -1,8 +1,8 @@
-import math
-import numpy as np
-import csv,re
-import os
+import csv
+
 import pandas as pd
+
+
 def find_left_right_axis(filename):
     to_left = 0
     to_right = 0 

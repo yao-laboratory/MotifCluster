@@ -1,10 +1,10 @@
-import numpy as np
-import matplotlib as mpl
-import matplotlib.pyplot as plt
-import math
-import csv,re
+import csv
 import os
 from collections import namedtuple
+
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+import numpy as np
 
 mpl.rcParams['pdf.fonttype'] = 42
 mpl.rcParams['ps.fonttype'] = 42
@@ -128,7 +128,7 @@ def draw_score_size(final_filename, output_folder):
     x = np.arange(1, 101)
     y1 = group_score
     y2 = group_cluster_size
-
+    x = np.arange(1, len(y1)+1)
     fig = plt.figure(figsize=[15, 6])
 
     ax1 = fig.add_subplot(111)
@@ -158,7 +158,3 @@ def draw_score_size(final_filename, output_folder):
     path = os.path.join(output_path, 'score_size.pdf')
     plt.savefig(path, bbox_inches='tight')
     plt.show()
- 
- 
-
-                
