@@ -16,41 +16,50 @@ from sklearn.mixture import GaussianMixture
 MAXIMUM_DISTANCE = 1000
 SINGLE_POINT = -5
 
-#delete warning
+# delete warning
 warnings.filterwarnings("ignore")
 
-#print every 10 minutes
+# print every 10 minutes
+
+
 def print_function():
     # print('Now:', time.strftime('%H:%M:%S',time.localtime()))
     t = threading.Timer(60*5, print_function)
     t.start()
     return t
 
-#mean value
+# mean value
+
+
 def average(data):
     return np.sum(data)/len(data)
 
-#standard deviation
-def sigma(data,avg):
-    sigma_squ=np.sum(np.power((data-avg),2))/len(data)
-    return np.power(sigma_squ,0.5)
+# standard deviation
 
-#Gaussion Distribution
-def prob(data,avg,sig):
+
+def sigma(data, avg):
+    sigma_squ = np.sum(np.power((data-avg), 2))/len(data)
+    return np.power(sigma_squ, 0.5)
+
+# Gaussion Distribution
+
+
+def prob(data, avg, sig):
     # print(data)
-    sqrt_2pi=np.power(2*np.pi,0.5)
-    coef=1/(sqrt_2pi*sig)
-    powercoef=-1/(2*np.power(sig,2))
-    mypow=powercoef*(np.power((data-avg),2))
+    sqrt_2pi = np.power(2*np.pi, 0.5)
+    coef = 1/(sqrt_2pi*sig)
+    powercoef = -1/(2*np.power(sig, 2))
+    mypow = powercoef*(np.power((data-avg), 2))
     return coef*(np.exp(mypow))
 
-def union_store_data(final_filename,x1,arr_final,data_sum,sequence,data_count,data_count_sum,arr_outliers):
-    with open(final_filename,"r") as lines:
+
+def union_store_data(final_filename, x1, arr_final, data_sum, sequence, data_count, data_count_sum, arr_outliers):
+    with open(final_filename, "r") as lines:
         cluster_id = 0
         flag = False
         for line in lines:
             line = line.split()
-            data_temp=[]
+            data_temp = []
             for i in range(len(x1)):
                 if int(x1[i]) > int(line[2]):
                     break
@@ -59,19 +68,19 @@ def union_store_data(final_filename,x1,arr_final,data_sum,sequence,data_count,da
                     data_sum.append(x1[i])
                     arr_final.append(cluster_id)
                     sequence.append(i)
-                    flag = True        
+                    flag = True
             if flag == True:
                 cluster_id += 1
             if len(data_temp) == 0:
                 continue
-            data_count.append(len(data_temp))          
+            data_count.append(len(data_temp))
 
     for i in range(len(x1)):
         if i not in sequence:
-            arr_final.insert(i,-1)
+            arr_final.insert(i, -1)
             arr_outliers.append(i)
-            sequence.insert(i,i)
-            data_sum.insert(i,x1[i])
+            sequence.insert(i, i)
+            data_sum.insert(i, x1[i])
     data_count_temp = copy.deepcopy(data_count)
     cnt = 0
     cnt_total = 0
@@ -83,7 +92,7 @@ def union_store_data(final_filename,x1,arr_final,data_sum,sequence,data_count,da
             cnt += 1
         elif arr_final[i] == -1:
             if cnt == 0:
-                data_count.insert(i,1)
+                data_count.insert(i, 1)
                 cnt_temp += 1
             elif cnt > 0:
                 if cnt == cnt_total:
@@ -98,8 +107,8 @@ def union_store_data(final_filename,x1,arr_final,data_sum,sequence,data_count,da
                             cnt_temp += 1
     cnt = 0
     for j in range(len(data_count)):
-            cnt += data_count[j]
-            data_count_sum.append(cnt)
+        cnt += data_count[j]
+        data_count_sum.append(cnt)
 
 
 def belong_which_class(distance, gm):
@@ -108,26 +117,29 @@ def belong_which_class(distance, gm):
     if distance == 0 or distance > 500:
         return class_id
     for i in range(len(gm.means_)):
-        value = (1 / math.sqrt(2 * math.pi * gm.covariances_[i])) * math.exp(-math.pow(distance - gm.means_[i],2) / (2 * gm.covariances_[i]))
+        value = (1 / math.sqrt(2 * math.pi * gm.covariances_[i])) * math.exp(-math.pow(
+            distance - gm.means_[i], 2) / (2 * gm.covariances_[i]))
         if value > maximum:
             maximum = value
             class_id = i
     return class_id
+
 
 def belong_which_class_better(class_0, class_1, id, distance, gm):
     temp_array = []
     if distance > 500:
         return -2
     for i in range(len(gm.means_)):
-        p_value = (1 / math.sqrt(2 * math.pi * gm.covariances_[i])) * math.exp(-math.pow(distance - gm.means_[i],2) / (2 * gm.covariances_[i]))
+        p_value = (1 / math.sqrt(2 * math.pi * gm.covariances_[i])) * math.exp(-math.pow(
+            distance - gm.means_[i], 2) / (2 * gm.covariances_[i]))
         if p_value != 0 and p_value != 1:
             log_odd = math.log(p_value/(1-p_value))
-            #idth distance
+            # idth distance
             temp_array.append([id, i, log_odd])
-    
-    temp_array.sort(key=lambda x:x[2], reverse = True)
+
+    temp_array.sort(key=lambda x: x[2], reverse=True)
     if len(temp_array) > 0:
-        #if the best log odd belong to class_0 or class_1
+        # if the best log odd belong to class_0 or class_1
         if temp_array[0][1] == class_0 or temp_array[0][1] == class_1:
             return temp_array[0][1]
         for i in range(len(temp_array) - 1):
@@ -135,17 +147,19 @@ def belong_which_class_better(class_0, class_1, id, distance, gm):
                 if temp_array[i+1][1] == class_0 or temp_array[i+1][1] == class_1:
                     return temp_array[i+1][1]
             else:
-                break;
+                break
     return -2
 
-#pre merge to divide class
-def pre_merge_divide_class(final_filename,x1,gm,arr_final,data_sum,sequence,data_count,class_belong,average_distance):
-    with open(final_filename,"r") as lines:
+# pre merge to divide class
+
+
+def pre_merge_divide_class(final_filename, x1, gm, arr_final, data_sum, sequence, data_count, class_belong, average_distance):
+    with open(final_filename, "r") as lines:
         class_id = 0
         flag = False
         for line in lines:
             line = line.split()
-            data_temp=[]
+            data_temp = []
             for i in range(len(x1)):
                 if int(x1[i]) > int(line[2]):
                     break
@@ -154,29 +168,34 @@ def pre_merge_divide_class(final_filename,x1,gm,arr_final,data_sum,sequence,data
                     data_sum.append(x1[i])
                     arr_final.append(class_id)
                     sequence.append(i)
-                    flag = True        
+                    flag = True
             if flag == True:
                 class_id += 1
             if len(data_temp) == 0:
                 continue
             data_count.append(len(data_temp))
-            data_distance_temp_=np.array([(int(data_temp[i+1]) - int(data_temp[i])) for i in range(len(data_temp)-1)])
-            #calculate the Gaussion distribution's mean value according to the sample data
-            ave_temp = 0 if len(data_distance_temp_) == 0 else average(data_distance_temp_)
+            data_distance_temp_ = np.array(
+                [(int(data_temp[i+1]) - int(data_temp[i])) for i in range(len(data_temp)-1)])
+            # calculate the Gaussion distribution's mean value according to the sample data
+            ave_temp = 0 if len(data_distance_temp_) == 0 else average(
+                data_distance_temp_)
             # one point counts how many distance and score
-            ave_final = MAXIMUM_DISTANCE if len(data_distance_temp_) == 0 else average(data_distance_temp_)
+            ave_final = MAXIMUM_DISTANCE if len(
+                data_distance_temp_) == 0 else average(data_distance_temp_)
             average_distance.append(ave_final)
             class_num = belong_which_class(ave_temp, gm)
-            class_belong.append(class_num)        
+            class_belong.append(class_num)
     # f.close()
-def pre_merge_store_data(x1,arr_final,data_sum,sequence,data_count,class_belong,arr_outliers):
+
+
+def pre_merge_store_data(x1, arr_final, data_sum, sequence, data_count, class_belong, arr_outliers):
     # add_outliers
     for i in range(len(x1)):
         if i not in sequence:
-            arr_final.insert(i,-1)
+            arr_final.insert(i, -1)
             arr_outliers.append(i)
-            sequence.insert(i,i)
-            data_sum.insert(i,x1[i])
+            sequence.insert(i, i)
+            data_sum.insert(i, x1[i])
     data_count_temp = copy.deepcopy(data_count)
     cnt = 0
     cnt_total = 0
@@ -188,7 +207,7 @@ def pre_merge_store_data(x1,arr_final,data_sum,sequence,data_count,class_belong,
             cnt += 1
         elif arr_final[i] == -1:
             if cnt == 0:
-                data_count.insert(i,1)
+                data_count.insert(i, 1)
                 class_belong.insert(i, -1)
                 cnt_temp += 1
             elif cnt > 0:
@@ -204,9 +223,11 @@ def pre_merge_store_data(x1,arr_final,data_sum,sequence,data_count,class_belong,
                             data_count.insert(j + 1 + cnt_temp, 1)
                             class_belong.insert(j + 1 + cnt_temp, -1)
                             cnt_temp += 1
-    
-#merge to the left
-def merge(data_sum,gm,data_count,class_belong,data_count_new,class_belong_new):
+
+# merge to the left
+
+
+def merge(data_sum, gm, data_count, class_belong, data_count_new, class_belong_new):
     sum_count = 0
     class_id = -3
     class_id_2 = -3
@@ -223,13 +244,13 @@ def merge(data_sum,gm,data_count,class_belong,data_count_new,class_belong_new):
         elif i != 0:
             data_count_i = data_count_new.pop()
             class_belong_i = class_belong_new.pop()
-        #bundary condition
+        # bundary condition
         if (i+1) > (len(data_count) - 1):
             data_count_new.append(data_count_i)
             class_belong_new.append(class_belong_i)
             break
         elif (i+2) > (len(data_count) - 1):
-            #not finished
+            # not finished
             data_count_new.append(data_count_i)
             data_count_new.append(data_count[i+1])
             class_belong_new.append(class_belong_i)
@@ -238,73 +259,82 @@ def merge(data_sum,gm,data_count,class_belong,data_count_new,class_belong_new):
         else:
             distance = data_sum[sum_count] - data_sum[sum_count - 1]
             distance_2 = data_sum[sum_count + 1] - data_sum[sum_count]
-            if data_count[i+1] > 1 :
+            if data_count[i+1] > 1:
                 if data_count_i > 1:
                     if class_belong_i == class_belong[i+1]:
-                        class_id = belong_which_class_better(class_belong_i, class_belong[i+1], i, distance, gm)
-                        #check gap
+                        class_id = belong_which_class_better(
+                            class_belong_i, class_belong[i+1], i, distance, gm)
+                        # check gap
                         if class_id == class_belong_i:
-                            data_count_new.append(data_count_i + data_count[i+1])
+                            data_count_new.append(
+                                data_count_i + data_count[i+1])
                             class_belong_new.append(class_belong_i)
                         else:
                             data_count_new.append(data_count_i)
-                            data_count_new.append(data_count[i+1])  
+                            data_count_new.append(data_count[i+1])
                             class_belong_new.append(class_belong_i)
                             class_belong_new.append(class_belong[i+1])
 
                     else:
-                        #not merge
+                        # not merge
                         data_count_new.append(data_count_i)
-                        data_count_new.append(data_count[i+1])  
+                        data_count_new.append(data_count[i+1])
                         class_belong_new.append(class_belong_i)
                         class_belong_new.append(class_belong[i+1])
                 elif data_count_i == 1:
-                    class_id = belong_which_class_better(class_belong_i, class_belong[i+1], i, distance, gm)
+                    class_id = belong_which_class_better(
+                        class_belong_i, class_belong[i+1], i, distance, gm)
                     if class_id == class_belong[i+1]:
                         data_count_new.append(data_count_i + data_count[i+1])
                         class_belong_new.append(class_belong[i+1])
                     else:
                         data_count_new.append(data_count_i)
-                        data_count_new.append(data_count[i+1])  
+                        data_count_new.append(data_count[i+1])
                         class_belong_new.append(class_belong_i)
-                        class_belong_new.append(class_belong[i+1]) 
-                i += 1   
+                        class_belong_new.append(class_belong[i+1])
+                i += 1
             elif data_count[i+1] == 1:
                 if data_count_i > 1 and data_count[i+2] == 1:
-                    class_id = belong_which_class_better(class_belong_i, class_belong[i+1], i, distance, gm)
+                    class_id = belong_which_class_better(
+                        class_belong_i, class_belong[i+1], i, distance, gm)
                     if class_id == class_belong_i:
                         data_count_new.append(data_count_i + data_count[i+1])
                         class_belong_new.append(class_belong_i)
                     else:
                         data_count_new.append(data_count_i)
-                        data_count_new.append(data_count[i+1])  
+                        data_count_new.append(data_count[i+1])
                         class_belong_new.append(class_belong_i)
-                        class_belong_new.append(class_belong[i+1]) 
+                        class_belong_new.append(class_belong[i+1])
                     i += 1
                 elif data_count_i > 1 and data_count[i+2] > 1:
                     distance = data_sum[sum_count] - data_sum[sum_count - 1]
                     distance_2 = data_sum[sum_count + 1] - data_sum[sum_count]
-                    class_id = belong_which_class_better(class_belong_i, class_belong[i+1], i, distance, gm)
-                    class_id_2 = belong_which_class_better(class_belong[i+1], class_belong[i+2], i, distance_2, gm)
+                    class_id = belong_which_class_better(
+                        class_belong_i, class_belong[i+1], i, distance, gm)
+                    class_id_2 = belong_which_class_better(
+                        class_belong[i+1], class_belong[i+2], i, distance_2, gm)
                     if class_belong_i != class_belong[i+2]:
-                        if class_id  == class_belong_i and class_id_2 == class_belong[i+2]:
-                            #not finished
-                            data_count_new.append(data_count_i + data_count[i+1])
+                        if class_id == class_belong_i and class_id_2 == class_belong[i+2]:
+                            # not finished
+                            data_count_new.append(
+                                data_count_i + data_count[i+1])
                             data_count_new.append(data_count[i+2])
                             class_belong_new.append(class_belong_i)
                             class_belong_new.append(class_belong[i+2])
                         else:
-                            if class_id  == class_belong_i:
-                                data_count_new.append(data_count_i + data_count[i+1])
+                            if class_id == class_belong_i:
+                                data_count_new.append(
+                                    data_count_i + data_count[i+1])
                                 data_count_new.append(data_count[i+2])
                                 class_belong_new.append(class_belong_i)
                                 class_belong_new.append(class_belong[i+2])
                             if class_id_2 == class_belong[i+2]:
                                 data_count_new.append(data_count_i)
-                                data_count_new.append(data_count[i+1]+ data_count[i+2])
+                                data_count_new.append(
+                                    data_count[i+1] + data_count[i+2])
                                 class_belong_new.append(class_belong_i)
                                 class_belong_new.append(class_belong[i+2])
-                            elif class_id  != class_belong_i and class_id_2 != class_belong[i+2]:
+                            elif class_id != class_belong_i and class_id_2 != class_belong[i+2]:
                                 data_count_new.append(data_count_i)
                                 data_count_new.append(data_count[i+1])
                                 data_count_new.append(data_count[i+2])
@@ -312,20 +342,23 @@ def merge(data_sum,gm,data_count,class_belong,data_count_new,class_belong_new):
                                 class_belong_new.append(class_belong[i+1])
                                 class_belong_new.append(class_belong[i+2])
                     elif class_belong_i == class_belong[i+2]:
-                        #merge together
-                        if class_id  == class_belong_i and class_id_2 == class_belong[i+2]:
-                            #not finished
-                            data_count_new.append(data_count_i + data_count[i+1] + data_count[i+2])
+                        # merge together
+                        if class_id == class_belong_i and class_id_2 == class_belong[i+2]:
+                            # not finished
+                            data_count_new.append(
+                                data_count_i + data_count[i+1] + data_count[i+2])
                             class_belong_new.append(class_belong_i)
                         else:
-                            if class_id  == class_belong_i:
-                                data_count_new.append(data_count_i + data_count[i+1])
+                            if class_id == class_belong_i:
+                                data_count_new.append(
+                                    data_count_i + data_count[i+1])
                                 data_count_new.append(data_count[i+2])
                                 class_belong_new.append(class_belong_i)
                                 class_belong_new.append(class_belong[i+2])
                             if class_id_2 == class_belong[i+2]:
                                 data_count_new.append(data_count_i)
-                                data_count_new.append(data_count[i+1] + data_count[i+2])
+                                data_count_new.append(
+                                    data_count[i+1] + data_count[i+2])
                                 class_belong_new.append(class_belong_i)
                                 class_belong_new.append(class_belong[i+2])
                             elif class_id != class_belong_i and class_id_2 != class_belong[i+2]:
@@ -336,13 +369,14 @@ def merge(data_sum,gm,data_count,class_belong,data_count_new,class_belong_new):
                                 class_belong_new.append(class_belong[i+1])
                                 class_belong_new.append(class_belong[i+2])
                     i += 2
-                    
-                elif data_count_i == 1:  
+
+                elif data_count_i == 1:
                     if class_belong_i != -1 and class_belong[i+1] != -1:
                         class_id = belong_which_class(distance, gm)
                         if class_belong_i == class_belong[i+1]:
                             if class_id != SINGLE_POINT:
-                                data_count_new.append(data_count_i + data_count[i+1])
+                                data_count_new.append(
+                                    data_count_i + data_count[i+1])
                                 class_belong_new.append(class_id)
                             else:
                                 data_count_new.append(data_count_i)
@@ -354,18 +388,19 @@ def merge(data_sum,gm,data_count,class_belong,data_count_new,class_belong_new):
                             data_count_new.append(data_count[i+1])
                             class_belong_new.append(class_belong_i)
                             class_belong_new.append(class_belong[i+1])
-                    else:  
-                            data_count_new.append(data_count_i)
-                            data_count_new.append(data_count[i+1])
-                            class_belong_new.append(class_belong_i)
-                            class_belong_new.append(class_belong[i+1])  
+                    else:
+                        data_count_new.append(data_count_i)
+                        data_count_new.append(data_count[i+1])
+                        class_belong_new.append(class_belong_i)
+                        class_belong_new.append(class_belong[i+1])
                     i += 1
 
-def merge_store_data(data_count_new,data_count_sum,class_belong_new,final_data,arr_final,arr_final_draw):
+
+def merge_store_data(data_count_new, data_count_sum, class_belong_new, final_data, arr_final, arr_final_draw):
     cnt = 0
     for j in range(len(data_count_new)):
-            cnt += data_count_new[j]
-            data_count_sum.append(cnt)
+        cnt += data_count_new[j]
+        data_count_sum.append(cnt)
 
     for i in range(len(data_count_new)):
         if data_count_new[i] == 1:
@@ -376,7 +411,7 @@ def merge_store_data(data_count_new,data_count_sum,class_belong_new,final_data,a
             continue
         cnt = data_count_new[i]
         for j in range(cnt):
-            final_data.append(class_belong_new[i]) 
+            final_data.append(class_belong_new[i])
     cnt = 0
     count = 0
     for i in range(len(data_count_new)):
@@ -391,10 +426,12 @@ def merge_store_data(data_count_new,data_count_sum,class_belong_new,final_data,a
         for j in range(cnt):
             arr_final_draw.append(count)
         count += 4
-    
-#output csv file     
-def store_file(path,x1,y1,gm,data_count_new,class_belong_new,data_count_sum,draw_input,final_data,arr_final,arr_final_draw,to_left,to_right):        
-    #output csv file 
+
+# output csv file
+
+
+def store_file(path, x1, y1, gm, data_count_new, class_belong_new, data_count_sum, draw_input, final_data, arr_final, arr_final_draw, to_left, to_right):
+    # output csv file
     if gm is None:
         res_dir = os.path.dirname(path)
         res_path = os.path.join(res_dir, 'result_simple_DBSCAN.csv')
@@ -406,9 +443,11 @@ def store_file(path,x1,y1,gm,data_count_new,class_belong_new,data_count_sum,draw
             os.remove(res_path2)
         if os.path.exists(res_path3):
             os.remove(res_path3)
-        write_result(res_path, x1, y1, final_data,to_left,to_right)
-        write_middle_result(res_path2, data_count_new, class_belong_new, data_count_sum)
-        write_draw_input(res_path3, x1, y1, draw_input, 1, arr_final, arr_final_draw)
+        write_result(res_path, x1, y1, final_data, to_left, to_right)
+        write_middle_result(res_path2, data_count_new,
+                            class_belong_new, data_count_sum)
+        write_draw_input(res_path3, x1, y1, draw_input,
+                         1, arr_final, arr_final_draw)
     elif class_belong_new is None:
         res_dir = os.path.dirname(path)
         res_path = os.path.join(res_dir, 'result_union.csv')
@@ -420,9 +459,11 @@ def store_file(path,x1,y1,gm,data_count_new,class_belong_new,data_count_sum,draw
             os.remove(res_path2)
         if os.path.exists(res_path3):
             os.remove(res_path3)
-        write_result(res_path, x1, y1, final_data,to_left,to_right)
-        write_middle_result(res_path2, data_count_new, class_belong_new, data_count_sum)
-        write_draw_input(res_path3, x1, y1, draw_input, len(gm.means_), arr_final, arr_final_draw)
+        write_result(res_path, x1, y1, final_data, to_left, to_right)
+        write_middle_result(res_path2, data_count_new,
+                            class_belong_new, data_count_sum)
+        write_draw_input(res_path3, x1, y1, draw_input, len(
+            gm.means_), arr_final, arr_final_draw)
     else:
         res_dir = os.path.dirname(path)
         res_path = os.path.join(res_dir, 'result.csv')
@@ -434,63 +475,69 @@ def store_file(path,x1,y1,gm,data_count_new,class_belong_new,data_count_sum,draw
             os.remove(res_path2)
         if os.path.exists(res_path3):
             os.remove(res_path3)
-        write_result(res_path, x1, y1, final_data,to_left,to_right)
-        write_middle_result(res_path2, data_count_new, class_belong_new, data_count_sum)
-        write_draw_input(res_path3, x1, y1, draw_input, len(gm.means_), arr_final, arr_final_draw)
+        write_result(res_path, x1, y1, final_data, to_left, to_right)
+        write_middle_result(res_path2, data_count_new,
+                            class_belong_new, data_count_sum)
+        write_draw_input(res_path3, x1, y1, draw_input, len(
+            gm.means_), arr_final, arr_final_draw)
+
 
 def cluster_and_merge(input_file1, start_axis, end_axis, merge_switch, weight_switch, output_folder):
     if merge_switch == "on":
         merge_switch = True
         print("merge swith on")
     else:
-        merge_switch = False   
+        merge_switch = False
         print("merge switch off")
     if weight_switch == "on":
         weight_switch = True
         print("weight switch swith on")
     else:
-        weight_switch = False   
+        weight_switch = False
         print("weight switch off")
     line_temp = []
     draw_input = []
     package_path = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
-    output_path = os.path.abspath(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))) + "/" + output_folder + "/"
+    output_path = os.path.abspath(os.path.dirname(os.path.dirname(
+        os.path.dirname(__file__)))) + "/" + output_folder + "/"
     if not os.path.exists(output_path):
         os.makedirs(output_path)
-    middle_results_path = os.path.abspath(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))) + "/" + output_folder +  "/tmp_output/"
+    middle_results_path = os.path.abspath(os.path.dirname(os.path.dirname(
+        os.path.dirname(__file__)))) + "/" + output_folder + "/tmp_output/"
     if not os.path.exists(middle_results_path):
         os.makedirs(middle_results_path)
-   
+
     final_filename = package_path + "/input_files/" + input_file1
     print("first, start reading total file:\n")
     tmp = []
     tmp = find_left_right_axis(final_filename)
     to_left = tmp[0]
-    to_right = tmp[1] 
-    data_axis=[]
-    weight=[]
-    f = open(final_filename,"r")
+    to_right = tmp[1]
+    data_axis = []
+    weight = []
+    f = open(final_filename, "r")
     with f as lines:
         class_id = 0
         for line in lines:
             line = line.split("\t")
-            p_value=float(str(line[7][8:]).strip())
+            p_value = float(str(line[7][8:]).strip())
             middle_axis = int(line[1]) + to_left
             data_axis.append(middle_axis)
-            num = -math.log10(p_value)       
+            num = -math.log10(p_value)
             if weight_switch:
                 weight.append(num)
             elif not weight_switch:
-                weight.append(10)           
+                weight.append(10)
 
     f.close()
     data_weight = np.array(weight)
-    data=np.array([(data_axis[i+1] - data_axis[i]) for i in range(len(data_axis)-1)])
-    ave=average(data)
-    #print("!!!ave:",ave)
-    sig=sigma(data,ave)
-    
-    #GMM fitting
+    data = np.array([(data_axis[i+1] - data_axis[i])
+                    for i in range(len(data_axis)-1)])
+    ave = average(data)
+    # print("!!!ave:",ave)
+    sig = sigma(data, ave)
+
+    # GMM fitting
     X_DISTANCE = data.reshape(len(data), 1)
     x_distance_temp = []
     for value in X_DISTANCE:
@@ -500,7 +547,7 @@ def cluster_and_merge(input_file1, start_axis, end_axis, merge_switch, weight_sw
     # print(X_DISTANCE)
     # Set up a range of cluster numbers to try
     # original
-    n_range = range(1,11)
+    n_range = range(1, 11)
 
     # Create empty lists to store the BIC and AIC values
     bic_score = []
@@ -511,9 +558,9 @@ def cluster_and_merge(input_file1, start_axis, end_axis, merge_switch, weight_sw
     global_class_num = 0
     # Loop through the range and fit a model
     for i in n_range:
-        gm = GaussianMixture(n_components=i, 
-                            random_state=100, 
-                            n_init=10)
+        gm = GaussianMixture(n_components=i,
+                             random_state=100,
+                             n_init=10)
         gm.fit(X_DISTANCE)
         # print("\nMeans:\n", gm.means_)
         # Append the BIC and AIC to the respective lists
@@ -522,28 +569,29 @@ def cluster_and_merge(input_file1, start_axis, end_axis, merge_switch, weight_sw
         if aic_score[i-1] < min_score:
             min_score = aic_score[i-1]
             global_class_num = i
-    gm = GaussianMixture(n_components = global_class_num, n_init = 10, random_state = 100)
+    gm = GaussianMixture(n_components=global_class_num,
+                         n_init=10, random_state=100)
     gm.fit(X_DISTANCE)
     # print("Weights: ", gm.weights_)
     # print("\nMeans:\n", gm.means_)
     class_means_all = gm.means_
     # print("\nCovariances:\n", gm.covariances_)
 
-    #Drawing each line according to different mean values
+    # Drawing each line according to different mean values
     X_ORIGIN = np.array(data_axis).reshape(len(data_axis), 1)
     value_total = []
     plt.figure("final")
-    ax1 = plt.subplot(12,1,1)
+    ax1 = plt.subplot(12, 1, 1)
 
-    # drawing 
-    label_space=[]
+    # drawing
+    label_space = []
     i0 = 0
-    if start_axis == "all" or end_axis =="all":
-        while(i0 < int(len(data_axis))):
+    if start_axis == "all" or end_axis == "all":
+        while (i0 < int(len(data_axis))):
             label_space.append(i0)
             i0 += 1
     else:
-        while(i0 < int(len(data_axis))):
+        while (i0 < int(len(data_axis))):
             if (data_axis[i0] - to_left) >= int(start_axis) and (data_axis[i0] + to_right) <= int(end_axis):
                 label_space.append(i0)
             if (data_axis[i0] + to_right) > int(end_axis):
@@ -552,11 +600,12 @@ def cluster_and_merge(input_file1, start_axis, end_axis, merge_switch, weight_sw
 
     x1 = data_axis[label_space[0]:label_space[-1] + 1]
     y1 = data_weight[label_space[0]:label_space[-1] + 1]
-    
+
     for i in range(0, len(gm.means_)):
         gc.disable()
-        #ORIGINAL
-        db_temp = DBSCAN(eps = gm.means_[i] + 2 * math.sqrt(gm.covariances_[i]), min_samples = 8).fit(X_ORIGIN, y = None, sample_weight=data_weight)
+        # ORIGINAL
+        db_temp = DBSCAN(eps=gm.means_[i] + 2 * math.sqrt(gm.covariances_[i]),
+                         min_samples=8).fit(X_ORIGIN, y=None, sample_weight=data_weight)
         labels = db_temp.labels_
         avg_show = str(gm.means_[i])
         label_values = []
@@ -564,11 +613,11 @@ def cluster_and_merge(input_file1, start_axis, end_axis, merge_switch, weight_sw
         flag_current = init_value
         value = init_value
         cnt = i
-        for i in range(0,len(labels)):
+        for i in range(0, len(labels)):
             if i == len(labels) - 1:
                 if labels[i] != -1:
                     label_values += [i]
-                else: 
+                else:
                     label_values += [value]
             if labels[i] == -1:
                 continue
@@ -580,36 +629,39 @@ def cluster_and_merge(input_file1, start_axis, end_axis, merge_switch, weight_sw
                 label_values += [i]
                 flag_current = labels[i]
             value = i
-        
-        #label value is like [0,3,4,4,6,9]
+
+        # label value is like [0,3,4,4,6,9]
         value_total.append(label_values)
-        
+
         label_drawing = labels[label_space[0]:label_space[-1]+1]
         draw_input.append(label_drawing)
-    
+
     # save GMM MODEL object
-    np.save(middle_results_path + 'GMM_weights', gm.weights_, allow_pickle=False)
+    np.save(middle_results_path + 'GMM_weights',
+            gm.weights_, allow_pickle=False)
     np.save(middle_results_path + 'GMM_means', gm.means_, allow_pickle=False)
-    np.save(middle_results_path + 'GMM_covariances', gm.covariances_, allow_pickle=False)
+    np.save(middle_results_path + 'GMM_covariances',
+            gm.covariances_, allow_pickle=False)
     # create and open file
     for cnt in range(len(value_total)):
-        filename =middle_results_path + "class%d.bdg"%cnt
-        f = open(filename,"w")
-        # write data to file 
+        filename = middle_results_path + "class%d.bdg" % cnt
+        f = open(filename, "w")
+        # write data to file
         i = 0
         # f.write("genename start end")
-        while(i < len(value_total[cnt])):
+        while (i < len(value_total[cnt])):
             sentence = "chr12\t{start}\t{end}\t{num}\n"
             num_start = value_total[cnt][i]
             num_end = value_total[cnt][i+1]
-            f.write(sentence.format(start = data_axis[num_start], end = data_axis[num_end] + 1,num = 1))
+            f.write(sentence.format(
+                start=data_axis[num_start], end=data_axis[num_end] + 1, num=1))
             i += 2
 
-        f.close() 
-    classes=[]  
+        f.close()
+    classes = []
     filenames = []
     for cnt in range(len(value_total)):
-        filename = middle_results_path + "class%d.bdg"%cnt
+        filename = middle_results_path + "class%d.bdg" % cnt
         classes.append(pybedtools.example_bedtool(filename))
         filenames.append(filename)
     final_filename = middle_results_path + "total.bdg"
@@ -617,34 +669,41 @@ def cluster_and_merge(input_file1, start_axis, end_axis, merge_switch, weight_sw
 
     if not merge_switch:
         print("second, start reading total file with not merge:\n")
-        arr_final=[]
-        arr_outliers=[]
-        sequence=[]
-        data_count=[]
-        data_sum=[]
-        data_count_sum=[]
-        union_store_data(final_filename,x1,arr_final,data_sum,sequence,data_count,data_count_sum,arr_outliers)    
-        store_file(output_path,x1,y1,gm,data_count,None,data_count_sum,draw_input,None,arr_final,None,to_left,to_right)
+        arr_final = []
+        arr_outliers = []
+        sequence = []
+        data_count = []
+        data_sum = []
+        data_count_sum = []
+        union_store_data(final_filename, x1, arr_final, data_sum,
+                         sequence, data_count, data_count_sum, arr_outliers)
+        store_file(output_path, x1, y1, gm, data_count, None, data_count_sum,
+                   draw_input, None, arr_final, None, to_left, to_right)
     elif merge_switch:
         print("second, start reading total file with merge:\n")
-        arr_final=[]
-        arr_outliers=[]
-        label_drawing_final=[]
-        sequence=[]
-        class_belong=[]
-        data_count=[]
-        data_sum=[]
+        arr_final = []
+        arr_outliers = []
+        label_drawing_final = []
+        sequence = []
+        class_belong = []
+        data_count = []
+        data_sum = []
         average_distance = []
-        pre_merge_divide_class(final_filename,x1,gm,arr_final,data_sum,sequence,data_count,class_belong,average_distance)
-        pre_merge_store_data(x1,arr_final,data_sum,sequence,data_count,class_belong,arr_outliers)
+        pre_merge_divide_class(final_filename, x1, gm, arr_final, data_sum,
+                               sequence, data_count, class_belong, average_distance)
+        pre_merge_store_data(x1, arr_final, data_sum,
+                             sequence, data_count, class_belong, arr_outliers)
 
         # merge to the left
         data_count_new = []
         class_belong_new = []
-        merge(data_sum,gm,data_count,class_belong,data_count_new,class_belong_new)
-        data_count_sum = []   
+        merge(data_sum, gm, data_count, class_belong,
+              data_count_new, class_belong_new)
+        data_count_sum = []
         final_data = []
         arr_final_draw = []
-        merge_store_data(data_count_new,data_count_sum,class_belong_new,final_data,arr_final,arr_final_draw)
-        store_file(output_path,x1,y1,gm,data_count_new,class_belong_new,data_count_sum,draw_input,final_data,arr_final,arr_final_draw,to_left,to_right)
+        merge_store_data(data_count_new, data_count_sum,
+                         class_belong_new, final_data, arr_final, arr_final_draw)
+        store_file(output_path, x1, y1, gm, data_count_new, class_belong_new, data_count_sum,
+                   draw_input, final_data, arr_final, arr_final_draw, to_left, to_right)
     print("done.")
