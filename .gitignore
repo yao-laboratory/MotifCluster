@@ -1,0 +1,8 @@
+drawing_f*/
+drawing_m*/
+example_output*/
+other_method*/
+
+*/**/__pycache__/*
+*.pyc
+MotifCluster/tests.py
