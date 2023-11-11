@@ -26,9 +26,9 @@ def main():
                            type=str, help='output folder name', default="none")
     # optional parameter
     parser_cm.add_argument('-start', required=False,
-                           type=str, help='start_axis', default="none")
+                           type=str, help='start_axis', default="all")
     parser_cm.add_argument('-end', required=False, type=str,
-                           help='end_axis', default="none")
+                           help='end_axis', default="all")
     # parser_cm.set_defaults(func=cluster_and_merge_simple_dbscan)
 
     # add sub command
@@ -44,9 +44,9 @@ def main():
                            type=str, help='output folder name', default="none")
     # optional parameter
     parser_cm.add_argument('-start', required=False,
-                           type=str, help='start_axis', default="none")
+                           type=str, help='start_axis', default="all")
     parser_cm.add_argument('-end', required=False, type=str,
-                           help='end_axis', default="none")
+                           help='end_axis', default="all")
 
     parser_cm.set_defaults(func=cluster_and_merge)
 
