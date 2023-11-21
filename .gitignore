@@ -2,7 +2,7 @@
 # drawing_m*/
 # example_output*/
 # other_method*/
-
+.vscode
 */**/__pycache__/*
 *.pyc
 MotifCluster/tests.py
