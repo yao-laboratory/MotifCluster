@@ -159,6 +159,9 @@ def score(input_file_0, input_file_score_1, input_file_score_2, weight_switch, s
         while (cnt < data_count_new[i]):
             count_1 = 0
             data_cnt = cnt if i == 0 else (data_count_sum[i-1] + cnt)
+            if data_cnt+2 > len(data_axis):
+                cnt += 1
+                continue
             if (cnt + 1) < data_count_new[i]:
                 group_distance.append(
                     data_axis[data_cnt + 1] - data_axis[data_cnt])

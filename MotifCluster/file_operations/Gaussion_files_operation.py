@@ -51,6 +51,8 @@ def write_score_result(res_path, data_axis, data_weight, final_data, p_score_fin
         csvwrite.writerow(title_head)
         for i in range(len(p_score_final)):
             id = 0 if p_score_final[i][0] == 0 else data_count_sum[p_score_final[i][0] - 1]
+            if (id >= len(data_axis)):
+                continue
             cluster_size = data_count_new[p_score_final[i][0]]
             center_pos_head = data_axis[id]
             start_pos_head = center_pos_head - to_left
