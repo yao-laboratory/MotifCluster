@@ -131,11 +131,13 @@ def cluster_and_merge_simple_dbscan(input_file1, start_axis, end_axis, output_fo
     to_right = tmp[1]
     data_axis = []
     weight = []
+    chrome = ""
     f = open(final_filename, "r")
     with f as lines:
         cluster_id = 0
         for line in lines:
             line = line.split("\t")
+            chrome = str(line[0]).strip()  
             data_axis.append(int(line[1]) + to_left)
             weight.append(10)
     f.close()
@@ -159,8 +161,6 @@ def cluster_and_merge_simple_dbscan(input_file1, start_axis, end_axis, output_fo
         if value <= 500:
             x_distance_temp.append(value)
     X_DISTANCE = np.array(x_distance_temp)
-    # Set up a range of cluster numbers to try
-    n_range = range(1, 11)
 
     gm = GaussianMixture(n_components=1, n_init=10, random_state=100)
     gm.fit(X_DISTANCE)
@@ -180,7 +180,7 @@ def cluster_and_merge_simple_dbscan(input_file1, start_axis, end_axis, output_fo
     X_ORIGIN = np.array(data_axis).reshape(len(data_axis), 1)
     value_total = []
     plt.figure("final")
-    ax1 = plt.subplot(12, 1, 1)
+    ax1 = plt.subplot(1, 1, 1)
 
     # drawing
     label_space = []
@@ -247,7 +247,7 @@ def cluster_and_merge_simple_dbscan(input_file1, start_axis, end_axis, output_fo
         # write data to file
         i = 0
         while (i < len(value_total[cnt])):
-            sentence = "chr12\t{start}\t{end}\t{num}\n"
+            sentence = "{chrome}\t{start}\t{end}\t{num}\n"
             num_start = value_total[cnt][i]
             num_end = value_total[cnt][i+1]
             f.write(sentence.format(

@@ -15,6 +15,9 @@ from sklearn.mixture import GaussianMixture
 
 MAXIMUM_DISTANCE = 1000
 SINGLE_POINT = -5
+STANDARD_WEIGHT = 10
+MAXIMUM_TRIED_GROUP_NUMBER = 11
+LONG_GAP_STANDARD = 500
 
 # delete warning
 warnings.filterwarnings("ignore")
@@ -114,7 +117,7 @@ def union_store_data(final_filename, x1, arr_final, data_sum, sequence, data_cou
 def belong_which_class(distance, gm):
     maximum = 0
     class_id = SINGLE_POINT
-    if distance == 0 or distance > 500:
+    if distance == 0 or distance > LONG_GAP_STANDARD:
         return class_id
     for i in range(len(gm.means_)):
         value = (1 / math.sqrt(2 * math.pi * gm.covariances_[i])) * math.exp(-math.pow(
@@ -127,7 +130,7 @@ def belong_which_class(distance, gm):
 
 def belong_which_class_better(class_0, class_1, id, distance, gm):
     temp_array = []
-    if distance > 500:
+    if distance > LONG_GAP_STANDARD:
         return -2
     for i in range(len(gm.means_)):
         p_value = (1 / math.sqrt(2 * math.pi * gm.covariances_[i])) * math.exp(-math.pow(
@@ -515,11 +518,16 @@ def cluster_and_merge(input_file1, start_axis, end_axis, merge_switch, weight_sw
     to_right = tmp[1]
     data_axis = []
     weight = []
+    chrome = ""
     f = open(final_filename, "r")
     with f as lines:
         class_id = 0
         for line in lines:
             line = line.split("\t")
+            if "P-value=" not in str(line[7]):
+                print("bed file format error, please compared with the example bed file in input_files!")
+                exit()
+            chrome = str(line[0]).strip()   
             p_value = float(str(line[7][8:]).strip())
             middle_axis = int(line[1]) + to_left
             data_axis.append(middle_axis)
@@ -527,13 +535,14 @@ def cluster_and_merge(input_file1, start_axis, end_axis, merge_switch, weight_sw
             if weight_switch:
                 weight.append(num)
             elif not weight_switch:
-                weight.append(10)
+                weight.append(STANDARD_WEIGHT)
 
     f.close()
     data_weight = np.array(weight)
     data = np.array([(data_axis[i+1] - data_axis[i])
                     for i in range(len(data_axis)-1)])
     ave = average(data)
+    #print(data_weight.min(), data_weight.max())
     # print("!!!ave:",ave)
     sig = sigma(data, ave)
 
@@ -541,13 +550,13 @@ def cluster_and_merge(input_file1, start_axis, end_axis, merge_switch, weight_sw
     X_DISTANCE = data.reshape(len(data), 1)
     x_distance_temp = []
     for value in X_DISTANCE:
-        if value <= 500:
+        if value <= LONG_GAP_STANDARD:
             x_distance_temp.append(value)
     X_DISTANCE = np.array(x_distance_temp)
     # print(X_DISTANCE)
-    # Set up a range of cluster numbers to try
+    # Set up a range of class numbers to try
     # original
-    n_range = range(1, 11)
+    n_range = range(1, MAXIMUM_TRIED_GROUP_NUMBER)
 
     # Create empty lists to store the BIC and AIC values
     bic_score = []
@@ -581,7 +590,7 @@ def cluster_and_merge(input_file1, start_axis, end_axis, merge_switch, weight_sw
     X_ORIGIN = np.array(data_axis).reshape(len(data_axis), 1)
     value_total = []
     plt.figure("final")
-    ax1 = plt.subplot(12, 1, 1)
+    ax1 = plt.subplot(global_class_num+2, 1, 1)
 
     # drawing
     label_space = []
@@ -650,7 +659,7 @@ def cluster_and_merge(input_file1, start_axis, end_axis, merge_switch, weight_sw
         i = 0
         # f.write("genename start end")
         while (i < len(value_total[cnt])):
-            sentence = "chr12\t{start}\t{end}\t{num}\n"
+            sentence = "{chrome}\t{start}\t{end}\t{num}\n"
             num_start = value_total[cnt][i]
             num_end = value_total[cnt][i+1]
             f.write(sentence.format(
