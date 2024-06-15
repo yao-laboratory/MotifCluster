@@ -6,7 +6,3 @@
 */**/__pycache__/*
 *.pyc
 MotifCluster/tests.py
-
-###TWIST1
-**/test_total_weight_results/*
-**/test_.out/*

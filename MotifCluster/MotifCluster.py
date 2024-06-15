@@ -10,8 +10,6 @@ from main_operations.Gaussion_cluster_merge_simple_DBSCAN import \
     cluster_and_merge_simple_dbscan
 from main_operations.Gaussion_score import score
 from main_operations.preprocessing import pre_process
-from utility.sort_and_filter_bedfile import sort_and_filter_bedfile
-from utility.simulation import simulation
 
 
 def main():
@@ -138,27 +136,6 @@ def main():
                              type=str, help='output folder name', default="none")
     parser_draw.set_defaults(func=draw_score_size)
 
-    # filtering by p-value and/or sorting bed file
-    parser_ul = subparsers.add_parser(
-        "sort_and_filter_bedfile", help='sorted bed file or filtered by p_value')
-    parser_ul.add_argument('-input_name', required=True,
-                           type=str, help='input file', default="none")
-    parser_ul.add_argument('-output_name', required=True,
-                           type=str, help='output file name', default="none")
-    parser_ul.add_argument('-sort_bed', required=False,
-                           action='store_true', help='sorting bed file')
-    parser_ul.add_argument('-filter_pvalue', required=False,
-                           type=str, help='filtering by p-value')
-    parser_ul.set_defaults(func=sort_and_filter_bedfile)
-
-    # Simulation
-    parser_sl = subparsers.add_parser(
-        "simulation", help='simulate a bed file')
-    parser_sl.add_argument('-output_name', required=True,
-                           type=str, help='output file name', default="none")
-
-    parser_sl.set_defaults(func=simulation)
-
     args = parser.parse_args()
     if args.subcommand == 'cluster_and_merge_simple_dbscan':
         input_file1 = args.input
@@ -233,16 +210,7 @@ def main():
         input_file = args.input
         output_folder = args.output_folder
         draw_score_size(input_file, output_folder)
-    elif args.subcommand == 'sort_and_filter_bedfile':
-        input_name = args.input_name
-        output_name = args.output_name
-        sort_bed = args.sort_bed
-        filter_pvalue = args.filter_pvalue
-        sort_and_filter_bedfile(input_name, output_name,
-                                sort_bed, filter_pvalue)
-    elif args.subcommand == 'simulation':
-        output_name = args.output_name
-        simulation(output_name)
+
     else:
         print("Wrong input. Check parameters")
 
