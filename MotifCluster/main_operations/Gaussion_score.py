@@ -8,6 +8,7 @@ from sklearn.mixture import GaussianMixture
 
 MINIMUM_VALUE = math.pow(10, -20)
 SINGLE_POINT = -5
+LONG_GAP_STANDARD = 500
 
 # mean values
 
@@ -41,10 +42,10 @@ def cal_distance_in_groups(data_axis, data_weight, gm):
             class_id = find_gap_class(data[len(data)-1], gm)
             group[class_id].append(data_weight[i])
         else:
-            if (data[i-1] < 500):
+            if (data[i-1] < LONG_GAP_STANDARD):
                 class_id = find_gap_class(data[i-1], gm)
                 group[class_id].append(data_weight[i])
-            elif data[i] < 500:
+            elif data[i] < LONG_GAP_STANDARD:
                 class_id = find_gap_class(data[i], gm)
                 group[class_id].append(data_weight[i])
             else:
