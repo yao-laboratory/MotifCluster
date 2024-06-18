@@ -43,6 +43,7 @@ def find_distribution_except_nearby(num):
 
 def find_distribution_except_nearby_or_log_gap(num):
     # This creates (n) gaussian distributions and 1 gap distribution, totally (n+1) distributions
+    #numbers = 0,1,...,n
     numbers = list(range(GAUSSIAN_GROUP_NUMBER+1))
     numbers.remove(num)
     # Now use random.choice to pick a number from the remaining ones
@@ -53,7 +54,7 @@ def find_distribution_except_nearby_or_log_gap(num):
 def find_gap_between_cluster(num):
     between_cluster_gap = 0
     random_number = find_distribution_except_nearby_or_log_gap(num)
-    if random_number == 10:
+    if random_number == GAUSSIAN_GROUP_NUMBER:
         between_cluster_gap = random.randint(OUTLIER_MIN_GAP, OUTLIER_MAX_GAP)
     else:
         between_cluster_gap = MU_SIGMA[random_number][0]
