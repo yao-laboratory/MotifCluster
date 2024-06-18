@@ -116,7 +116,7 @@ This cluster and merge command utilized our MotifCluster Method which employs bo
 
 ### Input:
 #### (Note: You should put bed files in input_files folder)
-    sort bed file 
+    sorted bed file 
 * Example description:
    * Input requirement: sorted bed file, if fimo.tsv, can use above "Preprocessing functions" to change.
    * Input parameters: '-merge_switch', '-weight_switch' ,'-output_folder' (explained in overview). You can define which folder you want to put the output results in.
@@ -223,7 +223,7 @@ This score and rank command is designed to conduct score for each cluster and gi
 
 
 ### Input:
-    sort bed file 
+    sorted bed file 
 * Example description:
    * input requirement: should use the same one in step 1, and already in the input_files folder. result.csv and result_middle.csv produced by step1 in the step1's output folder. 
    * Input parameter: '-weight_switch'; You can define which folder you want to put the output results in.
@@ -292,7 +292,7 @@ This command is designed to generate a pdf picture about a region of interest an
 
 
 ### Input:
-    sort bed file 
+    sorted bed file 
 * Example description:
    * Input requirement: In step1 still need here, result_draw file generated in the output file in step1
    * Input parameter:'-method', You can define which folder you want to put the output results in,'-start','-end'
@@ -326,7 +326,7 @@ This command is designed to generate a pdf picture about the performance(ranks) 
      -output_folder FOLDER,   FOLDER:    your customized output folder name
 
 ### Input:
-    Two result_score files 
+    result_score_without_noise.csv, result_score_noise.csv
 * Example description:
    * Input parameters: located: MotifCluster/input_files, and You can define which folder you want to put the output results in,'-start','-end'
 ### Command example:
@@ -437,7 +437,6 @@ python3 MotifCluster/MotifCluster.py draw_GMM  -step1_folder example_output_step
 ### Description:
 * This displays the results for the direct DBSCAN method.
 ### Step 1:
-### Overview:
 
      usage:  python3 MotifCluster/MotifCluster.py cluster_and_merge_simple_dbscan
                     -input -output_folder [-start] [-end]
@@ -625,7 +624,7 @@ This sort_and_filter_bedfile command include two sub functions, you can decide s
      -filter_pvalue PVALUE,     PVALUE:  None means no need process filtering, others means filter only keep pvalue <= PVALUE
 
 ### Input:
-    BED file
+    bed file
 * Example description
    * Input parameter: bed file which needs the following ordered columns: chrom, chromStart,chromEnd, sequence,,strand,,P-value. (Note: P-value column is 8th column)
 * test.bed shown as below:
@@ -712,9 +711,8 @@ This simulate command can build bed file with different parameters
 It can produce simulation bed file, stored directly in the MotifCluster/utility/utility_output folder. 
 * eg. simulation_example.bed shown as below:   
  ```
-chr6	0	    7			    P-value=0.0003417885733312685
-chr6	345	    362			    P-value=0.0009453865844609411
-chr6	673	    690			    P-value=0.00016734120267639522
-chr6	1063	1080			P-value=0.0006167923933824852
-chr6	1417	1434			P-value=5.474568128439536e-05
+chr6	0	17					P-value=0.0003417885733312685
+chr6	345	362					P-value=0.0009453865844609411
+chr6	673	690					P-value=0.00016734120267639522
+...
  ```
