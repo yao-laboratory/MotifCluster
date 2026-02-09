@@ -12,6 +12,9 @@ from file_operations.Gaussion_files_operation import *
 from pybedtools import BedTool
 from sklearn.cluster import DBSCAN
 from sklearn.mixture import GaussianMixture
+# Suppress font warnings
+import logging
+logging.getLogger('matplotlib.font_manager').setLevel(logging.ERROR)
 
 MAXIMUM_DISTANCE = 1000
 SINGLE_POINT = -5
@@ -662,8 +665,10 @@ def cluster_and_merge(input_file1, start_axis, end_axis, merge_switch, weight_sw
             sentence = "{chrome}\t{start}\t{end}\t{num}\n"
             num_start = value_total[cnt][i]
             num_end = value_total[cnt][i+1]
-            f.write(sentence.format(
+            f.write(sentence.format(chrome=chrome,
                 start=data_axis[num_start], end=data_axis[num_end] + 1, num=1))
+            # f.write(sentence.format(
+            #     start=data_axis[num_start], end=data_axis[num_end] + 1, num=1))
             i += 2
 
         f.close()

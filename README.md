@@ -1,6 +1,18 @@
 # MotifCluster (Motif Homogeneous Binding Site Cluster)
 
 ## Installation Instructions
+### Quick Installation (Recommended)
+#### (Dependency: need to install in Linux environment)
+Run the automated installation script:
+```bash
+git clone https://github.com/yao-laboratory/MotifCluster.git 
+cd MotifCluster/installation_packages
+chmod +x install.sh
+./install.sh
+```
+This script automatically installs all dependencies using mamba (or conda).
+
+### Manual Installation
 #### (Dependency: need to install in Linux environment)
 #### 1. Download code and create a new conda environment
 
