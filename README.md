@@ -11,6 +11,7 @@ chmod +x install.sh
 ./install.sh
 ```
 This script automatically installs all dependencies using mamba (or conda).
+Default environment name is motifcluster.
 
 ### Manual Installation
 #### (Dependency: need to install in Linux environment)
@@ -36,7 +37,7 @@ This script automatically installs all dependencies using mamba (or conda).
     pip install -r installation_packages/requirements_pip.txt
     conda install --file installation_packages/requirements_conda.txt
 
-#### 4. Command Overview:
+### Command Overview
 Make sure to activate the environment first (e.g.conda activate motifcluster) , then directly type:
 ```
 python3 MotifCluster/MotifCluster.py --h
