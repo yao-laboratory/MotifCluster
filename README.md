@@ -319,7 +319,10 @@ python3 MotifCluster/MotifCluster.py draw -step1_folder example_output_step1_1 -
    * draw_figure.pdf's output folder you can defined , eg.located: drawing_f1
    * This figure below shows using MotifCluster Method, the area in Human genome chr12:6,716,600-6,724,000 which is the ZNF410 binding clusters on the CHD4 promoter region.The x-axis is the coordinate from `6.717*10^6` to `6.724*10^6` in the chr12, and y-axis is the weight of each peak.12 line's figure. The diagram consists of 12 lines with weight information and illustrates data grouped into 10 Gassian components, one union-split and a single merge.
   
-<img src="./README_images/draw_figure-0.png" width=80% height=80%> <br> 
+<p align="center">
+<img src="./README_images/draw_figure-0.png" width=60% height=60%>
+</p>
+
 
 ## Plotting Rank Function:
 ### Description:
@@ -351,9 +354,11 @@ python3 MotifCluster/MotifCluster.py draw_rank -input1 result_score_chr12.csv -i
     normal_vs_noise_rank.pdf 
  * Example description:
     * output folder you can defined (eg.drawing_f2), located: drawing_f2   
-    * In this figure, x-axis is the rank in the without noise chr12, y-axis is its' corresponding rank in the noise chr12. And the purple dots means both rank <=100, light blue dots means rank <= 100 in chr12 p-value < 0.001 but its' corresponding rank > 100 in p-value < 0.01, and deep blue dots means rank <= 100 in chr12 p-value < 0.01 but its' corresponding rank > 100 in p-value < 0.001.    
-<img src="./README_images/normal_vs_noise_rank-1.png" width=80% height=80%> <br>
+    * In this figure, x-axis is the rank in the without noise chr12, y-axis is its' corresponding rank in the noise chr12. And the purple dots means both rank <=100, light blue dots means rank <= 100 in chr12 p-value < 0.001 but its' corresponding rank > 100 in p-value < 0.01, and deep blue dots means rank <= 100 in chr12 p-value < 0.01 but its' corresponding rank > 100 in p-value < 0.001.  
 
+<p align="center">
+<img src="./README_images/normal_vs_noise_rank-1.png" width=40% height=40%>
+</p> 
 ## Plotting Score Size Function:
 ### Description:
 This command is designed to generate a pdf picture about corresponding cluster score and cluster size for the top 100 clusters in specific genome. 
@@ -382,8 +387,10 @@ This command is designed to generate a pdf picture about corresponding cluster s
 ### Example description:
    * output folder you can defined (eg.drawing_f3), located: drawing_f3 
    * In this figure, x-axis is the rank id, left y-axis is their corresponding score, right y-axis is their corresponding cluster size.         
-<img src="./README_images/score_size-1.png" width=80% height=80%>  <br>  
 
+<p align="center">
+<img src="./README_images/score_size-1.png" width=60% height=60%> 
+</p>
 ## Plottings Cluster Weight Function:
 ### Description:
 This function can visualize: In every Gaussian component which those peaks best fitted separately, it shows the distribution of peaks' weights in every Gausssion component (It displays the number of clusters within ten weight intervals, ranging from 0-1 to 9-10 for weights between 0 and 10.).
@@ -412,9 +419,10 @@ This function can visualize: In every Gaussian component which those peaks best 
    * output folder you can defined (eg.drawing_f4), located: drawing_f4
    * The figure consists of 10 subfigures, each illustrating the weight distribution of peaks that best fit the corresponding nth Gaussian component. Within each subfigure, the x-axis represents the weight value, and the y-axis shows the count of clusters.
 
-         
-<img src="./README_images/cluster_weight_draw-1.png" width=80% height=80%>  <be>  
-
+ 
+<p align="center">        
+<img src="./README_images/cluster_weight_draw-1.png" width=80% height=80%>
+</p>
 
 ## Plotting GMM Function:
 ### Description:
@@ -443,7 +451,11 @@ python3 MotifCluster/MotifCluster.py draw_GMM  -step1_folder example_output_step
 ###  Example description:
    * output folder you defined (eg.drawing_f5), located: drawing_f5   
    * The figure represents the findings of the 10 most probable Gaussian components within human chr12. The x-axis displays the variables that are being measured, while the y-axis indicates the probability density for each variable.
-<img src="./README_images/GMM_drawing-1.png" width=80% height=80%>  <br>  
+<!-- <img src="./README_images/GMM_drawing-1.png" width=80% height=80%>  <br> -->
+
+<p align="center">
+<img src="./README_images/GMM_drawing-1.png" width=40% height=40%>  
+</p>
 
 # Additional methods (partial MotifCluster methods) (optional)
 ## Method a :  Direct DBSCAN Without Groups
@@ -492,7 +504,9 @@ python3 MotifCluster/MotifCluster.py draw -step1_folder other_method1 -inputbed 
 #### Example description:
    * This figure below shows using Method a : direct DBSCAN without groups, the area in the human genome region chr12:6,716,600-6,724,000 which are the ZNF410 binding clusters on the CHD4 promoter region. The x-axis is the coordinate from `6.717*10^6` to `6.724*10^6` in the chr12, and y-axis is the weight of each peak. Only 1 line figure, cause only itself as one group, no union, no merge.
 
-![draw_figure-1](./README_images/draw_figure-1.png)
+<p align="center">
+<img src="./README_images/draw_figure-1.png" width=75% height=75%>
+</p>
 
 ## Method b1 & Method b2 & Method c Overview:
 Step 1 (cluster and merge):
@@ -544,7 +558,9 @@ python3 MotifCluster/MotifCluster.py draw -step1_folder other_method2 -inputbed 
 #### Example description:
    * The figure below depicts Method b1: There are no weight information and no cluster merging in the human genome region chr12:6,716,600-6,724,000 which are the ZNF410 binding clusters on the CHD4 promoter region.  The x-axis reflects the chromosome 12 coordinates from 6,717,000 to 6,724,000, and the y-axis represents the weight of each peak. This visualization is composed of 11 lines, indicating data categorized into 10 groups with one union-split, and no merging of clusters is depicted.	
 
-![draw_figure-1](./README_images/draw_figure-2.png)
+<p align="center">
+<img src="./README_images/draw_figure-2.png" width=60% height=60%>
+</p>
 
 
 
@@ -580,7 +596,9 @@ python3 MotifCluster/MotifCluster.py draw -step1_folder other_method3 -inputbed 
 #### Example description:
 * The figure below shows Method b2, characterized by the without weights but including cluster merging within the human genome region chr12:6,716,600-6,724,000 which are the ZNF410 binding clusters on the CHD4 promoter region. The x-axis denotes coordinates ranging from 6,717,000 to 6,724,000 on chromosome 12, and the y-axis quantifies the weight of each peak. The diagram consists of 12 lines and illustrates data grouped into ten Gassian components with one union-split and a merge, although no weights information.	
 
-![draw_figure-1](./README_images/draw_figure-3.png)
+<p align="center">
+<img src="./README_images/draw_figure-3.png" width=60% height=60%>
+</p>
 
 
 
@@ -617,7 +635,9 @@ python3 MotifCluster/MotifCluster.py draw -step1_folder other_method4 -inputbed 
 * The figure below illustrates Method c, which displays weights' information without cluster merging in the human genome region chr12:6,716,600-6,724,000, corresponding to the ZNF410 binding clusters on the CHD4 promoter region. The x-axis represents coordinates from 6,717,000 to 6,724,000 on chromosome 12, while the y-axis measures the weight of each peak. This 11-line graph depicts the data as weighted groups, with ten distinct groups and one union-split, yet no clusters are merged.
 
 
-![draw_figure-1](./README_images/draw_figure-4.png)
+<p align="center">
+<img src="./README_images/draw_figure-4.png" width=60% height=60%>
+</p>
 
 
 # Utility Functions (Optional)
