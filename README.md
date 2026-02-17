@@ -112,21 +112,22 @@ This cluster and merge command utilized our MotifCluster Method which employs bo
                     -input -merge_switch -weight_switch -output_folder [-start -end]
     
      required arguments: 
-     -input        FILENAME,  FILENAME: your input file name(Note: sorted bed file),
-                                        the file should be put into the input_files folder.
-                                        (located: MotifCluster/input_files)   
-     -merge_switch STATUS,    STATUS: on or off,
-                                      on: run the program including merge step,
-                                      off: run the program without including merge step    
-     -weight_switch STATUS,   STATUS: on or off,
-                                      on: run the program including weight information,
-                                      off: run the program without weight information    
-     -output_folder FOLDER,   FOLDER: your customized output folder name
+     -input         FILENAME,  FILENAME: your input file name(Note: sorted bed file),
+                                         the file should be put into the input_files folder.
+                                         (located: MotifCluster/input_files)   
+     -merge_switch  STATUS,    STATUS:   on or off,
+                                         on: run the program including merge step,
+                                         off: run the program without including merge step    
+     -weight_switch STATUS,    STATUS:   on or off,
+                                         on: run the program including weight information,
+                                         off: run the program without weight information    
+     -output_folder FOLDER,    FOLDER:   your customized output folder name
     
      optional arguments:
-     -start NUM               NUM: the start coordinate of processing this input bed file 
-     -end   NUM               NUM: the end coordinate of processing this input bed file
-     -min_samples   NUM       NUM: the minimum threshold for total weight (integer > 0), default is 8. It is generally not recommended to modify this value.
+     -start         NUM        NUM: the start coordinate of processing this input bed file 
+     -end           NUM        NUM: the end coordinate of processing this input bed file
+     -min_samples   NUM        NUM: the minimum threshold for total weight (integer > 0), default is 8. 
+                                    It is generally not recommended to modify min_samples value.
 
 ### Input:
 #### (Note: You should put bed files in input_files folder)
@@ -468,15 +469,16 @@ python3 MotifCluster/MotifCluster.py draw_GMM  -step1_folder example_output_step
                     -input -output_folder [-start] [-end]
     
      required arguments: 
-     -input        FILENAME,  FILENAME: your input file name(Note: sorted bed file),
+     -input         FILENAME, FILENAME: your input file name(Note: sorted bed file),
                                         the file should be put into the input_files folder.
                                         (located: MotifCluster/input_files)   
-     -output_folder FOLDER,   FOLDER: your customized output folder name
+     -output_folder FOLDER,   FOLDER:   your customized output folder name
     
      optional arguments:
-     -start NUM               NUM: the start coordinate  of processing this input bed file 
-     -end   NUM               NUM: the end coordinate  of  processing this input bed file
-     -min_samples   NUM       NUM: the minimum threshold for total weight (integer > 0), default is 8. It is generally not recommended to modify this value.
+     -start         NUM       NUM: the start coordinate  of processing this input bed file 
+     -end           NUM       NUM: the end coordinate  of  processing this input bed file
+     -min_samples   NUM       NUM: the minimum threshold for total weight (integer > 0), default is 8. 
+                                   It is generally not recommended to modify min_samples value.
 
 ### Input & Output:
 * Input file: The bed file: sorted bed file, if fimo.tsv, can use above "Preprocessing functions" to change.
