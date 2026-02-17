@@ -126,7 +126,7 @@ This cluster and merge command utilized our MotifCluster Method which employs bo
      optional arguments:
      -start         NUM        NUM: the start coordinate of processing this input bed file 
      -end           NUM        NUM: the end coordinate of processing this input bed file
-     -min_samples   NUM        NUM: the minimum threshold for total weight (integer > 0), default is 8. 
+     -min_samples   NUM        NUM: the minimum threshold for total weight, default is 8. 
                                     It is generally not recommended to modify min_samples value.
 
 ### Input:
@@ -477,7 +477,7 @@ python3 MotifCluster/MotifCluster.py draw_GMM  -step1_folder example_output_step
      optional arguments:
      -start         NUM       NUM: the start coordinate  of processing this input bed file 
      -end           NUM       NUM: the end coordinate  of  processing this input bed file
-     -min_samples   NUM       NUM: the minimum threshold for total weight (integer > 0), default is 8. 
+     -min_samples   NUM       NUM: the minimum threshold for total weight, default is 8. 
                                    It is generally not recommended to modify min_samples value.
 
 ### Input & Output:
