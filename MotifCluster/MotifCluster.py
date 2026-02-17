@@ -13,6 +13,11 @@ from main_operations.preprocessing import pre_process
 from utility.sort_and_filter_bedfile import sort_and_filter_bedfile
 from utility.simulation import simulation
 
+def positive_int(value):
+    ivalue = int(value)
+    if ivalue <= 0:
+        raise argparse.ArgumentTypeError("min_samples must be an integer > 0")
+    return ivalue
 
 def main():
     parser = argparse.ArgumentParser(prog='MotifCluster')
@@ -31,6 +36,8 @@ def main():
                            type=str, help='start_axis', default="all")
     parser_cm.add_argument('-end', required=False, type=str,
                            help='end_axis', default="all")
+    parser_cm.add_argument('-min_samples', required=False, type=positive_int,
+                           default=8, help='minimum threshold for total weight (integer > 0)')
     # parser_cm.set_defaults(func=cluster_and_merge_simple_dbscan)
 
     # add sub command
@@ -49,6 +56,8 @@ def main():
                            type=str, help='start_axis', default="all")
     parser_cm.add_argument('-end', required=False, type=str,
                            help='end_axis', default="all")
+    parser_cm.add_argument('-min_samples', required=False, type=positive_int,
+                           default=8, help='minimum threshold for total weight (integer > 0)')
 
     parser_cm.set_defaults(func=cluster_and_merge)
 
@@ -164,10 +173,11 @@ def main():
         input_file1 = args.input
         start_axis = args.start
         end_axis = args.end
+        min_samples = args.min_samples
         output_folder = args.output_folder
         time_start_s = time.time()
         cluster_and_merge_simple_dbscan(
-            input_file1, start_axis, end_axis, output_folder)
+            input_file1, start_axis, end_axis, output_folder, int(min_samples))
         time_end_s = time.time()
         time_c = time_end_s - time_start_s
         print('time cost', time_c, 's')
@@ -175,12 +185,13 @@ def main():
         input_file1 = args.input
         start_axis = args.start
         end_axis = args.end
+        min_samples = args.min_samples
         merge_switch = args.merge_switch
         weight_switch = args.weight_switch
         output_folder = args.output_folder
         time_start = time.time()
         cluster_and_merge(input_file1, start_axis, end_axis,
-                          merge_switch, weight_switch, output_folder)
+                          merge_switch, weight_switch, output_folder, int(min_samples))
         time_end = time.time()
         time_c = time_end - time_start
         print('time cost', time_c, 's')

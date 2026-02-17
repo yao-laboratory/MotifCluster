@@ -488,7 +488,7 @@ def store_file(path, x1, y1, gm, data_count_new, class_belong_new, data_count_su
             gm.means_), arr_final, arr_final_draw)
 
 
-def cluster_and_merge(input_file1, start_axis, end_axis, merge_switch, weight_switch, output_folder):
+def cluster_and_merge(input_file1, start_axis, end_axis, merge_switch, weight_switch, output_folder, min_samples):
     if merge_switch == "on":
         merge_switch = True
         print("merge swith on")
@@ -501,6 +501,8 @@ def cluster_and_merge(input_file1, start_axis, end_axis, merge_switch, weight_sw
     else:
         weight_switch = False
         print("weight switch off")
+    print("min_samples:", min_samples)
+    print("min_samples type:", type(min_samples))
     line_temp = []
     draw_input = []
     package_path = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
@@ -617,7 +619,7 @@ def cluster_and_merge(input_file1, start_axis, end_axis, merge_switch, weight_sw
         gc.disable()
         # ORIGINAL
         db_temp = DBSCAN(eps=gm.means_[i] + 2 * math.sqrt(gm.covariances_[i]),
-                         min_samples=8).fit(X_ORIGIN, y=None, sample_weight=data_weight)
+                         min_samples=min_samples).fit(X_ORIGIN, y=None, sample_weight=data_weight)
         labels = db_temp.labels_
         avg_show = str(gm.means_[i])
         label_values = []

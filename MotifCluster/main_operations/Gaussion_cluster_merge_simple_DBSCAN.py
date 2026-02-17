@@ -114,7 +114,7 @@ def belong_which_cluster_better(cluster_0, cluster_1, id, distance, gm):
     return -2
 
 
-def cluster_and_merge_simple_dbscan(input_file1, start_axis, end_axis, output_folder):
+def cluster_and_merge_simple_dbscan(input_file1, start_axis, end_axis, output_folder, min_samples=8):
     line_temp = []
     draw_input = []
     package_path = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
@@ -205,7 +205,9 @@ def cluster_and_merge_simple_dbscan(input_file1, start_axis, end_axis, output_fo
 
     gc.disable()
     print("ave", ave)
-    db_temp = DBSCAN(eps=ave, min_samples=8).fit(
+    print("min_samples",min_samples)
+    print("min_samples type:", type(min_samples))
+    db_temp = DBSCAN(eps=ave, min_samples=min_samples).fit(
         X_ORIGIN, y=None, sample_weight=data_weight)
     # print("Gaussion mean:",gm.means_[0])
     # print("Gaussion covariance:",math.sqrt(gm.covariances_[0]))
