@@ -14,6 +14,10 @@ def pre_process(input_name, output_name, chrome):
     input_table['p-value'] = 'P-value=' + input_table['p-value'].astype(str)
     input_table['start'] = input_table['start'].astype(int)
     input_table['stop'] = input_table['stop'].astype(int)
+    old_start = input_table["start"].copy()
+    old_stop = input_table["stop"].copy()
+    input_table["start"] = pd.concat([old_start, old_stop], axis=1).min(axis=1) - 1
+    input_table["stop"] = pd.concat([old_start, old_stop], axis=1).max(axis=1)
     input_table['chrome'] = chrome
     input_table['blank1'] = ''
     input_table['blank2'] = ''

@@ -12,7 +12,7 @@ from main_operations.Gaussion_score import score
 from main_operations.preprocessing import pre_process
 from utility.sort_and_filter_bedfile import sort_and_filter_bedfile
 from utility.simulation import simulation
-
+from utility.simulation_more import simulation_for_comparison
 def positive_int(value):
     ivalue = int(value)
     if ivalue <= 0:
@@ -168,6 +168,15 @@ def main():
 
     parser_sl.set_defaults(func=simulation)
 
+    # Simulation for tools comparison
+    parser_slc = subparsers.add_parser(
+        "simulation_for_compare", help='simulate for tools comparison')
+    parser_slc.add_argument('-output_name', required=True,
+                           type=str, help='output file name', default="none")
+    parser_slc.add_argument('-bed_file', required=True,
+                        type=str, help='original bed file', default="none")
+    parser_slc.set_defaults(func=simulation_for_comparison)
+
     args = parser.parse_args()
     if args.subcommand == 'cluster_and_merge_simple_dbscan':
         input_file1 = args.input
@@ -254,6 +263,10 @@ def main():
     elif args.subcommand == 'simulation':
         output_name = args.output_name
         simulation(output_name)
+    elif args.subcommand == 'simulation_for_compare':
+        output_name = args.output_name
+        bed_file = args.bed_file
+        simulation_for_comparison(output_name, bed_file)
     else:
         print("Wrong input. Check parameters")
 
