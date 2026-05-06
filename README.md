@@ -1,4 +1,38 @@
-# MotifCluster (Motif Homogeneous Binding Site Cluster)
+# MotifCluster
+### (Motif Homogeneous Binding Site Cluster)
+---
+
+## About
+## Table of Contents
+- [About](#About)
+- [Installation Instructions](#installation-instructions)
+   - [Quick Installation](#quick-installation-recommended)
+   - [Manual Installation](#manual-installation)
+- [MotifCluster Pipeline](#motifcluster-pipeline)
+    - [Command Overview](#command-overview)
+    - [MotifCluster Method Functions (Required)](#motifcluster-method-functions-required)
+        - [Step 1: Cluster and Merge](#first-step-cluster-and-merge)
+        - [Step 2: Score and Rank](#second-step-score-and-rank)
+    - [Preprocessing Functions (Optional)](#preprocessing-optional)
+        - [Convert FIMO into Sorted BED File Function (`pre_process`)](#convert-fimo-into-sorted-bed-file-function)
+    - [Plotting Figures Functions (Optional)](#plotting-figures-functions-optional)
+        - [Plotting Function (`draw`)](#plotting-function)
+        - [Plotting Rank Function (`draw_rank`)](#plotting-rank-function)
+        - [Plotting Score Size Function (`draw_score_size`)](#plotting-score-size-function)
+        - [Plotting Cluster Weight Function (`draw_cluster_weight`)](#plotting-cluster-weight-function)
+        - [Plotting GMM Function (`draw_GMM`)](#plotting-gmm-function)
+    - [Additional Methods Functions (Optional)](#additional-methods-functions-optional)
+        - [Method a: Direct DBSCAN Without Groups](#method-a--direct-dbscan-without-groups)
+        - [Method b1 & Method b2 & Method c Overview](#method-b1--method-b2--method-c-overview)
+        - [Method b1: No Peak Intensity, No Cluster Merge](#method-b1-no-peak-intensity-no-cluster-merge)
+        - [Method b2: No Peak Intensity, With Cluster Merge](#method-b2-no-peak-intensity-with-cluster-merge)
+        - [Method c: With Peak Intensity, No Cluster Merge](#method-c-with-peak-intensity-no-cluster-merge)
+    - [Utility Functions (Optional)](#utility-functions-optional)
+        - [Sorting and Filtering BED File Function (`sort_and_filter_bedfile`)](#sorting-and-filtering-bed-file-function)
+        - [Bed File Simulation Function (`simulation`)](#bed-file-simulation-function)
+        - [Genome File Simulation Function (`simulation_for_compare`)](#genome-file-simulation-function)
+---
+
 
 ## Installation Instructions
 ### Quick Installation (Recommended)
@@ -12,6 +46,9 @@ chmod +x install.sh
 ```
 This script automatically installs all dependencies using mamba (or conda).
 Default environment name is motifcluster.
+
+---
+
 
 ### Manual Installation
 #### (Dependency: need to install in Linux environment)
@@ -37,6 +74,9 @@ Default environment name is motifcluster.
     pip install -r installation_packages/requirements_pip.txt
     conda install --file installation_packages/requirements_conda.txt
 
+---
+
+## MotifCluster Pipeline
 ### Command Overview
 Make sure to activate the environment first (e.g.conda activate motifcluster) , then directly type:
 ```
@@ -68,42 +108,11 @@ optional arguments:
   -h, --help            show this help message and exit
 ```
 
-## Preprocessing (Optional)
-### Description:
-This pre_process command can convert fimo.tsv file into the sorted bed file which is an essential input for main commands.
-### Overview:  
+---
 
-     usage: python3 MotifCluster/MotifCluster.py pre_process -input_name -output_name -chrome
-    
-     required arguments: 
-     -input_name FILENAME,   FILENAME: your input file name, the file should be put into the input_files folder.    
-                                      (located: MotifCluster/input_files)    
-     -output_name FILENAME,  FILENAME: your customized output file name, the file automatically 
-                                       put into the input_files folder.
-     -chrome CHROME,         CHROME:   chrome name in the bed file, eg.chr16
 
-### Input: 
-    fimo.tsv
-* Example description:
-   * Input parameter: 1.chrome name. 2.You can define which folder you want to put the output results in.
-* eg. chr16 's fimo.tsv shown as below:
- ```
-    motif		NC_000016.9	122369	122379	+	12.8	1.53e-07	0.0699	GGCCCCGGCCC
-    motif		NC_000016.9	122375	122385	+	12.8	1.53e-07	0.0699	GGCCCCGGCCC
-    motif		NC_000016.9	188276	188286	-	12.8	1.53e-07	0.0699	GGCCCCGGCCCT
- ```
-### Command example:
-    python3 MotifCluster/MotifCluster.py pre_process -input_name fimo_chr16.tsv -output_name sorted_chr16.bed -chrome chr16
-### Output: 
-    sorted bed file
-* eg. sorted_chr16.bed stored directly in the input_files folder:
- ```
-    chr16	61384	61394	GGCCCCAGCCC		-		P-value=1.83e-06
-    chr16	62064	62074	GGCTTTGGCCC		+		P-value=1.77e-05
-    chr16	62660	62670	GGCCTGGGCTC		-		P-value=1e-05
- ```
-## Running MotifCluster (Major Method)
-### First Step: cluster and merge
+## MotifCluster Method Functions (Required)
+### First Step: Cluster And Merge
 ### Description:
 This cluster and merge command utilized our MotifCluster Method which employs both groupings and merging functions to identify local motif clusters.
 ### Overview:
@@ -111,10 +120,10 @@ This cluster and merge command utilized our MotifCluster Method which employs bo
      usage: python3 MotifCluster/MotifCluster.py cluster_and_merge
                     -input -merge_switch -weight_switch -output_folder [-start -end]
     
-     required arguments: 
-     -input         FILENAME,  FILENAME: your input file name(Note: sorted bed file),
-                                         the file should be put into the input_files folder.
-                                         (located: MotifCluster/input_files)   
+     required arguments:
+     -input         FILENAME,  FILENAME: your input file name (Note: must be a sorted BED file);
+                                         the file must be placed in the input_files folder.
+                                         (located: MotifCluster/input_files)
      -merge_switch  STATUS,    STATUS:   on or off,
                                          on: run the program including merge step,
                                          off: run the program without including merge step    
@@ -124,20 +133,20 @@ This cluster and merge command utilized our MotifCluster Method which employs bo
      -output_folder FOLDER,    FOLDER:   your customized output folder name
     
      optional arguments:
-     -start         NUM        NUM: the start coordinate of processing this input bed file 
-     -end           NUM        NUM: the end coordinate of processing this input bed file
-     -min_samples   NUM        NUM: the minimum threshold for total weight, default is 8. 
-                                    It is generally not recommended to modify min_samples value.
+     -start         NUM        NUM: the start coordinate for processing this input BED file
+     -end           NUM        NUM: the end coordinate for processing this input BED file
+     -min_samples   NUM        NUM: the minimum threshold for total weight; default is 8.
+                                    It is generally not recommended to modify this value.
 
 ### Input:
-#### (Note: You should put bed files in input_files folder)
-    sorted bed file 
+#### (Note: BED files must be placed in the input_files folder)
+    Sorted BED file
 * Example description:
-   * Input requirement: sorted bed file, if fimo.tsv, can use above "Preprocessing functions" to change.
-   * Input parameters: '-merge_switch', '-weight_switch' ,'-output_folder' (explained in overview). You can define which folder you want to put the output results in.
+   * Input requirement: a sorted BED file. If the input is a fimo.tsv file, use the "Preprocessing functions" described above to convert it first.
+   * Input parameters: `-merge_switch`, `-weight_switch`, and `-output_folder` (described in the Overview). You can specify the folder where the output results will be saved.
 
 
-* eg. human_chr12_origin.bed as below:     
+* e.g. human_chr12_origin.bed as below:     
 ```
     chr12	60025	60042	TCCATTCCCTAGAAGGC	-1421	+	MA0752.1	P-value=5.29e-04  
     chr12	60063	60080	TCCATTCCCTAGAAGGC	-1421	+	MA0752.1	P-value=5.29e-04  
@@ -148,13 +157,13 @@ This cluster and merge command utilized our MotifCluster Method which employs bo
     python3 MotifCluster/MotifCluster.py cluster_and_merge -input human_chr12_origin.bed -merge_switch on  -weight_switch on -output_folder example_output_step1_1
     python3 MotifCluster/MotifCluster.py cluster_and_merge -input human_chr12_origin.bed -merge_switch on  -weight_switch on -output_folder example_output_step1_2 -start 6716000 -end 6724000 
     
-Use either of the commands one time	
-Difference between two commands: command the -start -end can only process part of the chr12.bed files.
+Use one of the commands at a time.
+The difference between the two commands: the second command uses `-start` and `-end` to process only a specified region of the BED file.
 
 ### Output:       
 
-#### 1.Middle processing files:
-#### Note: do not change cause useful in second step (score and rank) and drawing, they will update by themselves.
+#### 1. Intermediate Processing Files:
+#### Note: Do not modify these files. They are used in the second step (Score and Rank) and for drawing, and will be updated automatically.
 
 * located: example_output_step1_1/tmp_output
 * Including files: 
@@ -165,8 +174,8 @@ Difference between two commands: command the -start -end can only process part o
 #### 2. Final files:
     result.csv:    (NOTE: In the paper, called cluster-union.csv instead)
  * Example description:
-   * result.csv file located in example_output_step1_1 folder 
-   * Each line is the nth line(peak) from the original bed file's information: Each line contains 'center_pos' and 'end_pos', which represent the start and end coordinates of the peak, respectively. The 'weight' column indicates the weight of the peak. The column 'class_id', it indicates the group which the peak belongs to. If consecutive peaks share the same 'class_id', such as 4, it signifies that they are part of the same group and, therefore, can be aggregated into a single cluster.
+   * `result.csv` is located in the example_output_step1_1 folder.
+   * Each line corresponds to a peak from the original BED file. Each line contains `center_pos`, `start_pos`, and `end_pos`, representing the center, start, and end coordinates of the peak, respectively. The `weight` column indicates the peak's weight. The `class_id` column indicates the group to which the peak belongs. If consecutive peaks share the same `class_id` (e.g., 4), they belong to the same group and can be aggregated into a single cluster.
 * result.csv shown as below:
 ```
     id,center_pos,start_pos,end_pos,class_id,weight
@@ -180,8 +189,8 @@ Difference between two commands: command the -start -end can only process part o
  ```
     result_middle.csv:
 * example description:
-  * "result_middle.csv" file located in example_output_step1_1 folder
-  * each line presents information for the nth cluster, including 'data_count_new' which indicates the number of peaks from the original bed files, and 'cluster_belong_new' which denotes the group that the cluster belongs to. The 'data_count_sum' is used internally within the code.
+  * `result_middle.csv` is located in the example_output_step1_1 folder.
+  * Each line presents information for the nth cluster, including `data_count_new` (the number of peaks from the original BED file) and `cluster_belong_new` (the group the cluster belongs to). The `data_count_sum` column is used internally by the code.
 * result_middle.csv shown as below:
 ```
 id,data_count_new,cluster_belong_new,data_count_sum
@@ -196,8 +205,8 @@ id,data_count_new,cluster_belong_new,data_count_sum
 
     result_draw.csv:
  * Example description:
-   * result_draw.csv file located in example_output_step1_1 folder
-   * Each line is one peak in different groups and this peak's color in each subfigure is stored from 'draw_input0' to 'arr_final_draw', as well as includes weight information which can be used to visualize the weight in the figure. Given that the motifcluster method generates 12 subfigures, for each peak, there are 12 corresponding columns ranging from 'draw_input0' to 'arr_final_draw' to represent these 12 subfigures.
+   * `result_draw.csv` is located in the example_output_step1_1 folder.
+   * Each line represents a peak and its assigned group. The columns from `draw_input0` to `arr_final_draw` store the color of the peak in each subfigure, along with weight information for visualization. Since the MotifCluster method generates 12 subfigures, there are 12 corresponding columns per peak, ranging from `draw_input0` to `arr_final_draw`.
 * result_draw.csv shown as below:
 ```
     id,center_pos,weight,draw_input0,draw_input1,draw_input2,draw_input3,draw_input4,draw_input5,draw_input6,draw_input7,draw_input8,draw_input9,arr_final,arr_final_draw
@@ -210,6 +219,7 @@ id,data_count_new,cluster_belong_new,data_count_sum
     ...
 ```  
 
+---
 ## Second Step: Score And Rank
 ### Description:
 This score and rank command is designed to conduct score for each cluster and give them rank based on their final score.
@@ -218,9 +228,9 @@ This score and rank command is designed to conduct score for each cluster and gi
      usage: python3 MotifCluster/MotifCluster.py  calculate_score
                     -input_bed -input_result -input_middle -weight_switch -step1_folder -output_folder 
     
-     required arguments: 
-     -input_bed     FILENAME,  FILENAME:  your input file name(Note: step 1's sorted bed file)
-                                          the file should be put into the input_files folder.
+     required arguments:
+     -input_bed     FILENAME,  FILENAME:  your input file name (Note: the same sorted BED file used in Step 1);
+                                          the file must be placed in the input_files folder.
                                           (located: MotifCluster/input_files)
      -input_result  FILENAME,  FILENAME:  your input file name(Note: result*.csv),
                                           the file generated from step 1's output folder
@@ -238,10 +248,10 @@ This score and rank command is designed to conduct score for each cluster and gi
 
 
 ### Input:
-    sorted bed file 
+    Sorted BED file
 * Example description:
-   * input requirement: should use the same one in step 1, and already in the input_files folder. result.csv and result_middle.csv produced by step1 in the step1's output folder. 
-   * Input parameter: '-weight_switch'; You can define which folder you want to put the output results in.
+   * Input requirement: use the same sorted BED file from Step 1, which is already in the input_files folder. `result.csv` and `result_middle.csv` are produced by Step 1 and located in Step 1's output folder.
+   * Input parameter: `-weight_switch`. You can also specify the folder where the output results will be saved.
 ### Command example:
 ```
 python3 MotifCluster/MotifCluster.py  calculate_score -step1_folder example_output_step1_1 -input_bed human_chr12_origin.bed -input_result result.csv -input_middle result_middle.csv -weight_switch on -output_folder example_output_step1_1
@@ -264,9 +274,9 @@ python3 MotifCluster/MotifCluster.py  calculate_score -step1_folder example_outp
  ```   
     result_cluster_weight.csv
  * Example description:
-   * result_cluster_weight.csv file, located: MotifCluster/example_output_step1_1 
-   * The first line is the number of the peaks in each group. This example has 10 groups, each group's total cluster number labeled from 'cluster_length0' to 'cluster_length9'. Information beyond this within the file is not useful to the user.
-Begining with the second line, the 'cluster0' column lists the weights of all peaks in the first group, and this pattern continues up to the 'cluster9' column. Information beyond this within the file is not useful to the user.
+   * `result_cluster_weight.csv` is located in MotifCluster/example_output_step1_1.
+   * The first line contains the number of peaks in each group. This example has 10 groups, with total cluster counts labeled `cluster_length0` through `cluster_length9`. Information beyond these columns is not relevant to the user.
+   * Starting from the second line, the `cluster0` column lists the weights of all peaks in the first group, continuing through `cluster9`. Information beyond these columns is not relevant to the user.
 * result_cluster_weight.csv shown as below:
 ```
     ,cluster0,cluster1,cluster2,cluster3,cluster4,cluster5,cluster6,cluster7,cluster8,cluster9,cluster_length0,cluster_length1,cluster_length2,cluster_length3,cluster_length4,cluster_length5,cluster_length6,cluster_length7,cluster_length8,cluster_length9
@@ -274,8 +284,52 @@ Begining with the second line, the 'cluster0' column lists the weights of all pe
     1,3.0,3.0,3.0,3.0,3.0,3.0,3.0,3.0,3.0,3.0,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
     2,3.0,3.0,3.0,3.0,3.0,3.0,3.0,3.0,3.0,3.0,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
 ```
-# Plotting figures (optional)
+
+---
+
+## Preprocessing (Optional)
+### Convert FIMO into Sorted BED File Function
+---
+### Description:
+This pre_process command can convert fimo.tsv file into the sorted bed file which is an essential input for main commands.
+### Overview:  
+
+     usage: python3 MotifCluster/MotifCluster.py pre_process -input_name -output_name -chrome
+    
+     required arguments: 
+     -input_name FILENAME,   FILENAME: your input file name, the file should be put into the input_files folder.    
+                                      (located: MotifCluster/input_files)    
+     -output_name FILENAME,  FILENAME: your customized output file name, the file automatically 
+                                       put into the input_files folder.
+     -chrome CHROME,         CHROME:   chrome name in the bed file, e.g.chr16
+
+### Input: 
+    fimo.tsv
+* Example description:
+   * Input parameter: 1.chrome name. 2.You can define which folder you want to put the output results in.
+* e.g. chr16 's fimo.tsv shown as below:
+ ```
+    motif		NC_000016.9	61384	61394	-	12.5333	1.83e-06	0.153	GGCCCCAGCCC
+    motif		NC_000016.9	67532	67542	+	12.5333	1.83e-06	0.153	GGCCCCGGCTC
+    motif		NC_000016.9	73072	73082	-	12.5333	1.83e-06	0.153	GGCCTCGGCCC
+ ```
+### Command example:
+    python3 MotifCluster/MotifCluster.py pre_process -input_name fimo_chr16.tsv -output_name sorted_chr16.bed -chrome chr16
+### Output: 
+    sorted bed file
+* e.g. sorted_chr16.bed stored directly in the input_files folder:
+ ```
+    chr16	61383	61394	GGCCCCAGCCC		-		P-value=1.83e-06
+    chr16	62063	62074	GGCTTTGGCCC		+		P-value=1.77e-05
+    chr16	62659	62670	GGCCTGGGCTC		-		P-value=1e-05
+ ```
+
+---
+
+## Plotting Figures Functions (Optional)
 ## Plotting Function:
+
+
 ### Description:
 This command is designed to generate a pdf picture about a region of interest and it shows the distinctively colored clusters view.
 ### Overview:
@@ -318,13 +372,15 @@ python3 MotifCluster/MotifCluster.py draw -step1_folder example_output_step1_1 -
 ### Output:  
     draw_figure.pdf 
  * Example description:
-   * draw_figure.pdf's output folder you can defined , eg.located: drawing_f1
+   * draw_figure.pdf's output folder you can defined , e.g.located: drawing_f1
    * This figure below shows using MotifCluster Method, the area in Human genome chr12:6,716,600-6,724,000 which is the ZNF410 binding clusters on the CHD4 promoter region.The x-axis is the coordinate from `6.717*10^6` to `6.724*10^6` in the chr12, and y-axis is the weight of each peak.12 line's figure. The diagram consists of 12 lines with weight information and illustrates data grouped into 10 Gassian components, one union-split and a single merge.
   
 <p align="center">
 <img src="./README_images/draw_figure-0.png" width=60% height=60%>
 </p>
 
+
+---
 
 ## Plotting Rank Function:
 ### Description:
@@ -355,12 +411,15 @@ python3 MotifCluster/MotifCluster.py draw_rank -input1 result_score_chr12.csv -i
 ### Output:  
     normal_vs_noise_rank.pdf 
  * Example description:
-    * output folder you can defined (eg.drawing_f2), located: drawing_f2   
+    * output folder you can defined (e.g.drawing_f2), located: drawing_f2   
     * In this figure, x-axis is the rank in the without noise chr12, y-axis is its' corresponding rank in the noise chr12. And the purple dots means both rank <=100, light blue dots means rank <= 100 in chr12 p-value < 0.001 but its' corresponding rank > 100 in p-value < 0.01, and deep blue dots means rank <= 100 in chr12 p-value < 0.01 but its' corresponding rank > 100 in p-value < 0.001.  
 
 <p align="center">
 <img src="./README_images/normal_vs_noise_rank-1.png" width=40% height=40%>
-</p> 
+</p>
+
+---
+
 ## Plotting Score Size Function:
 ### Description:
 This command is designed to generate a pdf picture about corresponding cluster score and cluster size for the top 100 clusters in specific genome. 
@@ -387,13 +446,16 @@ This command is designed to generate a pdf picture about corresponding cluster s
     score_size.pdf 
 
 ### Example description:
-   * output folder you can defined (eg.drawing_f3), located: drawing_f3 
+   * output folder you can defined (e.g.drawing_f3), located: drawing_f3 
    * In this figure, x-axis is the rank id, left y-axis is their corresponding score, right y-axis is their corresponding cluster size.         
 
 <p align="center">
 <img src="./README_images/score_size-1.png" width=60% height=60%> 
 </p>
-## Plottings Cluster Weight Function:
+
+---
+
+## Plotting Cluster Weight Function:
 ### Description:
 This function can visualize: In every Gaussian component which those peaks best fitted separately, it shows the distribution of peaks' weights in every Gausssion component (It displays the number of clusters within ten weight intervals, ranging from 0-1 to 9-10 for weights between 0 and 10.).
 ### Overview:
@@ -418,13 +480,15 @@ This function can visualize: In every Gaussian component which those peaks best 
 ### Output:  
     cluster_weight_draw.pdf 
 ### Example description:
-   * output folder you can defined (eg.drawing_f4), located: drawing_f4
+   * output folder you can defined (e.g.drawing_f4), located: drawing_f4
    * The figure consists of 10 subfigures, each illustrating the weight distribution of peaks that best fit the corresponding nth Gaussian component. Within each subfigure, the x-axis represents the weight value, and the y-axis shows the count of clusters.
 
  
 <p align="center">        
 <img src="./README_images/cluster_weight_draw-1.png" width=80% height=80%>
 </p>
+
+---
 
 ## Plotting GMM Function:
 ### Description:
@@ -451,7 +515,7 @@ python3 MotifCluster/MotifCluster.py draw_GMM  -step1_folder example_output_step
 ### Output:
     GMM_drawing.pdf   
 ###  Example description:
-   * output folder you defined (eg.drawing_f5), located: drawing_f5   
+   * output folder you defined (e.g.drawing_f5), located: drawing_f5   
    * The figure represents the findings of the 10 most probable Gaussian components within human chr12. The x-axis displays the variables that are being measured, while the y-axis indicates the probability density for each variable.
 <!-- <img src="./README_images/GMM_drawing-1.png" width=80% height=80%>  <br> -->
 
@@ -459,8 +523,12 @@ python3 MotifCluster/MotifCluster.py draw_GMM  -step1_folder example_output_step
 <img src="./README_images/GMM_drawing-1.png" width=40% height=40%>  
 </p>
 
-# Additional methods (partial MotifCluster methods) (optional)
-## Method a :  Direct DBSCAN Without Groups
+---
+
+## Additional Methods Functions (Optional)
+
+
+### Method a :  Direct DBSCAN Without Groups
 ### Description:
 * This displays the results for the direct DBSCAN method.
 ### Step 1:
@@ -512,7 +580,9 @@ python3 MotifCluster/MotifCluster.py draw -step1_folder other_method1 -inputbed 
 <img src="./README_images/draw_figure-1.png" width=75% height=75%>
 </p>
 
-## Method b1 & Method b2 & Method c Overview:
+---
+
+### Method b1 & Method b2 & Method c Overview
 Step 1 (cluster and merge):
 
      usage: python3 MotifCluster/MotifCluster.py cluster_and_merge
@@ -529,7 +599,11 @@ draw:
      usage: python3 MotifCluster/MotifCluster.py draw
                     -inputbed -inputcsv -method -step1_folder -output_folder [-start] [-end]
 
-## Method b1:  No Peak Intensity, No Cluster Merge
+---
+
+
+### Method b1: No Peak Intensity, No Cluster Merge
+
 ### Description:
 This displays the results for Method b1: only union-split without merge and also no weight information used.
 ### Step 1：
@@ -566,9 +640,11 @@ python3 MotifCluster/MotifCluster.py draw -step1_folder other_method2 -inputbed 
 <img src="./README_images/draw_figure-2.png" width=60% height=60%>
 </p>
 
+---
 
 
-## Method b2:  No Peak Intensity, With Cluster Merge
+
+### Method b2:  No Peak Intensity, With Cluster Merge
 ### Description:
 This displays the results for Method b2: have union-split with merging clusters but without using weight information.
 ### Step 1：
@@ -605,8 +681,10 @@ python3 MotifCluster/MotifCluster.py draw -step1_folder other_method3 -inputbed 
 </p>
 
 
+---
 
-## Method c:  With Peak Intensity, No Cluster Merge
+
+### Method c:  With Peak Intensity, No Cluster Merge
 ### Description:
 This displays the results for Method c: has union-split with utilizing weight information but without merge clusters.
 ### Step 1：
@@ -644,8 +722,11 @@ python3 MotifCluster/MotifCluster.py draw -step1_folder other_method4 -inputbed 
 </p>
 
 
-# Utility Functions (Optional)
-## Sorting And Filtering Function:
+---
+
+## Utility Functions (Optional)
+
+### Sorting And Filtering Bed File Function:
 ### Description:
 This sort_and_filter_bedfile command include two sub functions, you can decide sorting bed file and/or filtering by p-value.
 ### Overview:  
@@ -699,22 +780,26 @@ chr16	62064	62074	GGCTTTGGCCC		+		P-value=1.77e-05
 chr16	62660	62670	GGCCTGGGCTC		-		P-value=1e-05
 chr16	65789	65799	TGCCCGGGCCC		-		P-value=0.000201
  ```
-## Simulate Bed File Function:
+
+
+---
+
+### Bed File Simulation Function: 
 ### Description:
-This simulate command can build bed file with different parameters 
+This simulation command simulate a BED file by using configurable parameters.
 ### Overview:  
 
      usage: python3 MotifCluster/MotifCluster.py MotifCluster simulation -output_name
 
      required arguments:  
-     -output_name FILENAME,  FILENAME: your customized output file name, the file automatically 
-                                       put into the input_files folder.
+     -output_name FILENAME,  FILENAME: your customized output file name; the file is automatically
+                                       saved to the utility_output folder.
 
 
 ### Input:
-    configuaration json file
+    Configuration JSON file
 * Example description:
-   * Input parameter: json file already existed, all the parameters has been set, but you can modify and produce the bed file directly.<br>
+   * Input parameter: a JSON file with all parameters pre-configured. You can modify the values and generate the BED file directly.
 
 * simulation_parameters.json shown as below:
  ```
@@ -730,7 +815,7 @@ This simulate command can build bed file with different parameters
         [404, 22.6],
         [465, 21.3]
     ],
-    "CHROME": "chr6",
+    "CHROME": "chr12",
     "MAX_AXIS": 300000,
     "MAX_CLUSTER_SIZE": 20,
     "INIT_MIDDLE_AXIS": 8,
@@ -745,11 +830,96 @@ This simulate command can build bed file with different parameters
     python3 MotifCluster/MotifCluster.py simulation -output_name simulation.bed
 
 ### Output: 
-It can produce simulation bed file, stored directly in the MotifCluster/utility/utility_output folder. 
-* eg. simulation_example.bed shown as below:   
+Produced a simulated BED file, stored in the MotifCluster/utility/utility_output folder.
+* e.g. simulation_example.bed: 
  ```
 chr6	0	17					P-value=0.0003417885733312685
 chr6	345	362					P-value=0.0009453865844609411
 chr6	673	690					P-value=0.00016734120267639522
+...
+ ```
+
+
+---
+
+### Genome File Simulation Function: 
+#### (Including Corresponding BED File, CSV File) 
+### Description:
+This simulation command simulate a genome file (include bed file) based on a provided BED file.
+### Overview:  
+
+     usage: python3 MotifCluster/MotifCluster.py MotifCluster simulation_for_compare -output_name -bed_file
+
+     required arguments:  
+     -output_name FILENAME,  FILENAME: your customized output file; the file is automatically
+                                       saved to the utility_output folder.
+     -bed_file    FILENAME,  FILENAME: your input BED file; the file must be placed in the input_files folder
+                                      (located: MotifCluster/input_files).
+
+
+### Input:
+    BED file:
+    Provide a BED file containing the motifs you want to simulate.
+
+    Configuration JSON file:
+* Example description:
+  * Input parameter: a JSON file with all parameters pre-configured. You can modify the values and generate the BED file directly.
+   `INIT_MIDDLE_AXIS`, `MIDDLE_AXIS_TO_START_AXIS_DISTANCE`, and `MIDDLE_AXIS_TO_END_AXIS_DISTANCE` are derived automatically from the input BED file you provided
+   and do not need to be specified. `MU_SIGMA` entries follow the format `[Mu[i], Sigma[i]]`, representing the mean and standard deviation.
+
+    * simulation_parameters.json shown as below:
+    ```
+    {
+        "MU_SIGMA": [
+            [2,  2.3],
+            [35,  16.4],
+            [85, 17.1],
+            [130, 18.9],
+            [180, 19.1],
+            [238, 21.1],
+            [298, 21.3],
+            [353, 20.3],
+            [410, 21.6],
+            [468, 19.1]
+        ],
+        "CHROME": "chr16",
+        "MAX_AXIS": 300000,
+        "MAX_CLUSTER_SIZE": 20,
+        "INIT_MIDDLE_AXIS": "none",
+        "MIN_PVALUE": 1.53e-7,
+        "MAX_PVALUE": 3.32e-05,
+        "FILTERING_OUT_MIN_GAP": 501,
+        "FILTERING_OUT_MAX_GAP": 2000,
+        "MIDDLE_AXIS_TO_START_AXIS_DISTANCE": "none",
+        "MIDDLE_AXIS_TO_END_AXIS_DISTANCE": "none"
+
+    }
+
+    ```
+### Command example:
+    python3 MotifCluster/MotifCluster.py simulation_for_compare -output_name simulation_compare.fa -bed_file chr16.bed
+
+### Output: 
+### Output:
+Produces a genome file, a BED file, and a corresponding CSV file derived from the provided BED file. The genome file is built from the simulated BED file using the motifs specified in the input BED you provide. All outputs are stored in the MotifCluster/utility/utility_output folder.
+
+
+* e.g. genome file: simulation_compare.fa shown as below:   
+ ```
+>simulated_genome_reference
+GGTCTTGGCCCCCTCCCAAAGATTCCAGGGACTCCTAGACTCATATTTACAGCATCTTCCGATTACTATCACCAACGCGGGGTAGTGGACATAGCGTGCTACGGAGACCCCTC...
+ ```
+* e.g. BED file: simulation_compare.bed shown as below:   
+ ```
+chr16	142	153	AGCCCAGGCCC		+		P-value=3.64e-06
+chr16	276	287	GGCCCCGGCCC		+		P-value=1.53e-07
+chr16	398	409	GGTCTGAGCCC		+		P-value=3.32e-05
+...
+ ```
+* e.g. CSV file: simulation_compare.csv shown as below: Last column indicates the cluster id each motif belongs to.
+ ```
+142,153,AGCCCAGGCCC,+,1
+276,287,GGCCCCGGCCC,+,1
+398,409,GGTCTGAGCCC,+,1
 ...
  ```
