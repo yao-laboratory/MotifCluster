@@ -1,8 +1,14 @@
 # MotifCluster
 ### (Motif Homogeneous Binding Site Cluster)
----
+
 
 ## About
+**MotifCluster** is an open-source tool for identifying and prioritizing significant transcription factor regulatory regions based on local motif clusters, without requiring experimental data. Its algorithm filters noise from weak binding sites by balancing region size and binding instances, enabling effective clustering of local binding sites and identification of crucial regulatory areas. MotifCluster provides an intuitive interface for analyzing densely packed binding sites and visualizing prioritized regulatory regions, offering researchers a more efficient and comprehensive solution for genome-wide TFBS analysis.
+
+This repository includes a `Demo` folder containing every example result folder for all commands described in the instructions. Corresponding input files are located in `MotifCluster/input_files`, and all commands are documented in `Demo/Demo_Commands_Manual.md`.
+
+For further reference, in addition to the instructions below, please also refer to: , which provides the main results analyzed in this paper, along with the analysis code and corresponding data.
+
 ## Table of Contents
 - [About](#About)
 - [Installation Instructions](#installation-instructions)
@@ -10,9 +16,9 @@
    - [Manual Installation](#manual-installation)
 - [MotifCluster Pipeline](#motifcluster-pipeline)
     - [Command Overview](#command-overview)
-    - [MotifCluster Method Functions (Required)](#motifcluster-method-functions-required)
-        - [Step 1: Cluster and Merge](#first-step-cluster-and-merge)
-        - [Step 2: Score and Rank](#second-step-score-and-rank)
+    - [MotifCluster Method Functions (Main)](#motifcluster-method-functions-required)
+        - [Step 1: Cluster and Merge (`cluster_and_merge`)](#first-step-cluster-and-merge)
+        - [Step 2: Score and Rank (`calculate_score`)](#second-step-score-and-rank)
     - [Preprocessing Functions (Optional)](#preprocessing-optional)
         - [Convert FIMO into Sorted BED File Function (`pre_process`)](#convert-fimo-into-sorted-bed-file-function)
     - [Plotting Figures Functions (Optional)](#plotting-figures-functions-optional)
@@ -220,7 +226,7 @@ id,data_count_new,cluster_belong_new,data_count_sum
 ```  
 
 ---
-## Second Step: Score And Rank
+### Second Step: Score And Rank
 ### Description:
 This score and rank command is designed to conduct score for each cluster and give them rank based on their final score.
 ### Overview:
@@ -288,8 +294,7 @@ python3 MotifCluster/MotifCluster.py  calculate_score -step1_folder example_outp
 ---
 
 ## Preprocessing (Optional)
-### Convert FIMO into Sorted BED File Function
----
+### Convert FIMO into Sorted BED File Function:
 ### Description:
 This pre_process command can convert fimo.tsv file into the sorted bed file which is an essential input for main commands.
 ### Overview:  
@@ -327,7 +332,7 @@ This pre_process command can convert fimo.tsv file into the sorted bed file whic
 ---
 
 ## Plotting Figures Functions (Optional)
-## Plotting Function:
+### Plotting Function:
 
 
 ### Description:
@@ -382,7 +387,7 @@ python3 MotifCluster/MotifCluster.py draw -step1_folder example_output_step1_1 -
 
 ---
 
-## Plotting Rank Function:
+### Plotting Rank Function:
 ### Description:
 This command is designed to generate a pdf picture about the performance(ranks) of top 100 clusters in without-noise data alongside their corresponding ranks in the noise data.
 ### Overview:
@@ -420,7 +425,7 @@ python3 MotifCluster/MotifCluster.py draw_rank -input1 result_score_chr12.csv -i
 
 ---
 
-## Plotting Score Size Function:
+### Plotting Score Size Function:
 ### Description:
 This command is designed to generate a pdf picture about corresponding cluster score and cluster size for the top 100 clusters in specific genome. 
 ### Overview:
@@ -455,7 +460,7 @@ This command is designed to generate a pdf picture about corresponding cluster s
 
 ---
 
-## Plotting Cluster Weight Function:
+### Plotting Cluster Weight Function:
 ### Description:
 This function can visualize: In every Gaussian component which those peaks best fitted separately, it shows the distribution of peaks' weights in every Gausssion component (It displays the number of clusters within ten weight intervals, ranging from 0-1 to 9-10 for weights between 0 and 10.).
 ### Overview:
@@ -490,7 +495,7 @@ This function can visualize: In every Gaussian component which those peaks best 
 
 ---
 
-## Plotting GMM Function:
+### Plotting GMM Function:
 ### Description:
 This function can visualize all Gaussian components' GMM distributions. 
 ### Overview:
@@ -525,8 +530,8 @@ python3 MotifCluster/MotifCluster.py draw_GMM  -step1_folder example_output_step
 
 ---
 
-## Additional Methods Functions (Optional)
-
+Additional Methods Functions (Optional)
+---
 
 ### Method a :  Direct DBSCAN Without Groups
 ### Description:
@@ -724,8 +729,8 @@ python3 MotifCluster/MotifCluster.py draw -step1_folder other_method4 -inputbed 
 
 ---
 
-## Utility Functions (Optional)
-
+Utility Functions (Optional)
+---
 ### Sorting And Filtering Bed File Function:
 ### Description:
 This sort_and_filter_bedfile command include two sub functions, you can decide sorting bed file and/or filtering by p-value.
@@ -843,9 +848,9 @@ chr6	673	690					P-value=0.00016734120267639522
 ---
 
 ### Genome File Simulation Function: 
-#### (Including Corresponding BED File, CSV File) 
+#### (Output including Genome file, Corresponding BED file;CSV file) 
 ### Description:
-This simulation command simulate a genome file (include bed file) based on a provided BED file.
+This simulation command simulate a Genome file (include Bed file) based on a provided real BED file.
 ### Overview:  
 
      usage: python3 MotifCluster/MotifCluster.py MotifCluster simulation_for_compare -output_name -bed_file
@@ -899,12 +904,11 @@ This simulation command simulate a genome file (include bed file) based on a pro
 ### Command example:
     python3 MotifCluster/MotifCluster.py simulation_for_compare -output_name simulation_compare.fa -bed_file chr16.bed
 
-### Output: 
 ### Output:
-Produces a genome file, a BED file, and a corresponding CSV file derived from the provided BED file. The genome file is built from the simulated BED file using the motifs specified in the input BED you provide. All outputs are stored in the MotifCluster/utility/utility_output folder.
+Produces a Genome files(.fa), a BED file, and a corresponding CSV file derived from the input BED file. The Genome file is built using the motifs specified in the input BED you provide. All outputs are stored in the MotifCluster/utility/utility_output folder.
 
 
-* e.g. genome file: simulation_compare.fa shown as below:   
+* e.g. Genome file: simulation_compare.fa shown as below:   
  ```
 >simulated_genome_reference
 GGTCTTGGCCCCCTCCCAAAGATTCCAGGGACTCCTAGACTCATATTTACAGCATCTTCCGATTACTATCACCAACGCGGGGTAGTGGACATAGCGTGCTACGGAGACCCCTC...
