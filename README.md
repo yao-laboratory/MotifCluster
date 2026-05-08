@@ -5,18 +5,21 @@
 ## About
 **MotifCluster** is an open-source tool for identifying and prioritizing significant transcription factor regulatory regions based on local motif clusters, without requiring experimental data. Its algorithm filters noise from weak binding sites by balancing region size and binding instances, enabling effective clustering of local binding sites and identification of crucial regulatory areas. MotifCluster provides an intuitive interface for analyzing densely packed binding sites and visualizing prioritized regulatory regions, offering researchers a more efficient and comprehensive solution for genome-wide TFBS analysis.
 
-This repository includes a `Demo` folder containing every example result folder for all commands described in the instructions. Corresponding input files are located in `MotifCluster/input_files`, and all commands are documented in `Demo/Demo_Commands_Manual.md`.
+This repository includes a `Demo` folder containing all results for all commands described in the instructions below. Corresponding input files are located in `MotifCluster/input_files`, and all commands are documented in `Demo/Demo_Commands_Manual.md`.
 
-For further reference, in addition to the instructions below, please also refer to: , which provides the main results analyzed in this paper, along with the analysis code and corresponding data.
+For further reference, in addition to the instructions below, please also refer to: https://zenodo.org/records/20075667 , which provides the main results analyzed in this paper, along with the analysis code and corresponding data.
 
 ## Table of Contents
-- [About](#About)
+- [About](#about)
+- [Requirements](#requirements)
 - [Installation Instructions](#installation-instructions)
    - [Quick Installation](#quick-installation-recommended)
    - [Manual Installation](#manual-installation)
-- [MotifCluster Pipeline](#motifcluster-pipeline)
-    - [Command Overview](#command-overview)
-    - [MotifCluster Method Functions (Main)](#motifcluster-method-functions-required)
+- [Getting Started: Quick Demo](#getting-started-quick-demo)
+    - [Verify Installation and Commands](#verify-installation-and-commands)
+    - [Running the Demo](#running-the-demo)
+- [MotifCluster Pipeline Introduction](#motifcluster-pipeline-introduction)
+    - [MotifCluster Method Functions (Main)](#motifcluster-method-functions-main)
         - [Step 1: Cluster and Merge (`cluster_and_merge`)](#first-step-cluster-and-merge)
         - [Step 2: Score and Rank (`calculate_score`)](#second-step-score-and-rank)
     - [Preprocessing Functions (Optional)](#preprocessing-optional)
@@ -39,9 +42,15 @@ For further reference, in addition to the instructions below, please also refer 
         - [Genome File Simulation Function (`simulation_for_compare`)](#genome-file-simulation-function)
 ---
 
+## Requirements
+
+- Linux environment
+- Conda + Mamba setup, or Conda + Pip
+- Approximately 1GB RAM for standard execution
+---
 
 ## Installation Instructions
-### Quick Installation (Recommended)
+### Quick Installation (Recommended):
 #### (Dependency: need to install in Linux environment)
 Run the automated installation script:
 ```bash
@@ -56,7 +65,7 @@ Default environment name is motifcluster.
 ---
 
 
-### Manual Installation
+### Manual Installation:
 #### (Dependency: need to install in Linux environment)
 #### 1. Download code and create a new conda environment
 
@@ -82,18 +91,21 @@ Default environment name is motifcluster.
 
 ---
 
-## MotifCluster Pipeline
-### Command Overview
+## Getting Started: Quick Demo
+### Verify Installation and Commands:
 Make sure to activate the environment first (e.g.conda activate motifcluster) , then directly type:
 ```
+conda activate motifcluster
 python3 MotifCluster/MotifCluster.py --h
 ```
 Then you can get all the sub commamd shown as below,which means you installed the package succesfully, or else you need to check the installation.
 ```
-usage: MotifCluster [-h] {cluster_and_merge_simple_dbscan,cluster_and_merge,pre_process,calculate_score,draw,draw_GMM,draw_cluster_weight,draw_rank,draw_score_size,sort_and_filter_bedfile,simulation} ...
+usage: MotifCluster [-h]
+                    {cluster_and_merge_simple_dbscan,cluster_and_merge,pre_process,calculate_score,draw,draw_GMM,draw_cluster_weight,draw_rank,draw_score_size,sort_and_filter_bedfile,simulation,simulation_for_compare}
+                    ...
 
 positional arguments:
-  {cluster_and_merge_simple_dbscan,cluster_and_merge,pre_process,calculate_score,draw,draw_GMM,draw_cluster_weight,draw_rank,draw_score_size,sort_and_filter_bedfile,simulation}
+  {cluster_and_merge_simple_dbscan,cluster_and_merge,pre_process,calculate_score,draw,draw_GMM,draw_cluster_weight,draw_rank,draw_score_size,sort_and_filter_bedfile,simulation,simulation_for_compare}
                         Sub Commands Help
     cluster_and_merge_simple_dbscan
                         Using direct DBSCAN method to identify local motif clusters
@@ -109,6 +121,8 @@ positional arguments:
     sort_and_filter_bedfile
                         sorted bed file or filtered by p_value
     simulation          simulate a bed file
+    simulation_for_compare
+                        simulate for tools comparison
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -116,8 +130,52 @@ optional arguments:
 
 ---
 
+### Running the Demo:
 
-## MotifCluster Method Functions (Required)
+#### Overview:
+
+The standard MotifCluster workflow consists of two sequential steps executed from the command line:
+
+1. Step 1 — Cluster and Merge: Groups motif binding sites into local clusters using Gaussian Mixture Models (GMM) and optionally merges adjacent clusters.
+2. Step 2 — Score and Rank: Scores each identified cluster based on peak density, peak weight, and spatial compactness, then ranks clusters by their final score.
+
+#### General Usage:
+
+Replace `<your_input_bed_file>` and `<your_output_folder_name>` with your file and folder name, remember this input bed file shoud
+
+```sh
+python3 MotifCluster/MotifCluster.py cluster_and_merge -input <your_input_bed_file> -merge_switch on  -weight_switch on -output_folder <your_output_folder_name>
+python3 MotifCluster/MotifCluster.py  calculate_score -step1_folder <your_output_folder_name> -input_bed <your_input_bed_file> -input_result result.csv -input_middle result_middle.csv -weight_switch on -output_folder <your_output_folder_name>
+```
+#### Demo Example:
+
+The following example uses a motif BED file containing ZNF410 binding sites mapped across human chromosome 12 (hg19) as the sole input data.
+
+##### Step 1 — Full chromosome run:
+
+```bash
+python3 MotifCluster/MotifCluster.py cluster_and_merge -input human_chr12_origin.bed -merge_switch on  -weight_switch on -output_folder example_output_step1_1
+```
+
+##### Step 2 — Score and rank clusters:
+
+```bash
+python3 MotifCluster/MotifCluster.py  calculate_score -step1_folder example_output_step1_1 -input_bed human_chr12_origin.bed -input_result result.csv -input_middle result_middle.csv -weight_switch on -output_folder example_output_step1_1
+```
+
+Demo commands about all analysis functions used to generate the pre-computed results and figures in the `Demo/` directory are listed in [`Demo/Demo_Commands_Manual.md`](Demo/Demo_Commands_Manual.md), all pre-computed output results and figures also in the `Demo/` directory.
+
+We also provide this Demo running command in shell for you: [github_demo_command.sh](Demo/github_demo_command.sh)
+
+#### Resource Requirements:
+
+Peak memory usage scales for Running this demo is around **400MB of RAM**, memory consumption is moderate and suitable for a standard workstation. For genome-wide runs with large input files, we recommend **1 GB of RAM** or more. 
+
+---
+
+# MotifCluster Pipeline Introduction
+
+## MotifCluster Method Functions (Main):
 ### First Step: Cluster And Merge
 ### Description:
 This cluster and merge command utilized our MotifCluster Method which employs both groupings and merging functions to identify local motif clusters.
@@ -806,7 +864,7 @@ This simulation command simulate a BED file by using configurable parameters.
 * Example description:
    * Input parameter: a JSON file with all parameters pre-configured. You can modify the values and generate the BED file directly.
 
-* simulation_parameters.json shown as below:
+   * This `simulation_parameters.json` file shown below was used for our ZNF410 simulation benchmarking experiments.
  ```
     "MU_SIGMA": [
         [33,  9.9],
@@ -844,7 +902,6 @@ chr6	673	690					P-value=0.00016734120267639522
 ...
  ```
 
-
 ---
 
 ### Genome File Simulation Function: 
@@ -872,7 +929,7 @@ This simulation command simulate a Genome file (include Bed file) based on a pro
    `INIT_MIDDLE_AXIS`, `MIDDLE_AXIS_TO_START_AXIS_DISTANCE`, and `MIDDLE_AXIS_TO_END_AXIS_DISTANCE` are derived automatically from the input BED file you provided
    and do not need to be specified. `MU_SIGMA` entries follow the format `[Mu[i], Sigma[i]]`, representing the mean and standard deviation.
 
-    * simulation_parameters.json shown as below:
+  * This `simulation_parameters.json` file shown below was used for our PHB1 simulation benchmarking experiments.
     ```
     {
         "MU_SIGMA": [
@@ -897,7 +954,6 @@ This simulation command simulate a Genome file (include Bed file) based on a pro
         "FILTERING_OUT_MAX_GAP": 2000,
         "MIDDLE_AXIS_TO_START_AXIS_DISTANCE": "none",
         "MIDDLE_AXIS_TO_END_AXIS_DISTANCE": "none"
-
     }
 
     ```
