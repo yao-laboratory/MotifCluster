@@ -5,7 +5,7 @@
 ## About
 **MotifCluster** is an open-source tool for identifying and prioritizing significant transcription factor regulatory regions based on local motif clusters, without requiring experimental data. Its algorithm filters noise from weak binding sites by balancing region size and binding instances, enabling effective clustering of local binding sites and identification of crucial regulatory areas. MotifCluster provides an intuitive interface for analyzing densely packed binding sites and visualizing prioritized regulatory regions, offering researchers a more efficient and comprehensive solution for genome-wide TFBS analysis.
 
-This repository includes a `Demo` folder containing all results for all commands described in the instructions below. Corresponding input files are located in `MotifCluster/input_files`, and all commands are documented in `Demo/Demo_Commands_Manual.md`.
+This repository includes a [`Demo/`](Demo/) folder containing all results for all commands described in the instructions below. Corresponding input files are located in [`MotifCluster/input_files`](MotifCluster/input_files) , and all commands are documented in [`Demo/Demo_Commands_Manual.md`](Demo/Demo_Commands_Manual.md).
 
 For further reference, in addition to the instructions below, please also refer to: https://zenodo.org/records/20075667 , which provides the main results analyzed in this paper, along with the analysis code and corresponding data.
 
@@ -163,7 +163,7 @@ python3 MotifCluster/MotifCluster.py cluster_and_merge -input human_chr12_origin
 python3 MotifCluster/MotifCluster.py  calculate_score -step1_folder example_output_step1_1 -input_bed human_chr12_origin.bed -input_result result.csv -input_middle result_middle.csv -weight_switch on -output_folder example_output_step1_1
 ```
 
-Demo commands about all analysis functions used to generate the pre-computed results and figures in the `Demo/` directory are listed in [`Demo/Demo_Commands_Manual.md`](Demo/Demo_Commands_Manual.md), all pre-computed output results and figures also in the `Demo/` directory.
+Demo commands include other analysis functions used to generate the pre-computed results and figures in the `Demo/` directory are listed in [`Demo/Demo_Commands_Manual.md`](Demo/Demo_Commands_Manual.md), all pre-computed output results and figures also in the `Demo/` directory.
 
 We also provide this Demo running command in shell for you: [github_demo_command.sh](Demo/github_demo_command.sh)
 
