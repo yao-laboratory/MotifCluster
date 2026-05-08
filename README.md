@@ -134,7 +134,7 @@ optional arguments:
 
 #### Overview:
 
-The standard MotifCluster workflow consists of two sequential steps executed from the command line:
+The standard MotifCluster Method workflow consists of two sequential steps executed from the command line:
 
 1. Step 1 — Cluster and Merge: Groups motif binding sites into local clusters using Gaussian Mixture Models (GMM) and optionally merges adjacent clusters.
 2. Step 2 — Score and Rank: Scores each identified cluster based on peak density, peak weight, and spatial compactness, then ranks clusters by their final score.
@@ -163,9 +163,9 @@ python3 MotifCluster/MotifCluster.py cluster_and_merge -input human_chr12_origin
 python3 MotifCluster/MotifCluster.py  calculate_score -step1_folder example_output_step1_1 -input_bed human_chr12_origin.bed -input_result result.csv -input_middle result_middle.csv -weight_switch on -output_folder example_output_step1_1
 ```
 
-Demo commands include other analysis functions used to generate the pre-computed results and figures in the `Demo/` directory are listed in [`Demo/Demo_Commands_Manual.md`](Demo/Demo_Commands_Manual.md), all pre-computed output results and figures also in the `Demo/` directory.
+We also provide this Demo running command in shell for you: [github_demo_command.sh](Demo/github_demo_command.sh) .
 
-We also provide this Demo running command in shell for you: [github_demo_command.sh](Demo/github_demo_command.sh)
+Other optional commands in the [`Demo/`](Demo/) directory are listed in [`Demo/Demo_Commands_Manual.md`](Demo/Demo_Commands_Manual.md), all output results and figures also in the [`Demo/`](Demo/) directory.
 
 #### Resource Requirements:
 
