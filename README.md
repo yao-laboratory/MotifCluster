@@ -169,9 +169,9 @@ Other optional commands in the [`Demo/`](Demo/) directory are listed in [`Demo/D
 
 #### Resource Requirements:
 
-Peak memory usage scales for Running this demo is around **400MB of RAM**, memory consumption is moderate and suitable for a standard workstation. For genome-wide runs with large input files, we recommend **1 GB of RAM** or more. 
+Peak memory usage scales for Running this demo is around **307MB of RAM**, memory consumption is moderate and suitable for a standard workstation. For genome-wide runs with large input files, we recommend **1 GB of RAM** or more. 
 
-And running time for this demo, Step 1 takes approximately **1189 seconds** (~20 min) and Step 2 takes approximately **395 seconds** (~7 min), for a total of approximately **1584 seconds** (~26 min).
+And running time for this demo, Step 1 takes approximately **1889 seconds** (~32 min) and Step 2 takes approximately **395 seconds** (~7 min), for a total of approximately **2284 seconds** (~38 min).
 
 
 
