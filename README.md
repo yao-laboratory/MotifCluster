@@ -1,6 +1,5 @@
 # Motif-Cluster
 ### (Motif Driven Prioritization of Transcription Factor Binding Clusters)
-Motif-Cluster: Motif Driven Prioritization of Transcription Factor Binding Clusters 
 
 ## About
 **Motif-Cluster** is an open-source tool for identifying and prioritizing significant transcription factor regulatory regions based on local motif clusters, without requiring experimental data. Its algorithm filters noise from weak binding sites by balancing region size and binding instances, enabling effective clustering of local binding sites and identification of crucial regulatory areas. Motif-Cluster provides an intuitive interface for analyzing densely packed binding sites and visualizing prioritized regulatory regions, offering researchers a more efficient and comprehensive solution for genome-wide TFBS analysis.
