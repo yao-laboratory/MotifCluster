@@ -1,9 +1,9 @@
-# MotifCluster
-### (Motif Homogeneous Binding Site Cluster)
-
+# Motif-Cluster
+### (Motif Driven Prioritization of Transcription Factor Binding Clusters)
+Motif-Cluster: Motif Driven Prioritization of Transcription Factor Binding Clusters 
 
 ## About
-**MotifCluster** is an open-source tool for identifying and prioritizing significant transcription factor regulatory regions based on local motif clusters, without requiring experimental data. Its algorithm filters noise from weak binding sites by balancing region size and binding instances, enabling effective clustering of local binding sites and identification of crucial regulatory areas. MotifCluster provides an intuitive interface for analyzing densely packed binding sites and visualizing prioritized regulatory regions, offering researchers a more efficient and comprehensive solution for genome-wide TFBS analysis.
+**Motif-Cluster** is an open-source tool for identifying and prioritizing significant transcription factor regulatory regions based on local motif clusters, without requiring experimental data. Its algorithm filters noise from weak binding sites by balancing region size and binding instances, enabling effective clustering of local binding sites and identification of crucial regulatory areas. Motif-Cluster provides an intuitive interface for analyzing densely packed binding sites and visualizing prioritized regulatory regions, offering researchers a more efficient and comprehensive solution for genome-wide TFBS analysis.
 
 This repository includes a [`Demo/`](Demo/) folder containing all results for all commands described in the instructions below. Corresponding input files are located in [`MotifCluster/input_files`](MotifCluster/input_files) , and all commands are documented in [`Demo/Demo_Commands_Manual.md`](Demo/Demo_Commands_Manual.md).
 
@@ -18,8 +18,8 @@ For further reference, in addition to the instructions below, please also refer 
 - [Getting Started: Quick Demo](#getting-started-quick-demo)
     - [Verify Installation and Commands](#verify-installation-and-commands)
     - [Running the Demo](#running-the-demo)
-- [MotifCluster Pipeline Introduction](#motifcluster-pipeline-introduction)
-    - [MotifCluster Method Functions (Main)](#motifcluster-method-functions-main)
+- [Motif-Cluster Pipeline Introduction](#motif-cluster-pipeline-introduction)
+    - [Motif-Cluster Method Functions (Main)](#motif-cluster-method-functions-main)
         - [Step 1: Cluster and Merge (`cluster_and_merge`)](#first-step-cluster-and-merge)
         - [Step 2: Score and Rank (`calculate_score`)](#second-step-score-and-rank)
     - [Preprocessing Functions (Optional)](#preprocessing-optional)
@@ -134,7 +134,7 @@ optional arguments:
 
 #### Overview:
 
-The standard MotifCluster Method workflow consists of two sequential steps executed from the command line:
+The standard Motif-Cluster Method workflow consists of two sequential steps executed from the command line:
 
 1. Step 1 — Cluster and Merge: Groups motif binding sites into local clusters using Gaussian Mixture Models (GMM) and optionally merges adjacent clusters.
 2. Step 2 — Score and Rank: Scores each identified cluster based on peak density, peak weight, and spatial compactness, then ranks clusters by their final score.
@@ -177,12 +177,12 @@ And running time for this demo, Step 1 takes approximately **1889 seconds** (~32
 
 ---
 
-# MotifCluster Pipeline Introduction
+# Motif-Cluster Pipeline Introduction
 
-## MotifCluster Method Functions (Main):
+## Motif-Cluster Method Functions (Main):
 ### First Step: Cluster And Merge
 ### Description:
-This cluster and merge command utilized our MotifCluster Method which employs both groupings and merging functions to identify local motif clusters.
+This cluster and merge command utilized our Motif-Cluster Method which employs both groupings and merging functions to identify local motif clusters.
 ### Overview:
 
      usage: python3 MotifCluster/MotifCluster.py cluster_and_merge
@@ -274,7 +274,7 @@ id,data_count_new,cluster_belong_new,data_count_sum
     result_draw.csv:
  * Example description:
    * `result_draw.csv` is located in the example_output_step1_1 folder.
-   * Each line represents a peak and its assigned group. The columns from `draw_input0` to `arr_final_draw` store the color of the peak in each subfigure, along with weight information for visualization. Since the MotifCluster method generates 12 subfigures, there are 12 corresponding columns per peak, ranging from `draw_input0` to `arr_final_draw`.
+   * Each line represents a peak and its assigned group. The columns from `draw_input0` to `arr_final_draw` store the color of the peak in each subfigure, along with weight information for visualization. Since the Motif-Cluster method generates 12 subfigures, there are 12 corresponding columns per peak, ranging from `draw_input0` to `arr_final_draw`.
 * result_draw.csv shown as below:
 ```
     id,center_pos,weight,draw_input0,draw_input1,draw_input2,draw_input3,draw_input4,draw_input5,draw_input6,draw_input7,draw_input8,draw_input9,arr_final,arr_final_draw
@@ -412,7 +412,7 @@ This command is designed to generate a pdf picture about a region of interest an
                                           the file generated in the output file in step1
                                           (located: example_output_step1_1/result_draw*.csv)
      -method        NUM,       NUM:       The method you use:
-                                          NUM = 1: MotifCluster: with peak intensity, with cluster merge (method d)
+                                          NUM = 1: Motif-Cluster: with peak intensity, with cluster merge (method d)
                                           NUM = 2: direct DBSCAN without groups (method a)
                                           NUM = 3: No peak intensity, no cluster merge (method b1)
                                           NUM = 4: No peak intensity, with cluster merge (method b2)
@@ -618,7 +618,7 @@ Additional Methods Functions (Optional)
 ### Input & Output:
 * Input file: The bed file: sorted bed file, if fimo.tsv, can use above "Preprocessing functions" to change.
    * Input parameters: output_folder' (explained in overview). You can define which folder you want to put the output results in.	
-* Output: produces three output files same format as MotifCluster step1, only names different: result_simple_DBSCAN.csv,  result_middle_simple_DBSCAN.csv, result_draw_simple_DBSCAN.csv  
+* Output: produces three output files same format as Motif-Cluster method step1, only names different: result_simple_DBSCAN.csv,  result_middle_simple_DBSCAN.csv, result_draw_simple_DBSCAN.csv  
 ### Command example:
 ```
 python3 MotifCluster/MotifCluster.py cluster_and_merge_simple_dbscan -input human_chr12_origin.bed  -output_folder other_method1 
@@ -628,7 +628,7 @@ Use either of the commands one time
 Difference between two commands: command the -start -end can only process part of the chr12.bed files.
 ### Step 2:
 ### Input & Output:
-* Same as MotifCluster method's step 2 command, input only change -weight_switch: off, output files format same.
+* Same as Motif-Cluster method's step 2 command, input only change -weight_switch: off, output files format same.
 ### Command example:
 ``` 
 python3 MotifCluster/MotifCluster.py calculate_score -step1_folder other_method1 -input_bed human_chr12_origin.bed -input_result result_simple_DBSCAN.csv -input_middle result_middle_simple_DBSCAN.csv -output_folder other_method1 -weight_switch off
@@ -675,8 +675,8 @@ draw:
 This displays the results for Method b1: only union-split without merge and also no weight information used.
 ### Step 1：
 #### Input & Output:
-* Input: Input files same as MotifCluster method's step 1 command.Input parameters:-merge_switch off  -weight_switch on.    
-* Ouput: same format as MotifCluster method's step 1 command, only file name different, now is result_union.csv, result_draw_union, result_middle_union.csv (compared with MotifCluster method step 1's result.csv, result_draw.csv, result_middle.csv)
+* Input: Input files same as Motif-Cluster method's step 1 command.Input parameters:-merge_switch off  -weight_switch on.    
+* Ouput: same format as Motif-Cluster method's step 1 command, only file name different, now is result_union.csv, result_draw_union, result_middle_union.csv (compared with Motif-Cluster method step 1's result.csv, result_draw.csv, result_middle.csv)
 #### Command example:
  
 	python3 MotifCluster/MotifCluster.py cluster_and_merge -input human_chr12_origin.bed -merge_switch off  -weight_switch off -output_folder other_method2
@@ -686,14 +686,14 @@ Use either of the commands one time
 Difference between two commands: command the -start -end can only process part of the chr12.bed files.
 ### Step 2：
 #### Input & Output:
-* Same as MotifCluster method's step 2 command, input only change -weight_switch: off, output files same.
+* Same as Motif-Cluster method's step 2 command, input only change -weight_switch: off, output files same.
 #### command example:
 ``` 
 python3 MotifCluster/MotifCluster.py  calculate_score -step1_folder other_method2 -input_bed human_chr12_origin.bed -input_result result_union.csv -input_middle result_middle_union.csv -weight_switch off -output_folder other_method2
 ```
 ### Drawing:
 #### Input & Output:
-* Same as MotifCluster method's step 2 command, input only change -method 3.
+* Same as Motif-Cluster method's step 2 command, input only change -method 3.
 
 
 #### command example:
@@ -716,8 +716,8 @@ python3 MotifCluster/MotifCluster.py draw -step1_folder other_method2 -inputbed 
 This displays the results for Method b2: have union-split with merging clusters but without using weight information.
 ### Step 1：
 #### Input & Output:
-* Input: Input files same as MotifCluster method's step 1 command.Input parameters:-merge_switch on  -weight_switch off.    
-* Ouput: Same format as MotifCluster method's step 1 command.
+* Input: Input files same as Motif-Cluster method's step 1 command.Input parameters:-merge_switch on  -weight_switch off.    
+* Ouput: Same format as Motif-Cluster method's step 1 command.
 #### Command example:
  
 	python3 MotifCluster/MotifCluster.py cluster_and_merge -input human_chr12_origin.bed -merge_switch on  -weight_switch off -output_folder other_method3
@@ -727,7 +727,7 @@ Use either of the commands one time
 Difference between two commands: command the -start -end can only process part of the chr12.bed files.
 ### Step 2：
 #### Input & Output:
-* Same as MotifCluster method's step 2 command, input only change -weight_switch: off, output files same.
+* Same as Motif-Cluster method's step 2 command, input only change -weight_switch: off, output files same.
 #### command example:
 ```
 python3 MotifCluster/MotifCluster.py calculate_score -step1_folder other_method3 -input_bed human_chr12_origin.bed -input_result result.csv -input_middle result_middle.csv -weight_switch off -output_folder other_method3
@@ -756,9 +756,9 @@ python3 MotifCluster/MotifCluster.py draw -step1_folder other_method3 -inputbed 
 This displays the results for Method c: has union-split with utilizing weight information but without merge clusters.
 ### Step 1：
 #### Input & Output:
-* Input files: same as MotifCluster method's step 1 command.    
+* Input files: same as Motif-Cluster method's step 1 command.    
    * Input parameters:-merge_switch off  -weight_switch on.    
-* Output: Same format as MotifCluster method's step 1 command, only file name different, now is result_union.csv, result_draw_union result_middle_union.csv (compared with MotifCluster method step 1's result.csv, result_draw.csv, result_middle.csv)
+* Output: Same format as Motif-Cluster method's step 1 command, only file name different, now is result_union.csv, result_draw_union result_middle_union.csv (compared with Motif-Cluster method step 1's result.csv, result_draw.csv, result_middle.csv)
 #### Command example:
  
 	python3 MotifCluster/MotifCluster.py cluster_and_merge -input human_chr12_origin.bed -merge_switch off  -weight_switch on -output_folder other_method4
@@ -768,7 +768,7 @@ Use either of the commands one time
 Difference between two commands: command the -start -end can only process part of the chr12.bed files.
 ### Step 2：
 #### Input & Output:
-* Same as MotifCluster method's step 2 command, input -weight_switch: on, output files same format.
+* Same as Motif-Cluster method's step 2 command, input -weight_switch: on, output files same format.
 #### command example:
 ``` 
 python3 MotifCluster/MotifCluster.py  calculate_score -step1_folder other_method4 -input_bed human_chr12_origin.bed -input_result result_union.csv -input_middle result_middle_union.csv -weight_switch on -output_folder other_method4
