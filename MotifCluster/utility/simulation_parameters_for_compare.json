@@ -1,0 +1,27 @@
+{
+    "comments1": "you can change the fowllowing parameters, default bed file end-start = 17, default Gaussian group is 10",
+    "comments2": "MU_SIGMA should follow this order: [Mu[i],sigma[i]]",
+    "MU_SIGMA": [
+        [2,  2.3],
+        [35,  16.4],
+        [85, 17.1],
+        [130, 18.9],
+        [180, 19.1],
+        [238, 21.1],
+        [298, 21.3],
+        [353, 20.3],
+        [410, 21.6],
+        [468, 19.1]
+    ],
+    "CHROME": "chr16",
+    "MAX_AXIS": 300000,
+    "MAX_CLUSTER_SIZE": 20,
+    "INIT_MIDDLE_AXIS": "none",
+    "MIN_PVALUE": "none",
+    "MAX_PVALUE": "none",
+    "FILTERING_OUT_MIN_GAP": 501,
+    "FILTERING_OUT_MAX_GAP": 2000,
+    "MIDDLE_AXIS_TO_START_AXIS_DISTANCE": "none",
+    "MIDDLE_AXIS_TO_END_AXIS_DISTANCE": "none"
+}
+    

@@ -913,7 +913,7 @@ Below is the JSON parameters explanation table of this Bed File Simulation Funct
     python3 MotifCluster/MotifCluster.py simulation -output_name simulation.bed
 
 ### Output: 
-Produced a simulated BED file, stored in the MotifCluster/utility/utility_output folder.
+Produced a simulated BED file, a simulation statistics file: stored in the MotifCluster/utility/utility_output folder.
 * e.g. simulation_example.bed: 
  ```
 chr6	0	17					P-value=0.0003417885733312685
@@ -921,7 +921,7 @@ chr6	345	362					P-value=0.0009453865844609411
 chr6	673	690					P-value=0.00016734120267639522
 ...
  ```
-* e.g. simulation statistics file: simulation_stat.txt shown as below
+* e.g. simulation_stat.txt shown as below:
  ```
 # binding site: 1177
 # cluster: 126
@@ -1012,7 +1012,7 @@ Below is the JSON parameters explanation table of this Genome File Simulation Fu
     python3 MotifCluster/MotifCluster.py simulation_for_compare -output_name simulation_compare.fa -bed_file chr16.bed
 
 ### Output:
-Produces a Genome files(.fa), a BED file, and a corresponding CSV file derived from the input BED file. The Genome file is built using the motifs specified in the input BED you provide. All outputs are stored in the MotifCluster/utility/utility_output folder.
+Produces a genome file (.fa), a BED file, a CSV file, and a TXT file, using the motifs provided in the input BED file. All outputs are stored in the MotifCluster/utility/utility_output folder.
 
 
 * e.g. Genome file: simulation_compare.fa shown as below:   
@@ -1034,7 +1034,7 @@ chr16	398	409	GGTCTGAGCCC		+		P-value=3.32e-05
 398,409,GGTCTGAGCCC,+,1
 ...
  ```
-* e.g. simulation statistics file: simulation_stat_for_compare.txt shown as below
+* e.g. simulation statistics file: simulation_stat_for_compare.txt shown as below:
  ```
 # binding site: 1438
 # cluster: 131
