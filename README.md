@@ -852,7 +852,8 @@ chr16	65789	65799	TGCCCGGGCCC		-		P-value=0.000201
 
 ### Bed File Simulation Function: 
 ### Description:
-This simulation command simulate a BED file by using configurable parameters.
+This simulation command generates a BED file using configurable parameters.The resulted cluster number and cluster size in each cluster will be summarized in a simulation statistic file  (simulation_stat.txt). Users do not need to directly control the expected cluster distribution; instead, they can adjust the parameters in utility/simulation_parameters.json.
+
 ### Overview:  
 
      usage: python3 MotifCluster/MotifCluster.py MotifCluster simulation -output_name
@@ -865,7 +866,7 @@ This simulation command simulate a BED file by using configurable parameters.
 ### Input:
     Configuration JSON file
 * Example description:
-   * Input parameter: a JSON file with all parameters pre-configured. You can modify the values and generate the BED file directly.
+   * Input parameter: a JSON file with all parameters pre-configured. You also can modify the values and generate the BED file directly.
 
    * This `simulation_parameters.json` file shown below was used for our ZNF410 simulation benchmarking experiments.
  ```
@@ -892,6 +893,22 @@ This simulation command simulate a BED file by using configurable parameters.
     "MIDDLE_AXIS_TO_START_AXIS_DISTANCE": 8,
     "MIDDLE_AXIS_TO_END_AXIS_DISTANCE": 9
  ```
+Below is the JSON parameters explanation table of this Bed File Simulation Function for your understanding.
+| JSON Parameter | Description |
+| --- | --- |
+| `MU_SIGMA` | Gaussian components (mean, standard deviation pairs) |
+| `CHROME` | Chromosome name; used only for BED file labeling |
+| `MAX_AXIS` | Maximum genome coordinate (starts from 0). Note: The actual genome length may slightly exceed this value, as the last cluster is allowed to end naturally beyond the boundary. |
+| `MAX_CLUSTER_SIZE` | Maximum allowed cluster size |
+| `INIT_MIDDLE_AXIS` | Center position index of each motif. this example above shows a motif of length 17 with 8 flanking bases on each side, set to 8 |
+| `MIN_PVALUE` | Minimum p-value threshold |
+| `MAX_PVALUE` | Maximum p-value threshold |
+| `FILTERING_OUT_MIN_GAP` | Minimum distance to represent non-clustered regions |
+| `FILTERING_OUT_MAX_GAP` | Maximum distance to represent non-clustered regions |
+| `MIDDLE_AXIS_TO_START_AXIS_DISTANCE` | Distance from the center axis to the motif start position. Calculated as `(end - start) // 2`. For a motif of length 17 (e.g. start=0, end=17): `17 // 2 = 8` |
+| `MIDDLE_AXIS_TO_END_AXIS_DISTANCE` | Distance from the center axis to the motif end position. Calculated as `(end - start) // 2 + (end - start) % 2`. For a motif of length 17: `8 + 1 = 9` |
+
+
 ### Command example:
     python3 MotifCluster/MotifCluster.py simulation -output_name simulation.bed
 
@@ -904,19 +921,33 @@ chr6	345	362					P-value=0.0009453865844609411
 chr6	673	690					P-value=0.00016734120267639522
 ...
  ```
+* e.g. simulation statistics file: simulation_stat.txt shown as below
+ ```
+# binding site: 1177
+# cluster: 126
+cluster_size cluster_count
+1 9
+2 6
+3 8
+4 8
+5 9
+6 5
+...
+ ```
 
 ---
 
 ### Genome File Simulation Function: 
-#### (Output including Genome file, Corresponding BED file;CSV file) 
+#### (Outputs: genome file, corresponding BED file, and CSV file)
 ### Description:
-This simulation command simulate a Genome file (include Bed file) based on a provided real BED file.
+This simulation command generates a genome file (including a BED file) of a defined length (maximum coordinates), based on a provided real BED file. The resulting cluster count and cluster sizes are summarized in a simulation statistics file (simulation_stat.txt). Users do not need to directly control the expected cluster distribution; instead, they configure the genomic size and gap parameters directly in utility/simulation_parameters_for_compare.json. The provided BED file can be short and contain only a few binding site examples.
+
 ### Overview:  
 
      usage: python3 MotifCluster/MotifCluster.py MotifCluster simulation_for_compare -output_name -bed_file
 
      required arguments:  
-     -output_name FILENAME,  FILENAME: your customized output file; the file is automatically
+     -output_name FILENAME,  FILENAME: your customized output .fa file; the file is automatically
                                        saved to the utility_output folder.
      -bed_file    FILENAME,  FILENAME: your input BED file; the file must be placed in the input_files folder
                                       (located: MotifCluster/input_files).
@@ -928,11 +959,12 @@ This simulation command simulate a Genome file (include Bed file) based on a pro
 
     Configuration JSON file:
 * Example description:
-  * Input parameter: a JSON file with all parameters pre-configured. You can modify the values and generate the BED file directly.
-   `INIT_MIDDLE_AXIS`, `MIDDLE_AXIS_TO_START_AXIS_DISTANCE`, and `MIDDLE_AXIS_TO_END_AXIS_DISTANCE` are derived automatically from the input BED file you provided
-   and do not need to be specified. `MU_SIGMA` entries follow the format `[Mu[i], Sigma[i]]`, representing the mean and standard deviation.
+   * Input parameter: a JSON file with all parameters pre-configured. You also can modify the values and generate the genome file directly.
+   `INIT_MIDDLE_AXIS`, `MIDDLE_AXIS_TO_START_AXIS_DISTANCE`, `MIDDLE_AXIS_TO_END_AXIS_DISTANCE`,
+   `MIN_PVALUE`,`MAX_PVALUE` are derived automatically from the input BED file and do not need to be specified. `MU_SIGMA` entries follow the format `[Mu[i], Sigma[i]]`, representing the mean and standard deviation.
 
-  * This `simulation_parameters.json` file shown below was used for our PHB1 simulation benchmarking experiments.
+
+  * This `simulation_parameters_for_compare.json` file shown below was used for our PHB1 simulation benchmarking experiments.
     ```
     {
         "MU_SIGMA": [
@@ -951,8 +983,8 @@ This simulation command simulate a Genome file (include Bed file) based on a pro
         "MAX_AXIS": 300000,
         "MAX_CLUSTER_SIZE": 20,
         "INIT_MIDDLE_AXIS": "none",
-        "MIN_PVALUE": 1.53e-7,
-        "MAX_PVALUE": 3.32e-05,
+        "MIN_PVALUE": "none",
+        "MAX_PVALUE": "none",
         "FILTERING_OUT_MIN_GAP": 501,
         "FILTERING_OUT_MAX_GAP": 2000,
         "MIDDLE_AXIS_TO_START_AXIS_DISTANCE": "none",
@@ -960,6 +992,22 @@ This simulation command simulate a Genome file (include Bed file) based on a pro
     }
 
     ```
+Below is the JSON parameters explanation table of this Genome File Simulation Function for your understanding.
+| JSON Parameter | Description |
+| --- | --- |
+| `MU_SIGMA` | Gaussian components (mean, standard deviation pairs)  |
+| `CHROME` | Chromosome name; used only for BED file labeling |
+| `MAX_AXIS` | Maximum genome coordinate; the actual genome length may slightly exceed this value, as the last cluster is allowed to end naturally beyond the boundary. |
+| `MAX_CLUSTER_SIZE` | Maximum allowed cluster size |
+| `INIT_MIDDLE_AXIS` | Set to `"none"`; this command derived automatically from the input BED file |
+| `MIN_PVALUE` | Set to `"none"`; this command derived automatically from the input BED file |
+| `MAX_PVALUE` | Set to `"none"`; this command derived automatically from the input BED file |
+| `FILTERING_OUT_MIN_GAP` | Minimum distance to represent non-clustered regions |
+| `FILTERING_OUT_MAX_GAP` | Maximum distance to represent non-clustered regions |
+| `MIDDLE_AXIS_TO_START_AXIS_DISTANCE` | Set to `"none"`; derived automatically from the input BED file |
+| `MIDDLE_AXIS_TO_END_AXIS_DISTANCE` | Set to `"none"`; derived automatically from the input BED file |
+
+
 ### Command example:
     python3 MotifCluster/MotifCluster.py simulation_for_compare -output_name simulation_compare.fa -bed_file chr16.bed
 
@@ -986,3 +1034,13 @@ chr16	398	409	GGTCTGAGCCC		+		P-value=3.32e-05
 398,409,GGTCTGAGCCC,+,1
 ...
  ```
+* e.g. simulation statistics file: simulation_stat_for_compare.txt shown as below
+ ```
+# binding site: 1438
+# cluster: 131
+cluster_size cluster_count
+1 5
+2 7
+3 11
+4 5
+...

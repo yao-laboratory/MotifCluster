@@ -40,8 +40,8 @@ def read_config_file(config_file_path, original_bed_file_path):
     MAX_AXIS = config["MAX_AXIS"]
     MAX_CLUSTER_SIZE = config["MAX_CLUSTER_SIZE"]
     # INIT_MIDDLE_AXIS = config["INIT_MIDDLE_AXIS"]
-    MIN_PVALUE = config["MIN_PVALUE"]
-    MAX_PVALUE = config["MAX_PVALUE"]
+    # MIN_PVALUE = config["MIN_PVALUE"]
+    # MAX_PVALUE = config["MAX_PVALUE"]
     OUTLIER_MIN_GAP = config["FILTERING_OUT_MIN_GAP"]
     OUTLIER_MAX_GAP = config["FILTERING_OUT_MAX_GAP"]
     # MIDDLE_AXIS_TO_START_AXIS_DISTANCE = config["MIDDLE_AXIS_TO_START_AXIS_DISTANCE"]
@@ -187,11 +187,23 @@ def save_data(start_axis, end_axis, p_value, sequence, cluster_ids, bed_file_pat
         for line in data:
             file.write("\t".join(map(str, line)) + "\n")
 
+    return len(start_axis)
 
-def cluster_size_analysis(cluster_cnt, clusters_size):
+
+
+def cluster_size_analysis(cluster_cnt, clusters_size, b_site_number, folder_output):
     clusters_size = sorted(clusters_size)
-    for number, count in Counter(clusters_size).items():
-        print(f"cluster size {number} appears {count} times")
+    size_counts = Counter(clusters_size)
+    output_path = path.abspath(
+    path.join(folder_output, "utility_output", "simulation_stat_for_compare.txt"))
+    with open(output_path, "w") as f:
+        f.write(f"# binding site: {b_site_number}\n")
+        cluster_num = sum(size_counts.values()) 
+        f.write(f"# cluster: {cluster_num}\n")
+        f.write("cluster_size cluster_count\n")
+        for cluster_size, cluster_count in size_counts.items():
+            f.write(f"{cluster_size} {cluster_count}\n")
+
 
 def prepare_df(original_bed_file_path):
     df1 = pd.read_csv(original_bed_file_path, sep="\t", header=None, names=["chrom", "start", "end", "sequence", "score", "strand", "motif", "pValue"])
@@ -245,12 +257,12 @@ def simulation_for_comparison(output_name, original_bed_file):
 
     folder_output = path.abspath(path.dirname(__file__))
     config_file_path = path.abspath(
-        path.join(folder_output, "simulation_parameters.json"))
+        path.join(folder_output, "simulation_parameters_for_compare.json"))
     read_config_file(config_file_path, original_bed_file_path)
     bed_file_path = path.abspath(
-        path.join(folder_output, "utility_output", output_name))
+        path.join(folder_output, "utility_output", output_name.replace(".fa", ".bed")))
     csv_file_path = path.abspath(
-        path.join(folder_output, "utility_output", output_name.replace(".bed", ".csv")))
+        path.join(folder_output, "utility_output", output_name.replace(".fa", ".csv")))
     
     orifinal_bed_file_colomns_df, motif = prepare_df(original_bed_file_path)
     print("simulation start: ")
@@ -267,9 +279,9 @@ def simulation_for_comparison(output_name, original_bed_file):
     print("clusters' size with generation order in a list:", clusters_size)
     start_axis, end_axis = change_middle_to_start_end_axis(middle_axis)
     # print("attention",middle_axis)
-    save_data(start_axis, end_axis, p_value, sequences, cluster_ids, bed_file_path, csv_file_path)
-    cluster_size_analysis(cluster_cnt, clusters_size)
-    print("Simulation end.")
+    b_site_number = save_data(start_axis, end_axis, p_value, sequences, cluster_ids, bed_file_path, csv_file_path)
+    cluster_size_analysis(cluster_cnt, clusters_size, b_site_number, folder_output)
     print("Start to simulate genome reference file about motif {}.".format(motif))
     simulate_fa_file(csv_file_path)
     print("Simulated corresponding genome reference file from the existed motif bed file built successfully.")
+    print("Simulation end. ")

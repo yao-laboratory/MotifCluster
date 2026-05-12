@@ -58,6 +58,9 @@ def find_gap_between_cluster(num):
         between_cluster_gap = random.randint(OUTLIER_MIN_GAP, OUTLIER_MAX_GAP)
     else:
         between_cluster_gap = MU_SIGMA[random_number][0]
+        while between_cluster_gap <= (MIDDLE_AXIS_TO_START_AXIS_DISTANCE + MIDDLE_AXIS_TO_END_AXIS_DISTANCE):
+            random_number = random.randint(0, len(MU_SIGMA) - 1)
+            between_cluster_gap = MU_SIGMA[random_number][0]
     return random_number, between_cluster_gap
 
 
@@ -83,8 +86,13 @@ def generate_all_clusters():
         for i in range(1, cluster_size):
             # generate gap randomly
             # print("mu"+str(MU_SIGMA[num][0])+"sigma"+str(MU_SIGMA[num][1]))
-            gap = np.random.normal(
-                MU_SIGMA[num][0], MU_SIGMA[num][1], size=None)
+            gap = 0
+            while True:
+                gap = np.random.normal(
+                    MU_SIGMA[num][0], MU_SIGMA[num][1], size=None)
+                gap = int(gap)
+                if gap >= (MIDDLE_AXIS_TO_START_AXIS_DISTANCE + MIDDLE_AXIS_TO_END_AXIS_DISTANCE):
+                    break
             gap = int(gap)
             last_middle_axis = middle_axis[-1]
             middle_axis.append(last_middle_axis + gap)
@@ -122,13 +130,22 @@ def save_data_to_bedfile(start_axis, end_axis, p_value, bed_file_path):
     with open(bed_file_path, "w") as file:
         for line in data:
             file.write("\t".join(map(str, line)) + "\n")
+    return len(start_axis)
 
 
-def cluster_size_analysis(cluster_cnt, clusters_size):
+
+def cluster_size_analysis(cluster_cnt, clusters_size, b_site_number, folder_output):
     clusters_size = sorted(clusters_size)
-    for number, count in Counter(clusters_size).items():
-        print(f"cluster size {number} appears {count} times")
-
+    size_counts = Counter(clusters_size)
+    output_path = path.abspath(
+    path.join(folder_output, "utility_output", "simulation_stat.txt"))
+    with open(output_path, "w") as f:
+        f.write(f"# binding site: {b_site_number}\n")
+        cluster_num = sum(size_counts.values()) 
+        f.write(f"# cluster: {cluster_num}\n")
+        f.write("cluster_size cluster_count\n")
+        for cluster_size, cluster_count in size_counts.items():
+            f.write(f"{cluster_size} {cluster_count}\n")
 
 def simulation(output_name):
     folder_output = path.abspath(path.dirname(__file__))
@@ -138,7 +155,7 @@ def simulation(output_name):
 
     bed_file_path = path.abspath(
         path.join(folder_output, "utility_output", output_name))
-    print("simulation start: ")
+    print("Simulation start: ")
     cluster_cnt = 0
     middle_axis = []
     p_value = []
@@ -147,6 +164,8 @@ def simulation(output_name):
     clusters_size = []
     cluster_cnt, middle_axis, p_value, clusters_size = generate_all_clusters()
     print("the number of clusters: ", cluster_cnt)
+    print("clusters' size with generation order in a list:", clusters_size)
     start_axis, end_axis = change_middle_to_start_end_axis(middle_axis)
-    save_data_to_bedfile(start_axis, end_axis, p_value, bed_file_path)
-    cluster_size_analysis(cluster_cnt, clusters_size)
+    b_site_number = save_data_to_bedfile(start_axis, end_axis, p_value, bed_file_path)
+    cluster_size_analysis(cluster_cnt, clusters_size, b_site_number, folder_output)
+    print("Simulation end. ")
